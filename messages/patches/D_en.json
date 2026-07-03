@@ -1,0 +1,19 @@
+{
+  "upload": {
+    "age": "{min}–{max} years",
+    "ageMin": "{min}+",
+    "genderLabels": {
+      "erkek": "Male",
+      "kadin": "Female",
+      "diger": "Other"
+    }
+  },
+  "cookie": {
+    "ariaLabel": "Cookie preferences",
+    "title": "Cookie & Analytics Preferences",
+    "description": "We collect anonymous usage data to improve your experience. No personal data is shared with third parties.",
+    "privacyLink": "Privacy Policy",
+    "accept": "Accept",
+    "decline": "Decline"
+  }
+}

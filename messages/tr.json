@@ -822,6 +822,22 @@
       "updatePassword": "Şifreyi Güncelle",
       "passwordMismatch": "Şifreler eşleşmiyor.",
       "passwordTooShort": "Şifre en az 6 karakter olmalı."
+    },
+    "plan": {
+      "title": "Plan & Abonelik",
+      "storage": "GB depolama",
+      "unlimited": "Sınırsız",
+      "users": "kullanıcı",
+      "agency": "Ajans",
+      "cancelledUntil": "İptal edildi — {date} tarihine kadar aktif.",
+      "manageSubscription": "Aboneliği Yönet",
+      "upgradeTo": "Planını yükselt:",
+      "perMonth": "/ay",
+      "productIdMissing": "Ürün ID yapılandırılmamış."
+    },
+    "language": {
+      "title": "Dil",
+      "description": "Uygulama dili tercihinizi seçin."
     }
   },
   "upload": {
@@ -850,6 +866,21 @@
     "deadline": "Son başvuru: {date}",
     "script": "Senaryo",
     "scriptInstructions": "Senaryoyu indirip rolü hazırladıktan sonra videoyu yükle.",
-    "downloadScript": "Senaryoyu İndir"
+    "downloadScript": "Senaryoyu İndir",
+    "age": "{min}–{max} yaş",
+    "ageMin": "{min}+",
+    "genderLabels": {
+      "erkek": "Erkek",
+      "kadin": "Kadın",
+      "diger": "Diğer"
+    }
+  },
+  "cookie": {
+    "ariaLabel": "Çerez tercihleri",
+    "title": "Çerez ve Analitik Tercihleri",
+    "description": "Deneyimini iyileştirmek için anonim kullanım verileri topluyoruz. Hiçbir kişisel veri üçüncü taraflarla paylaşılmaz.",
+    "privacyLink": "Gizlilik Politikası",
+    "accept": "Kabul Et",
+    "decline": "Reddet"
   }
 }

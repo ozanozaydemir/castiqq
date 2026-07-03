@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import { AnimationInit } from '@/components/AnimationInit'
 import { JsonLd } from '@/components/JsonLd'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { getTranslations } from 'next-intl/server'
 
 export default async function HomePage() {
@@ -181,6 +182,7 @@ export default async function HomePage() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <LanguageSwitcher />
             <Link href="/giris"
               className="hidden sm:block px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
               {t('nav.login')}

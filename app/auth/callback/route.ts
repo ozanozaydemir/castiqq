@@ -5,7 +5,9 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/dashboard'
+  const locale = searchParams.get('locale') ?? 'tr'
+  const defaultNext = locale === 'en' ? '/en/dashboard' : '/dashboard'
+  const next = searchParams.get('next') ?? defaultNext
 
   if (!code) {
     return NextResponse.redirect(`${origin}/giris?error=no_code`)

@@ -1,0 +1,19 @@
+{
+  "upload": {
+    "age": "{min}–{max} yaş",
+    "ageMin": "{min}+",
+    "genderLabels": {
+      "erkek": "Erkek",
+      "kadin": "Kadın",
+      "diger": "Diğer"
+    }
+  },
+  "cookie": {
+    "ariaLabel": "Çerez tercihleri",
+    "title": "Çerez ve Analitik Tercihleri",
+    "description": "Deneyimini iyileştirmek için anonim kullanım verileri topluyoruz. Hiçbir kişisel veri üçüncü taraflarla paylaşılmaz.",
+    "privacyLink": "Gizlilik Politikası",
+    "accept": "Kabul Et",
+    "decline": "Reddet"
+  }
+}

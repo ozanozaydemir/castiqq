@@ -822,6 +822,22 @@
       "updatePassword": "Update Password",
       "passwordMismatch": "Passwords do not match.",
       "passwordTooShort": "Password must be at least 6 characters."
+    },
+    "plan": {
+      "title": "Plan & Subscription",
+      "storage": "GB storage",
+      "unlimited": "Unlimited",
+      "users": "users",
+      "agency": "Agency",
+      "cancelledUntil": "Cancelled — active until {date}.",
+      "manageSubscription": "Manage Subscription",
+      "upgradeTo": "Upgrade your plan:",
+      "perMonth": "/mo",
+      "productIdMissing": "Product ID not configured."
+    },
+    "language": {
+      "title": "Language",
+      "description": "Choose your preferred application language."
     }
   },
   "upload": {
@@ -850,6 +866,21 @@
     "deadline": "Deadline: {date}",
     "script": "Script",
     "scriptInstructions": "Download the script, prepare the role, then upload your video.",
-    "downloadScript": "Download Script"
+    "downloadScript": "Download Script",
+    "age": "{min}–{max} years",
+    "ageMin": "{min}+",
+    "genderLabels": {
+      "erkek": "Male",
+      "kadin": "Female",
+      "diger": "Other"
+    }
+  },
+  "cookie": {
+    "ariaLabel": "Cookie preferences",
+    "title": "Cookie & Analytics Preferences",
+    "description": "We collect anonymous usage data to improve your experience. No personal data is shared with third parties.",
+    "privacyLink": "Privacy Policy",
+    "accept": "Accept",
+    "decline": "Decline"
   }
 }

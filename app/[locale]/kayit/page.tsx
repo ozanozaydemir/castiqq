@@ -4,12 +4,13 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Clapperboard, Loader2, Eye, EyeOff, Mail, ArrowLeft } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 
 type Step = 'form' | 'done'
 
 export default function RegisterPage() {
   const t = useTranslations('auth')
+  const locale = useLocale()
   const [step, setStep] = useState<Step>('form')
   const [form, setForm] = useState({
     org_name: '',
@@ -46,7 +47,7 @@ export default function RegisterPage() {
       email: form.email,
       password: form.password,
       options: {
-        emailRedirectTo: `${siteUrl}/auth/callback`,
+        emailRedirectTo: `${siteUrl}/auth/callback?locale=${locale}`,
         data: {
           full_name: form.full_name,
           org_name: form.org_name,

@@ -1,10 +1,11 @@
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, getLocale } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { OrgForm } from './OrgForm'
 import { ProfilForm } from './ProfilForm'
 import { SifreForm } from './SifreForm'
 import { PlanCard } from './PlanCard'
-import { Building2, User, Lock } from 'lucide-react'
+import { Building2, User, Lock, Globe } from 'lucide-react'
+import { LanguageForm } from './LanguageForm'
 
 function SettingsCard({ title, icon, children }: {
   title: string; icon: React.ReactNode; children: React.ReactNode
@@ -22,6 +23,7 @@ function SettingsCard({ title, icon, children }: {
 
 export default async function AyarlarPage() {
   const t = await getTranslations('settings')
+  const locale = await getLocale()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -60,6 +62,10 @@ export default async function AyarlarPage() {
 
       <SettingsCard title={t('sectionPassword')} icon={<Lock className="w-4 h-4" />}>
         <SifreForm />
+      </SettingsCard>
+
+      <SettingsCard title={t('language.title')} icon={<Globe className="w-4 h-4" />}>
+        <LanguageForm currentLocale={locale} />
       </SettingsCard>
     </div>
   )

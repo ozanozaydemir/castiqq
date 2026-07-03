@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
+import { useTranslations, useLocale } from 'next-intl'
 
 const STORAGE_KEY = 'castflow_cookie_consent'
 
@@ -14,6 +15,8 @@ export function getConsent(): ConsentState {
 
 export function CookieConsent({ onConsent }: { onConsent: (v: ConsentState) => void }) {
   const [visible, setVisible] = useState(false)
+  const t = useTranslations('cookie')
+  const locale = useLocale()
 
   useEffect(() => {
     const saved = getConsent()
@@ -32,17 +35,16 @@ export function CookieConsent({ onConsent }: { onConsent: (v: ConsentState) => v
   return (
     <div
       role="dialog"
-      aria-label="Çerez tercihleri"
+      aria-label={t('ariaLabel')}
       className="fixed bottom-4 left-4 right-4 z-50 max-w-lg mx-auto bg-white border border-gray-200 rounded-xl shadow-xl p-4"
     >
       <div className="flex items-start gap-3">
         <div className="flex-1">
-          <p className="text-sm font-semibold text-gray-900 mb-1">Çerez ve Analitik Tercihleri</p>
+          <p className="text-sm font-semibold text-gray-900 mb-1">{t('title')}</p>
           <p className="text-xs text-gray-500 leading-relaxed">
-            Deneyimini iyileştirmek için anonim kullanım verileri topluyoruz. Hiçbir kişisel veri
-            üçüncü taraflarla paylaşılmaz.{' '}
-            <a href="/gizlilik" className="text-indigo-600 hover:underline">
-              Gizlilik Politikası
+            {t('description')}{' '}
+            <a href={locale === 'en' ? '/en/gizlilik' : '/gizlilik'} className="text-indigo-600 hover:underline">
+              {t('privacyLink')}
             </a>
           </p>
         </div>
@@ -55,13 +57,13 @@ export function CookieConsent({ onConsent }: { onConsent: (v: ConsentState) => v
           onClick={() => handle('accepted')}
           className="flex-1 text-xs font-semibold py-2 px-3 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
         >
-          Kabul Et
+          {t('accept')}
         </button>
         <button
           onClick={() => handle('declined')}
           className="flex-1 text-xs font-semibold py-2 px-3 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
         >
-          Reddet
+          {t('decline')}
         </button>
       </div>
     </div>

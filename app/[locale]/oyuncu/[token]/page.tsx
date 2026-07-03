@@ -1,4 +1,4 @@
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, getLocale } from 'next-intl/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { notFound } from 'next/navigation'
 import { UploadSection } from './UploadSection'
@@ -7,6 +7,7 @@ import { Film, User, Calendar, FileText } from 'lucide-react'
 export default async function OyuncuTokenPage({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params
   const t = await getTranslations('upload')
+  const locale = await getLocale()
   const admin = createAdminClient()
 
   const { data: audition } = await admin
@@ -28,11 +29,13 @@ export default async function OyuncuTokenPage({ params }: { params: Promise<{ to
   const project = role?.projects as any
   const existingVideos = (audition.audition_videos as { id: string; uploaded_at: string; duration_seconds: number | null }[] | null) ?? []
   const ageLabel = role?.age_min && role?.age_max
-    ? `${role.age_min}–${role.age_max} yaş`
-    : role?.age_min ? `${role.age_min}+` : null
+    ? t('age', { min: role.age_min, max: role.age_max })
+    : role?.age_min ? t('ageMin', { min: role.age_min }) : null
 
   const GENDER_LABELS: Record<string, string> = {
-    erkek: 'Erkek', kadin: 'Kadın', diger: 'Diğer',
+    erkek: t('genderLabels.erkek'),
+    kadin: t('genderLabels.kadin'),
+    diger: t('genderLabels.diger'),
   }
 
   return (
@@ -58,7 +61,7 @@ export default async function OyuncuTokenPage({ params }: { params: Promise<{ to
           {project?.deadline && (
             <span className="flex items-center gap-1.5">
               <Film className="w-4 h-4 text-gray-300" />
-              {t('deadline', { date: new Date(project.deadline).toLocaleDateString('tr-TR') })}
+              {t('deadline', { date: new Date(project.deadline).toLocaleDateString(locale === 'tr' ? 'tr-TR' : 'en-US') })}
             </span>
           )}
         </div>
@@ -102,7 +105,7 @@ export default async function OyuncuTokenPage({ params }: { params: Promise<{ to
         <span className="font-semibold text-gray-600">Gizlilik Bildirimi: </span>
         Yüklediğiniz videolar yalnızca casting değerlendirmesi amacıyla kullanılır ve üçüncü taraflarla paylaşılmaz.
         Değerlendirme süreci tamamlandıktan sonra verileriniz silinir.{' '}
-        <a href="/gizlilik" className="text-indigo-500 hover:underline">
+        <a href={locale === 'en' ? '/en/gizlilik' : '/gizlilik'} className="text-indigo-500 hover:underline">
           Gizlilik Politikası
         </a>
       </div>

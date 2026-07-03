@@ -6,22 +6,24 @@ const FROM = 'CastFlow <noreply@castiqq.app>'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castiqq.app'
 
 // ── Hoş Geldin ──────────────────────────────────────────────────────
-export async function sendWelcomeEmail(to: string, name: string) {
+export async function sendWelcomeEmail(to: string, name: string, locale: 'tr' | 'en' = 'tr') {
   return resend.emails.send({
     from: FROM,
     to,
-    subject: 'CastFlow\'a hoş geldiniz 🎬',
-    html: welcomeHtml(name, SITE_URL),
+    subject: locale === 'en' ? `Welcome to CastFlow 🎬` : `CastFlow'a hoş geldiniz 🎬`,
+    html: locale === 'en' ? welcomeHtmlEN(name, SITE_URL) : welcomeHtml(name, SITE_URL),
   })
 }
 
 // ── Ekip Daveti ─────────────────────────────────────────────────────
-export async function sendTeamInviteEmail(to: string, orgName: string, inviteUrl: string) {
+export async function sendTeamInviteEmail(to: string, orgName: string, inviteUrl: string, locale: 'tr' | 'en' = 'tr') {
   return resend.emails.send({
     from: FROM,
     to,
-    subject: `${orgName} sizi CastFlow'a davet etti`,
-    html: teamInviteHtml(orgName, inviteUrl, SITE_URL),
+    subject: locale === 'en'
+      ? `${orgName} invited you to CastFlow`
+      : `${orgName} sizi CastFlow'a davet etti`,
+    html: locale === 'en' ? teamInviteHtmlEN(orgName, inviteUrl, SITE_URL) : teamInviteHtml(orgName, inviteUrl, SITE_URL),
   })
 }
 
@@ -32,12 +34,17 @@ export async function sendAuditionInviteEmail(
   roleName: string,
   projectTitle: string,
   uploadUrl: string,
+  locale: 'tr' | 'en' = 'tr',
 ) {
   return resend.emails.send({
     from: FROM,
     to,
-    subject: `"${roleName}" rolü için video yükleme daveti`,
-    html: auditionInviteHtml(talentName, roleName, projectTitle, uploadUrl, SITE_URL),
+    subject: locale === 'en'
+      ? `Video upload invitation for the "${roleName}" role`
+      : `"${roleName}" rolü için video yükleme daveti`,
+    html: locale === 'en'
+      ? auditionInviteHtmlEN(talentName, roleName, projectTitle, uploadUrl)
+      : auditionInviteHtml(talentName, roleName, projectTitle, uploadUrl, SITE_URL),
   })
 }
 
@@ -121,6 +128,55 @@ function auditionInviteHtml(
     <p class="p" style="margin-top:20px;font-size:13px;color:#888">
       Maksimum 3 video yükleyebilirsiniz. Videolar yalnızca casting ekibi tarafından izlenir.<br><br>
       Sorunuz varsa bu emaili yanıtlayabilirsiniz.
+    </p>
+  `)
+}
+
+// ── EN HTML Template'leri ────────────────────────────────────────────
+
+function welcomeHtmlEN(name: string, siteUrl: string) {
+  return baseHtml(`
+    <p class="h1">Welcome, ${name}! 👋</p>
+    <p class="p">Your CastFlow account is ready. Create your first project and streamline your casting process.</p>
+    <p class="p">
+      ✅ Project and role management<br>
+      ✅ Talent database<br>
+      ✅ Video review and rating<br>
+      ✅ WhatsApp integration
+    </p>
+    <a class="btn" href="${siteUrl}/en/dashboard">Go to Dashboard →</a>
+    <p class="p" style="margin-top:24px;font-size:13px;color:#888">
+      Questions? Email us at <a href="mailto:support@castiqq.app">support@castiqq.app</a>
+    </p>
+  `)
+}
+
+function teamInviteHtmlEN(orgName: string, inviteUrl: string, siteUrl: string) {
+  return baseHtml(`
+    <p class="h1">${orgName} invited you</p>
+    <p class="p"><strong>${orgName}</strong> has invited you to join CastFlow and collaborate on casting projects.</p>
+    <a class="btn" href="${inviteUrl}">Accept Invitation →</a>
+    <p class="p" style="margin-top:20px;font-size:13px;color:#888">
+      This invitation expires in 7 days. You will need to set a password to create your account.<br><br>
+      If you did not request this invitation, you can safely ignore this email.
+    </p>
+  `)
+}
+
+function auditionInviteHtmlEN(
+  talentName: string,
+  roleName: string,
+  projectTitle: string,
+  uploadUrl: string,
+) {
+  return baseHtml(`
+    <p class="h1">Hello, ${talentName}!</p>
+    <p class="p">We'd like to consider you for the <strong>"${roleName}"</strong> role in <strong>${projectTitle}</strong>.</p>
+    <p class="p">Click the link below to upload your audition video:</p>
+    <a class="btn" href="${uploadUrl}">Upload Video →</a>
+    <p class="p" style="margin-top:20px;font-size:13px;color:#888">
+      You can upload up to 3 videos. They will only be viewed by the casting team.<br><br>
+      If you have any questions, reply to this email.
     </p>
   `)
 }

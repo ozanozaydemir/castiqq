@@ -1,6 +1,7 @@
 'use client'
 
 import { CreditCard, ExternalLink, Zap } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { PLAN_LIMITS, getProductIdForPlan, type Plan } from '@/lib/plan'
 
 interface Props {
@@ -11,18 +12,19 @@ interface Props {
   orgId: string
 }
 
-const UPGRADE_PLANS: { plan: 'pro' | 'agency'; label: string; price: string; desc: string }[] = [
-  { plan: 'pro',    label: 'Pro',   price: '$39/ay', desc: '200 GB · 3 kullanıcı' },
-  { plan: 'agency', label: 'Ajans', price: '$99/ay', desc: '1 TB · Sınırsız kullanıcı' },
-]
-
 export function PlanCard({ plan, status, endsAt, hasPortal, orgId }: Props) {
+  const t = useTranslations('settings.plan')
   const info = PLAN_LIMITS[plan as Plan] ?? PLAN_LIMITS.starter
   const isCancelled = status === 'cancelled'
 
+  const UPGRADE_PLANS = [
+    { plan: 'pro' as const,    label: 'Pro',          price: `$39${t('perMonth')}`, desc: `200 GB · 3 ${t('users')}` },
+    { plan: 'agency' as const, label: t('agency'),    price: `$99${t('perMonth')}`, desc: `1 TB · ${t('unlimited')} ${t('users')}` },
+  ]
+
   function goToCheckout(targetPlan: 'pro' | 'agency') {
     const productId = getProductIdForPlan(targetPlan)
-    if (!productId) return alert('Ürün ID yapılandırılmamış.')
+    if (!productId) return alert(t('productIdMissing'))
     window.location.href = `/api/checkout?products=${productId}&customerExternalId=${orgId}`
   }
 
@@ -30,7 +32,7 @@ export function PlanCard({ plan, status, endsAt, hasPortal, orgId }: Props) {
     <div className="sb-card p-6">
       <div className="flex items-center gap-2 mb-5">
         <span className="text-gray-400"><CreditCard className="w-4 h-4" /></span>
-        <h2 className="text-sm font-semibold text-gray-900">Plan & Abonelik</h2>
+        <h2 className="text-sm font-semibold text-gray-900">{t('title')}</h2>
       </div>
 
       {/* Mevcut plan */}
@@ -41,11 +43,11 @@ export function PlanCard({ plan, status, endsAt, hasPortal, orgId }: Props) {
             {info.label}
           </span>
           <p className="text-xs text-gray-500 mt-1">
-            {info.storageGB} GB depolama · {info.maxUsers === Infinity ? 'Sınırsız' : info.maxUsers} kullanıcı
+            {info.storageGB} {t('storage')} · {info.maxUsers === Infinity ? t('unlimited') : info.maxUsers} {t('users')}
           </p>
           {isCancelled && endsAt && (
             <p className="text-xs text-amber-600 mt-1">
-              İptal edildi — {new Date(endsAt).toLocaleDateString('tr-TR')} tarihine kadar aktif.
+              {t('cancelledUntil', { date: new Date(endsAt).toLocaleDateString() })}
             </p>
           )}
         </div>
@@ -54,7 +56,7 @@ export function PlanCard({ plan, status, endsAt, hasPortal, orgId }: Props) {
             href="/api/portal"
             className="flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-800 font-medium"
           >
-            Aboneliği Yönet <ExternalLink className="w-3 h-3" />
+            {t('manageSubscription')} <ExternalLink className="w-3 h-3" />
           </a>
         )}
       </div>
@@ -62,7 +64,7 @@ export function PlanCard({ plan, status, endsAt, hasPortal, orgId }: Props) {
       {/* Yükselt — sadece starter veya cancelled durumunda göster */}
       {(plan === 'starter' || isCancelled) && (
         <div className="border-t border-gray-100 pt-4">
-          <p className="text-xs text-gray-500 mb-3">Planını yükselt:</p>
+          <p className="text-xs text-gray-500 mb-3">{t('upgradeTo')}</p>
           <div className="grid grid-cols-2 gap-3">
             {UPGRADE_PLANS.map(({ plan: p, label, price, desc }) => (
               <button

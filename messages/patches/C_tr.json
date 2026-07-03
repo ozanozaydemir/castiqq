@@ -1,0 +1,20 @@
+{
+  "settings": {
+    "plan": {
+      "title": "Plan & Abonelik",
+      "storage": "GB depolama",
+      "unlimited": "Sınırsız",
+      "users": "kullanıcı",
+      "agency": "Ajans",
+      "cancelledUntil": "İptal edildi — {date} tarihine kadar aktif.",
+      "manageSubscription": "Aboneliği Yönet",
+      "upgradeTo": "Planını yükselt:",
+      "perMonth": "/ay",
+      "productIdMissing": "Ürün ID yapılandırılmamış."
+    },
+    "language": {
+      "title": "Dil",
+      "description": "Uygulama dili tercihinizi seçin."
+    }
+  }
+}

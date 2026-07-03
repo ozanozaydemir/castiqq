@@ -1,0 +1,20 @@
+{
+  "settings": {
+    "plan": {
+      "title": "Plan & Subscription",
+      "storage": "GB storage",
+      "unlimited": "Unlimited",
+      "users": "users",
+      "agency": "Agency",
+      "cancelledUntil": "Cancelled — active until {date}.",
+      "manageSubscription": "Manage Subscription",
+      "upgradeTo": "Upgrade your plan:",
+      "perMonth": "/mo",
+      "productIdMissing": "Product ID not configured."
+    },
+    "language": {
+      "title": "Language",
+      "description": "Choose your preferred application language."
+    }
+  }
+}

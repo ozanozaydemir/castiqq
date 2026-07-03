@@ -2,6 +2,7 @@
 
 import { Link, usePathname } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import {
   LayoutDashboard, Film, Users, UserSearch, Settings, LogOut, Clapperboard, BookMarked,
 } from 'lucide-react'
@@ -62,8 +63,11 @@ export function AppSidebar({ orgName = 'CastFlow', isOpen = false, onClose }: Ap
         })}
       </nav>
 
-      {/* Logout */}
-      <div className="px-3 py-4 border-t border-gray-200">
+      {/* Bottom */}
+      <div className="px-3 py-4 border-t border-gray-200 space-y-1">
+        <div className="flex justify-center py-1">
+          <LanguageSwitcher />
+        </div>
         <form action={logout}>
           <button
             type="submit"
