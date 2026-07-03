@@ -1,0 +1,23 @@
+{
+  "applyForm": {
+    "title": "Rol Başvurusu",
+    "role": "Rol",
+    "project": "Proje",
+    "name": "Ad Soyad",
+    "namePlaceholder": "Adınız ve soyadınız",
+    "email": "E-posta (isteğe bağlı)",
+    "phone": "Telefon (isteğe bağlı)",
+    "submit": "Başvur",
+    "submitting": "Gönderiliyor...",
+    "success": "Başvurunuz alındı!",
+    "successDesc": "Video yüklemek için aşağıdaki butona tıklayabilirsiniz.",
+    "uploadVideo": "Video Yükle",
+    "closed": "Bu rol için başvuru kapalı.",
+    "notFound": "Başvuru bulunamadı.",
+    "gdprNote": "Bilgileriniz yalnızca bu başvuru için kullanılacaktır.",
+    "privacyPolicy": "Gizlilik Politikası"
+  },
+  "roles": {
+    "publicLink": "Herkese Açık Başvuru"
+  }
+}

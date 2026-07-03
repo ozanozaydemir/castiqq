@@ -487,7 +487,8 @@
     "sortZa": "Z → A",
     "filterClear": "Clear",
     "searchPlaceholder": "Search roles or projects…",
-    "totalCount": "{count} roles"
+    "totalCount": "{count} roles",
+    "publicLink": "Public Application"
   },
   "auditions": {
     "status": {
@@ -592,7 +593,13 @@
     "manualNamePlaceholder": "e.g. Jane Smith",
     "manualPhone": "Phone (WhatsApp)",
     "manualEmail": "Email",
-    "inviteCreate": "Create Invite"
+    "inviteCreate": "Create Invite",
+    "compareTitle": "Candidate Comparison",
+    "compareButton": "Compare",
+    "compareHint": "Select up to 4 candidates",
+    "noVideo": "No video",
+    "deleteVideo": "Delete Video",
+    "deleteVideoConfirm": "Are you sure you want to delete this video? This action cannot be undone."
   },
   "talent": {
     "title": "Talent",
@@ -773,7 +780,11 @@
     "removeConfirm": "{name} will be removed from this list. Are you sure?",
     "removeFromList": "Remove from list",
     "newListPlaceholder": "New list name…",
-    "addedToList": "Added to {name}"
+    "addedToList": "Added to {name}",
+    "shareTitle": "Share List",
+    "shareDesc": "Anyone with this link can view this list.",
+    "copyLink": "Copy Link",
+    "copied": "Copied!"
   },
   "settings": {
     "title": "Settings",
@@ -882,5 +893,35 @@
     "privacyLink": "Privacy Policy",
     "accept": "Accept",
     "decline": "Decline"
+  },
+  "applyForm": {
+    "title": "Role Application",
+    "role": "Role",
+    "project": "Project",
+    "name": "Full Name",
+    "namePlaceholder": "Your full name",
+    "email": "Email (optional)",
+    "phone": "Phone (optional)",
+    "submit": "Apply",
+    "submitting": "Submitting...",
+    "success": "Application received!",
+    "successDesc": "Click the button below to upload your video.",
+    "uploadVideo": "Upload Video",
+    "closed": "Applications for this role are closed.",
+    "notFound": "Application not found.",
+    "gdprNote": "Your information will only be used for this application.",
+    "privacyPolicy": "Privacy Policy"
+  },
+  "onboarding": {
+    "title": "Getting Started",
+    "subtitle": "Complete these steps to start using the platform.",
+    "step1": "Create your first project",
+    "step2": "Add talent",
+    "step3": "Send an audition invite",
+    "step1Desc": "Open a project to start the casting process.",
+    "step2Desc": "Build your talent database.",
+    "step3Desc": "Send a video upload link to a talent.",
+    "dismiss": "Dismiss Guide",
+    "allDone": "Great! You've completed all the setup steps."
   }
 }

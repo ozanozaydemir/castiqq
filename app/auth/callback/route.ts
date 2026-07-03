@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { NextRequest, NextResponse } from 'next/server'
+import { sendWelcomeEmail } from '@/lib/resend'
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
@@ -24,6 +25,16 @@ export async function GET(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.redirect(`${origin}/giris`)
+
+  // Yeni kullanıcıya hoş geldin emaili gönder (kayıt sonrası 10 dk içinde doğrulandıysa)
+  if (user.email && user.created_at) {
+    const msSinceCreation = Date.now() - new Date(user.created_at).getTime()
+    if (msSinceCreation < 10 * 60 * 1000) {
+      const name = (user.user_metadata?.full_name as string | undefined) ?? user.email
+      sendWelcomeEmail(user.email, name, locale as 'tr' | 'en')
+        .catch(err => console.error('Welcome email error:', err.message))
+    }
+  }
 
   // Davetli kullanıcı: organization_id metadata'da varsa profili oluştur
   const meta = user.user_metadata ?? {}

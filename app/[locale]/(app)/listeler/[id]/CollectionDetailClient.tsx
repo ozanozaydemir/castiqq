@@ -1,9 +1,9 @@
 'use client'
 
-import { useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { removeFromCollection } from '@/app/actions/collections'
 import { useRouter, Link } from '@/i18n/navigation'
-import { UserMinus, MapPin, Phone, Mail } from 'lucide-react'
+import { UserMinus, MapPin, Phone, Mail, Share2, Copy, Check } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
 type Member = {
@@ -23,6 +23,7 @@ type Member = {
 interface Props {
   collectionId: string
   members: Member[]
+  shareToken: string
 }
 
 const AVAIL_DOTS: Record<string, string> = {
@@ -76,28 +77,60 @@ function MemberRow({ member, collectionId }: { member: Member; collectionId: str
   )
 }
 
-export function CollectionDetailClient({ collectionId, members }: Props) {
+export function CollectionDetailClient({ collectionId, members, shareToken }: Props) {
   const tc = useTranslations('collections')
+  const [copied, setCopied] = useState(false)
+
+  const shareUrl = typeof window !== 'undefined'
+    ? `${window.location.origin}/paylasim/${shareToken}`
+    : `/paylasim/${shareToken}`
+
+  const shareSection = (
+    <div className="mb-6 p-4 bg-indigo-50 rounded-xl border border-indigo-100 flex items-center gap-3">
+      <Share2 className="w-4 h-4 text-indigo-500 flex-shrink-0" />
+      <div className="flex-1 min-w-0">
+        <p className="text-xs font-semibold text-indigo-700 mb-1">{tc('shareTitle')}</p>
+        <p className="text-xs text-indigo-500 truncate">{shareUrl}</p>
+      </div>
+      <button
+        onClick={() => {
+          navigator.clipboard.writeText(shareUrl)
+          setCopied(true)
+          setTimeout(() => setCopied(false), 2000)
+        }}
+        className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors"
+      >
+        {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+        {copied ? tc('copied') : tc('copyLink')}
+      </button>
+    </div>
+  )
 
   if (members.length === 0) {
     return (
-      <div className="sb-card p-10 text-center text-gray-300">
-        <p className="text-sm">{tc('noTalentInList')}</p>
-        <p className="text-xs mt-1">{tc('noTalentInListHint')}</p>
-      </div>
+      <>
+        {shareSection}
+        <div className="sb-card p-10 text-center text-gray-300">
+          <p className="text-sm">{tc('noTalentInList')}</p>
+          <p className="text-xs mt-1">{tc('noTalentInListHint')}</p>
+        </div>
+      </>
     )
   }
 
   return (
-    <div className="sb-card overflow-hidden">
-      <div className="px-5 py-4 border-b border-gray-100">
-        <p className="text-sm font-semibold text-gray-800">{tc('talentCount', { count: members.length })}</p>
+    <>
+      {shareSection}
+      <div className="sb-card overflow-hidden">
+        <div className="px-5 py-4 border-b border-gray-100">
+          <p className="text-sm font-semibold text-gray-800">{tc('talentCount', { count: members.length })}</p>
+        </div>
+        <div className="px-5">
+          {members.map(m => (
+            <MemberRow key={m.talent_id} member={m} collectionId={collectionId} />
+          ))}
+        </div>
       </div>
-      <div className="px-5">
-        {members.map(m => (
-          <MemberRow key={m.talent_id} member={m} collectionId={collectionId} />
-        ))}
-      </div>
-    </div>
+    </>
   )
 }

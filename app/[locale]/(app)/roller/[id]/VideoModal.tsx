@@ -8,7 +8,7 @@ import {
   Star, RotateCcw,
 } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
-import { updateAuditionStatus, updateAuditionNotes, updateAuditionRating } from '@/app/actions/auditions'
+import { updateAuditionStatus, updateAuditionNotes, updateAuditionRating, deleteVideo } from '@/app/actions/auditions'
 import { addAuditionTag, removeAuditionTag } from '@/app/actions/audition-tags'
 import { addVideoNote, deleteVideoNote } from '@/app/actions/video-notes'
 import { useRouter } from '@/i18n/navigation'
@@ -550,6 +550,8 @@ export function VideoModal({ auditions, startIndex, roleId, siteUrl, onClose }: 
   const [vidIdx, setVidIdx] = useState(0)
   const [copied, setCopied] = useState(false)
   const videoRef            = useRef<HTMLVideoElement>(null)
+  const router              = useRouter()
+  const [, startDelete]     = useTransition()
 
   const audition  = auditions[idx]
   const video     = audition.audition_videos[vidIdx] ?? audition.audition_videos[0]
@@ -629,6 +631,22 @@ export function VideoModal({ auditions, startIndex, roleId, siteUrl, onClose }: 
           </div>
 
           <div className="flex items-center gap-2 flex-shrink-0">
+            {video && (
+              <button
+                onClick={() => {
+                  if (!confirm(t('deleteVideoConfirm'))) return
+                  const id = video.id
+                  startDelete(async () => {
+                    await deleteVideo(id, roleId)
+                    router.refresh()
+                  })
+                }}
+                className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors"
+                title={t('deleteVideo')}
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            )}
             {auditions.length > 1 && (
               <div className="flex items-center gap-1">
                 <button onClick={() => go(-1)}

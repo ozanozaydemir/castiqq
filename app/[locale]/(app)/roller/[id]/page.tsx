@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { RolAuditions } from './RolAuditions'
 import { RolStatusSelect } from './RolStatusSelect'
+import { CopyPublicLinkButton } from './CopyPublicLinkButton'
 import { Link } from '@/i18n/navigation'
 import { ArrowLeft, User, Calendar, Users } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
@@ -107,6 +108,17 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
           )}
         </div>
         <h1 className="text-2xl font-bold text-gray-900">{role.name}</h1>
+
+        {/* Public apply link */}
+        {role.public_token && (
+          <div className="mt-3 flex items-center gap-2 flex-wrap">
+            <span className="text-xs text-gray-400">{tr('publicLink')}:</span>
+            <code className="text-xs bg-gray-100 px-2 py-0.5 rounded text-gray-600 max-w-[280px] truncate">
+              {`${siteUrl}/basvur/${role.public_token}`}
+            </code>
+            <CopyPublicLinkButton url={`${siteUrl}/basvur/${role.public_token}`} />
+          </div>
+        )}
 
         <div className="flex flex-wrap gap-4 mt-4 text-sm text-gray-500">
           {role.gender && (

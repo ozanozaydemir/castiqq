@@ -180,3 +180,50 @@ function auditionInviteHtmlEN(
     </p>
   `)
 }
+
+// ── Video Yükleme Bildirimi (direktöre) ─────────────────────────────
+export async function sendVideoNotificationEmail(
+  to: string,
+  talentName: string,
+  roleName: string,
+  projectTitle: string,
+  dashboardUrl: string,
+  locale: 'tr' | 'en' = 'tr',
+) {
+  return resend.emails.send({
+    from: FROM,
+    to,
+    subject: locale === 'en'
+      ? `New video from ${talentName} for "${roleName}"`
+      : `"${roleName}" için ${talentName} adlı oyuncudan yeni video`,
+    html: locale === 'en'
+      ? videoNotifHtmlEN(talentName, roleName, projectTitle, dashboardUrl)
+      : videoNotifHtml(talentName, roleName, projectTitle, dashboardUrl),
+  })
+}
+
+function videoNotifHtml(
+  talentName: string,
+  roleName: string,
+  projectTitle: string,
+  dashboardUrl: string,
+) {
+  return baseHtml(`
+    <p class="h1">Yeni video yüklendi 🎬</p>
+    <p class="p"><strong>${talentName}</strong> adlı oyuncu <strong>"${roleName}"</strong> rolü için (<strong>${projectTitle}</strong>) yeni bir video yükledi.</p>
+    <a class="btn" href="${dashboardUrl}">Videoyu İzle →</a>
+  `)
+}
+
+function videoNotifHtmlEN(
+  talentName: string,
+  roleName: string,
+  projectTitle: string,
+  dashboardUrl: string,
+) {
+  return baseHtml(`
+    <p class="h1">New video uploaded 🎬</p>
+    <p class="p"><strong>${talentName}</strong> uploaded a new audition video for the <strong>"${roleName}"</strong> role in <strong>${projectTitle}</strong>.</p>
+    <a class="btn" href="${dashboardUrl}">Watch Video →</a>
+  `)
+}

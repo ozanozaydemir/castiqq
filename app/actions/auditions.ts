@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { requireOrg } from '@/lib/require-org'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export type ActionState = { error?: string; success?: boolean; token?: string } | null
 
@@ -176,4 +177,34 @@ export async function requestAudition(
 
   revalidatePath(`/roller/${roleId}`)
   return { success: true, token: data.token }
+}
+
+export async function deleteVideo(videoId: string, roleId: string): Promise<ActionState> {
+  const { supabase, orgId } = await requireOrg()
+
+  const { data: video } = await supabase
+    .from('audition_videos')
+    .select('storage_path, file_size_bytes')
+    .eq('id', videoId)
+    .eq('organization_id', orgId)
+    .single()
+
+  if (!video) return { error: 'Video bulunamadı.' }
+
+  const { deleteFromR2 } = await import('@/lib/r2')
+  await deleteFromR2(video.storage_path).catch(err =>
+    console.error('R2 delete error:', err.message)
+  )
+
+  const { error } = await supabase.from('audition_videos').delete().eq('id', videoId)
+  if (error) return { error: error.message }
+
+  if (video.file_size_bytes) {
+    const admin = createAdminClient()
+    admin.rpc('increment_storage', { org_id: orgId, bytes: -video.file_size_bytes })
+      .then(({ error: rpcErr }) => { if (rpcErr) console.error('Storage decrement error:', rpcErr.message) })
+  }
+
+  revalidatePath(`/roller/${roleId}`)
+  return { success: true }
 }

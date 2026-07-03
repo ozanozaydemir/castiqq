@@ -1,4 +1,4 @@
-import { S3Client } from '@aws-sdk/client-s3'
+import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3'
 
 export const r2 = new S3Client({
   region: 'auto',
@@ -11,3 +11,7 @@ export const r2 = new S3Client({
 
 export const R2_BUCKET = process.env.CLOUDFLARE_R2_BUCKET_NAME!
 export const R2_PUBLIC_URL = process.env.NEXT_PUBLIC_R2_PUBLIC_URL!
+
+export async function deleteFromR2(storagePath: string): Promise<void> {
+  await r2.send(new DeleteObjectCommand({ Bucket: R2_BUCKET, Key: storagePath }))
+}

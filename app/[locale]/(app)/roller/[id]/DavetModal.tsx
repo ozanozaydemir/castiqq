@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { X, Search, UserPlus, MessageCircle, Copy, Check, Loader2 } from 'lucide-react'
 import { createAudition } from '@/app/actions/auditions'
+import { sendAuditionEmailAction } from '@/app/actions/email'
 import { useTranslations } from 'next-intl'
 
 type Talent = { id: string; full_name: string; phone: string | null; email: string | null }
@@ -58,7 +59,14 @@ export function DavetModal({ roleId, roleName, talents, siteUrl, onClose }: Dave
     startTransition(async () => {
       const result = await createAudition(roleId, talentId, talentName, talentEmail, ph)
       if (result?.error) { setError(result.error); return }
-      if (result?.token) setToken(result.token)
+      if (result?.token) {
+        setToken(result.token)
+        if (talentEmail) {
+          const uploadUrl = `${siteUrl}/oyuncu/${result.token}`
+          sendAuditionEmailAction(talentEmail, talentName, roleName, '', uploadUrl)
+            .catch(err => console.error('Audition email error:', err))
+        }
+      }
     })
   }
 

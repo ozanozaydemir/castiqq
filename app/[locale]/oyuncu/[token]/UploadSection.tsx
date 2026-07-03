@@ -89,7 +89,7 @@ export function UploadSection({ token, initialVideos }: Props) {
     const urlRes = await fetch('/api/upload-url', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token, fileName: file.name, fileType: file.type }),
+      body: JSON.stringify({ token, fileName: file.name, fileType: file.type, fileSize: file.size }),
     })
 
     if (!urlRes.ok) {

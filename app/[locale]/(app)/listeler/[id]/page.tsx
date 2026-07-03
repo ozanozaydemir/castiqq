@@ -17,7 +17,7 @@ export default async function CollectionDetailPage({
 
   const { data: collection } = await supabase
     .from('collections')
-    .select('id, name, description')
+    .select('id, name, description, share_token')
     .eq('id', id)
     .single()
 
@@ -37,6 +37,9 @@ export default async function CollectionDetailPage({
   }
   const members = (rawItems ?? []) as ItemRow[]
 
+  type CollectionRow = { id: string; name: string; description: string | null; share_token: string }
+  const col = collection as CollectionRow
+
   return (
     <div>
       <div className="flex items-center px-6 pt-6 pb-0">
@@ -44,9 +47,9 @@ export default async function CollectionDetailPage({
           <ArrowLeft className="w-3.5 h-3.5" /> {tc('backToLists')}
         </Link>
       </div>
-      <PageHeader title={collection.name} description={collection.description ?? tc('pageDesc')} />
+      <PageHeader title={col.name} description={col.description ?? tc('pageDesc')} />
       <div className="px-6 pb-8">
-        <CollectionDetailClient collectionId={id} members={members} />
+        <CollectionDetailClient collectionId={id} members={members} shareToken={col.share_token} />
       </div>
     </div>
   )

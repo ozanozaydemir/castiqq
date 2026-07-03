@@ -6,6 +6,7 @@ import { format } from 'date-fns'
 import { tr, enUS } from 'date-fns/locale'
 import { getTranslations, getLocale } from 'next-intl/server'
 import { PLAN_LIMITS, type Plan } from '@/lib/plan'
+import { OnboardingCard } from './OnboardingCard'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -71,6 +72,10 @@ export default async function DashboardPage() {
 
   const deadlines = upcomingDeadlines ?? []
 
+  const hasProjects = (projectCount ?? 0) > 0
+  const hasTalent = (talentCount ?? 0) > 0
+  const hasAuditions = ((auditionCount ?? 0) + (candidateCount ?? 0)) > 0
+
   return (
     <div>
       <PageHeader
@@ -79,6 +84,12 @@ export default async function DashboardPage() {
       />
 
       <div className="p-6 space-y-6">
+        <OnboardingCard
+          hasProjects={hasProjects}
+          hasTalent={hasTalent}
+          hasAuditions={hasAuditions}
+        />
+
         {/* Deadline uyarısı */}
         {deadlines.length > 0 && (
           <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 flex items-start gap-3">

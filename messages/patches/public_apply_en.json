@@ -1,0 +1,23 @@
+{
+  "applyForm": {
+    "title": "Role Application",
+    "role": "Role",
+    "project": "Project",
+    "name": "Full Name",
+    "namePlaceholder": "Your full name",
+    "email": "Email (optional)",
+    "phone": "Phone (optional)",
+    "submit": "Apply",
+    "submitting": "Submitting...",
+    "success": "Application received!",
+    "successDesc": "Click the button below to upload your video.",
+    "uploadVideo": "Upload Video",
+    "closed": "Applications for this role are closed.",
+    "notFound": "Application not found.",
+    "gdprNote": "Your information will only be used for this application.",
+    "privacyPolicy": "Privacy Policy"
+  },
+  "roles": {
+    "publicLink": "Public Application"
+  }
+}

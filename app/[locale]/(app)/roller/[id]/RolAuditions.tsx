@@ -18,10 +18,11 @@ import {
 import { useRouter } from '@/i18n/navigation'
 import {
   UserPlus, Copy, Check, MessageCircle, ChevronDown,
-  Trash2, Users, GripVertical, ArrowUpDown, Video, X, Loader2, Play, MessageSquare, Star,
+  Trash2, Users, GripVertical, ArrowUpDown, Video, X, Loader2, Play, MessageSquare, Star, BarChart2,
 } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import { VideoModal, type VideoAudition, type TagEntry } from './VideoModal'
+import { KarsilastirModal } from './KarsilastirModal'
 import { useTranslations } from 'next-intl'
 
 // ── Types ────────────────────────────────────────────────────────
@@ -244,11 +245,13 @@ function AuditionIsteModal({ state, roleId, siteUrl, onClose }: {
 
 // ── Sortable row ─────────────────────────────────────────────────
 
-function SortableRow({ audition, roleId, siteUrl, isDragMode, onDelete, onRequestAudition, onWatch }: {
+function SortableRow({ audition, roleId, siteUrl, isDragMode, isSelected, onToggleSelect, onDelete, onRequestAudition, onWatch }: {
   audition: Audition
   roleId: string
   siteUrl: string
   isDragMode: boolean
+  isSelected: boolean
+  onToggleSelect: (id: string) => void
   onDelete: (id: string) => void
   onRequestAudition: (a: Audition) => void
   onWatch: (a: Audition) => void
@@ -278,16 +281,25 @@ function SortableRow({ audition, roleId, siteUrl, isDragMode, onDelete, onReques
   return (
     <tr ref={setNodeRef} style={style}>
       <td className="w-8 px-2">
-        {isDragMode && (
-          <button
-            {...attributes}
-            {...listeners}
-            className="cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500 touch-none"
-            tabIndex={-1}
-          >
-            <GripVertical className="w-4 h-4" />
-          </button>
-        )}
+        <div className="flex items-center gap-1.5">
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={() => onToggleSelect(audition.id)}
+            onClick={e => e.stopPropagation()}
+            className="w-3.5 h-3.5 rounded border-gray-300 text-indigo-600 cursor-pointer flex-shrink-0"
+          />
+          {isDragMode && (
+            <button
+              {...attributes}
+              {...listeners}
+              className="cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500 touch-none"
+              tabIndex={-1}
+            >
+              <GripVertical className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </td>
 
       <td className="font-medium text-gray-900">
@@ -413,6 +425,17 @@ export function RolAuditions({ roleId, roleName, auditions: initial, talents, si
   const [items, setItems] = useState<Audition[]>(
     [...initial].sort((a, b) => a.sort_order - b.sort_order)
   )
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [compareOpen, setCompareOpen] = useState(false)
+
+  function toggleSelect(id: string) {
+    setSelectedIds(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else if (next.size < 4) next.add(id)
+      return next
+    })
+  }
 
   useEffect(() => {
     setItems([...initial].sort((a, b) => a.sort_order - b.sort_order))
@@ -504,6 +527,16 @@ export function RolAuditions({ roleId, roleName, auditions: initial, talents, si
             </select>
           </div>
 
+          {selectedIds.size >= 2 && (
+            <button
+              onClick={() => setCompareOpen(true)}
+              className="sb-btn-secondary text-sm flex items-center gap-1.5"
+            >
+              <BarChart2 className="w-4 h-4" />
+              {t('compareButton')} ({selectedIds.size})
+            </button>
+          )}
+
           <button onClick={() => setShowAdayModal(true)} className="sb-btn-primary text-xs">
             <UserPlus className="w-3.5 h-3.5" />
             {t('addCandidate')}
@@ -542,6 +575,8 @@ export function RolAuditions({ roleId, roleName, auditions: initial, talents, si
                       roleId={roleId}
                       siteUrl={siteUrl}
                       isDragMode={isDragMode}
+                      isSelected={selectedIds.has(a.id)}
+                      onToggleSelect={toggleSelect}
                       onDelete={id => setItems(prev => prev.filter(i => i.id !== id))}
                       onRequestAudition={a => {
                         const liveTalent = a.talent ? talents.find(tl => tl.id === a.talent!.id) : null
@@ -598,6 +633,21 @@ export function RolAuditions({ roleId, roleName, auditions: initial, talents, si
           roleId={roleId}
           siteUrl={siteUrl}
           onClose={() => setVideoState(null)}
+        />
+      )}
+
+      {compareOpen && (
+        <KarsilastirModal
+          auditions={items.filter(a => selectedIds.has(a.id)).map(a => ({
+            id: a.id,
+            talent_name: a.talent_name,
+            talent: a.talent,
+            rating: a.rating,
+            notes: a.notes,
+            status: a.status,
+            audition_videos: a.audition_videos,
+          }))}
+          onClose={() => setCompareOpen(false)}
         />
       )}
     </div>

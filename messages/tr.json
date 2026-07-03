@@ -487,7 +487,8 @@
     "sortZa": "Z → A",
     "filterClear": "Temizle",
     "searchPlaceholder": "Rol veya proje ara…",
-    "totalCount": "{count} rol"
+    "totalCount": "{count} rol",
+    "publicLink": "Herkese Açık Başvuru"
   },
   "auditions": {
     "status": {
@@ -592,7 +593,13 @@
     "manualNamePlaceholder": "ör. Ayşe Yılmaz",
     "manualPhone": "Telefon (WhatsApp)",
     "manualEmail": "E-posta",
-    "inviteCreate": "Davet Oluştur"
+    "inviteCreate": "Davet Oluştur",
+    "compareTitle": "Aday Karşılaştırma",
+    "compareButton": "Karşılaştır",
+    "compareHint": "En fazla 4 aday seçebilirsiniz",
+    "noVideo": "Video yok",
+    "deleteVideo": "Videoyu Sil",
+    "deleteVideoConfirm": "Bu videoyu silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
   },
   "talent": {
     "title": "Oyuncular",
@@ -773,7 +780,11 @@
     "removeConfirm": "{name} bu listeden çıkarılacak. Emin misiniz?",
     "removeFromList": "Listeden çıkar",
     "newListPlaceholder": "Yeni liste adı…",
-    "addedToList": "{name}'e eklendi"
+    "addedToList": "{name}'e eklendi",
+    "shareTitle": "Listeyi Paylaş",
+    "shareDesc": "Bu link ile listeyi herkesle paylaşabilirsiniz.",
+    "copyLink": "Linki Kopyala",
+    "copied": "Kopyalandı!"
   },
   "settings": {
     "title": "Ayarlar",
@@ -882,5 +893,35 @@
     "privacyLink": "Gizlilik Politikası",
     "accept": "Kabul Et",
     "decline": "Reddet"
+  },
+  "applyForm": {
+    "title": "Rol Başvurusu",
+    "role": "Rol",
+    "project": "Proje",
+    "name": "Ad Soyad",
+    "namePlaceholder": "Adınız ve soyadınız",
+    "email": "E-posta (isteğe bağlı)",
+    "phone": "Telefon (isteğe bağlı)",
+    "submit": "Başvur",
+    "submitting": "Gönderiliyor...",
+    "success": "Başvurunuz alındı!",
+    "successDesc": "Video yüklemek için aşağıdaki butona tıklayabilirsiniz.",
+    "uploadVideo": "Video Yükle",
+    "closed": "Bu rol için başvuru kapalı.",
+    "notFound": "Başvuru bulunamadı.",
+    "gdprNote": "Bilgileriniz yalnızca bu başvuru için kullanılacaktır.",
+    "privacyPolicy": "Gizlilik Politikası"
+  },
+  "onboarding": {
+    "title": "Başlangıç Rehberi",
+    "subtitle": "Platformu kullanmaya başlamak için bu adımları tamamlayın.",
+    "step1": "İlk projenizi oluşturun",
+    "step2": "Oyuncu ekleyin",
+    "step3": "Audition daveti gönderin",
+    "step1Desc": "Casting sürecini başlatmak için bir proje açın.",
+    "step2Desc": "Oyuncu veritabanınızı oluşturun.",
+    "step3Desc": "Bir oyuncuya audition davet linki gönderin.",
+    "dismiss": "Rehberi Kapat",
+    "allDone": "Harika! Tüm başlangıç adımlarını tamamladınız."
   }
 }

@@ -3,9 +3,10 @@ import { PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { r2, R2_BUCKET } from '@/lib/r2'
+import { PLAN_LIMITS, type Plan } from '@/lib/plan'
 
 export async function POST(req: NextRequest) {
-  const { token, fileName, fileType } = await req.json()
+  const { token, fileName, fileType, fileSize } = await req.json()
 
   if (!token || !fileName || !fileType) {
     return NextResponse.json({ error: 'Eksik parametre' }, { status: 400 })
@@ -24,6 +25,25 @@ export async function POST(req: NextRequest) {
 
   if (audition.submitted_at) {
     return NextResponse.json({ error: 'Bu audition zaten tamamlandı' }, { status: 409 })
+  }
+
+  if (fileSize) {
+    const { data: org } = await admin
+      .from('organizations')
+      .select('storage_used_bytes, subscription_plan')
+      .eq('id', audition.organization_id)
+      .single()
+
+    if (org) {
+      const plan = (org.subscription_plan ?? 'starter') as Plan
+      const limitBytes = PLAN_LIMITS[plan].storageGB * 1024 ** 3
+      if ((org.storage_used_bytes ?? 0) + fileSize > limitBytes) {
+        return NextResponse.json(
+          { error: 'Depolama limitiniz dolmuş. Planınızı yükseltmek için ayarlar sayfasını ziyaret edin.' },
+          { status: 403 }
+        )
+      }
+    }
   }
 
   const ext = fileName.split('.').pop()
