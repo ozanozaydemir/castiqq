@@ -1,0 +1,85 @@
+'use server'
+
+import { revalidatePath } from 'next/cache'
+import { requireOrg } from '@/lib/require-org'
+import { createAdminClient } from '@/lib/supabase/admin'
+
+export type ActionState = { error?: string; success?: boolean } | null
+
+export async function inviteTeamMember(_: ActionState, formData: FormData): Promise<ActionState> {
+  const { supabase, orgId, userId } = await requireOrg()
+
+  // Sadece admin davet edebilir
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', userId)
+    .single()
+  if (profile?.role !== 'admin') return { error: 'Sadece yöneticiler üye davet edebilir.' }
+
+  const email = (formData.get('email') as string)?.trim().toLowerCase()
+  const role  = (formData.get('role') as string) || 'member'
+  if (!email) return { error: 'E-posta adresi zorunludur.' }
+
+  const adminClient = createAdminClient()
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+
+  const { error } = await adminClient.auth.admin.inviteUserByEmail(email, {
+    data: { organization_id: orgId, role },
+    redirectTo: `${siteUrl}/auth/callback?next=/dashboard`,
+  })
+
+  if (error) {
+    if (error.message.includes('already been invited') || error.message.includes('already registered')) {
+      return { error: 'Bu e-posta adresi zaten sistemde kayıtlı veya davet gönderilmiş.' }
+    }
+    return { error: error.message }
+  }
+
+  revalidatePath('/ayarlar/ekip')
+  return { success: true }
+}
+
+export async function updateMemberRole(memberId: string, role: string): Promise<ActionState> {
+  const { supabase, orgId, userId } = await requireOrg()
+
+  const { data: myProfile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', userId)
+    .single()
+  if (myProfile?.role !== 'admin') return { error: 'Sadece yöneticiler rol değiştirebilir.' }
+  if (memberId === userId) return { error: 'Kendi rolünüzü değiştiremezsiniz.' }
+
+  const { error } = await supabase
+    .from('profiles')
+    .update({ role })
+    .eq('id', memberId)
+    .eq('organization_id', orgId)
+
+  if (error) return { error: error.message }
+  revalidatePath('/ayarlar/ekip')
+  return { success: true }
+}
+
+export async function removeMember(memberId: string): Promise<ActionState> {
+  const { supabase, orgId, userId } = await requireOrg()
+
+  const { data: myProfile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', userId)
+    .single()
+  if (myProfile?.role !== 'admin') return { error: 'Sadece yöneticiler üye çıkarabilir.' }
+  if (memberId === userId) return { error: 'Kendinizi çıkaramazsınız.' }
+
+  const { error } = await supabase
+    .from('profiles')
+    .delete()
+    .eq('id', memberId)
+    .eq('organization_id', orgId)
+
+  if (error) return { error: error.message }
+  revalidatePath('/ayarlar/ekip')
+  return { success: true }
+}
