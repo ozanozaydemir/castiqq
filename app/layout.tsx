@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import { getLocale } from 'next-intl/server'
-import { PostHogProvider } from '@/components/PostHogProvider'
 import './globals.css'
 
 const inter = Inter({
@@ -41,7 +40,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale} className={`h-full ${inter.variable}`}>
       <body className={`h-full antialiased ${inter.className}`}>
-        <PostHogProvider>{children}</PostHogProvider>
+        {children}
       </body>
     </html>
   )
