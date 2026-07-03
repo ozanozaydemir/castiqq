@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import { getMessages } from 'next-intl/server'
 import { routing } from '@/i18n/routing'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castflow.app'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castiqq.app'
 
 interface Props {
   children: React.ReactNode

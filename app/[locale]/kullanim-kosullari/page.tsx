@@ -35,7 +35,7 @@ export default async function KullanimKosullariPage({ params }: Props) {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">1. Taraflar ve Kabul</h2>
             <p className="text-gray-600 leading-relaxed mb-4">
-              Bu Kullanım Koşulları ("Koşullar"), CastFlow ("CastFlow", "biz") ile castflow.app
+              Bu Kullanım Koşulları ("Koşullar"), CastFlow ("CastFlow", "biz") ile castiqq.app
               platformuna erişen veya kullanan bireyler ya da kuruluşlar ("Kullanıcı", "siz")
               arasındaki bağlayıcı sözleşmeyi oluşturur.
             </p>
@@ -55,7 +55,7 @@ export default async function KullanimKosullariPage({ params }: Props) {
             <p className="text-gray-600 leading-relaxed mb-4">
               Hesabınızın güvenliğini sağlamakla yükümlüsünüz. Hesabınızda gerçekleşen tüm
               işlemlerden sizin sorumlu olduğunuzu kabul edersiniz. Yetkisiz erişim şüphesi
-              durumunda derhal <a href="mailto:support@castflow.app" className="text-indigo-600 hover:underline">support@castflow.app</a> adresine bildirmeniz gerekmektedir.
+              durumunda derhal <a href="mailto:support@castiqq.app" className="text-indigo-600 hover:underline">support@castiqq.app</a> adresine bildirmeniz gerekmektedir.
             </p>
           </section>
 
@@ -84,8 +84,8 @@ export default async function KullanimKosullariPage({ params }: Props) {
             <p className="text-gray-600 leading-relaxed mb-4">
               Kısmi dönem ücretleri için para iadesi yapılmamaktadır. Özel durumlar veya teknik
               hatalardan kaynaklanan sorunlar için{' '}
-              <a href="mailto:support@castflow.app" className="text-indigo-600 hover:underline">
-                support@castflow.app
+              <a href="mailto:support@castiqq.app" className="text-indigo-600 hover:underline">
+                support@castiqq.app
               </a>{' '}
               adresiyle iletişime geçebilirsiniz.
             </p>
@@ -197,8 +197,8 @@ export default async function KullanimKosullariPage({ params }: Props) {
             </p>
             <p className="text-gray-600 leading-relaxed mb-4">
               <strong>E-posta:</strong>{' '}
-              <a href="mailto:support@castflow.app" className="text-indigo-600 hover:underline">
-                support@castflow.app
+              <a href="mailto:support@castiqq.app" className="text-indigo-600 hover:underline">
+                support@castiqq.app
               </a>
             </p>
           </section>
@@ -229,7 +229,7 @@ export default async function KullanimKosullariPage({ params }: Props) {
           <p className="text-gray-600 leading-relaxed mb-4">
             These Terms of Service ("Terms") constitute a binding agreement between CastFlow
             ("CastFlow", "we", "us") and any individual or organization ("User", "you") accessing
-            or using the castflow.app platform.
+            or using the castiqq.app platform.
           </p>
           <p className="text-gray-600 leading-relaxed mb-4">
             By registering for or continuing to use the platform, you agree to these Terms. If you
@@ -248,8 +248,8 @@ export default async function KullanimKosullariPage({ params }: Props) {
             You are responsible for maintaining the security of your account. You acknowledge that
             you are responsible for all actions taken under your account. If you suspect
             unauthorized access, you must notify us immediately at{' '}
-            <a href="mailto:support@castflow.app" className="text-indigo-600 hover:underline">
-              support@castflow.app
+            <a href="mailto:support@castiqq.app" className="text-indigo-600 hover:underline">
+              support@castiqq.app
             </a>
             .
           </p>
@@ -280,8 +280,8 @@ export default async function KullanimKosullariPage({ params }: Props) {
           <p className="text-gray-600 leading-relaxed mb-4">
             Refunds are not provided for partial billing periods. For exceptional cases or issues
             caused by technical errors, please contact{' '}
-            <a href="mailto:support@castflow.app" className="text-indigo-600 hover:underline">
-              support@castflow.app
+            <a href="mailto:support@castiqq.app" className="text-indigo-600 hover:underline">
+              support@castiqq.app
             </a>
             .
           </p>
@@ -392,8 +392,8 @@ export default async function KullanimKosullariPage({ params }: Props) {
           </p>
           <p className="text-gray-600 leading-relaxed mb-4">
             <strong>Email:</strong>{' '}
-            <a href="mailto:support@castflow.app" className="text-indigo-600 hover:underline">
-              support@castflow.app
+            <a href="mailto:support@castiqq.app" className="text-indigo-600 hover:underline">
+              support@castiqq.app
             </a>
           </p>
         </section>

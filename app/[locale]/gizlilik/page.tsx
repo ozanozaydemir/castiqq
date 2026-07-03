@@ -35,13 +35,13 @@ export default async function GizlilikPage({ params }: Props) {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">1. Veri Sorumlusu</h2>
             <p className="text-gray-600 leading-relaxed mb-4">
-              Bu gizlilik politikası, CastFlow ("biz", "bizim") tarafından işletilen castflow.app
+              Bu gizlilik politikası, CastFlow ("biz", "bizim") tarafından işletilen castiqq.app
               platformuna ilişkindir. Veri sorumlusu olarak Türkiye'de faaliyet gösteren CastFlow,
               6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) ve Avrupa Birliği Genel Veri
               Koruma Tüzüğü (GDPR) kapsamındaki yükümlülüklerini yerine getirmeyi taahhüt eder.
             </p>
             <p className="text-gray-600 leading-relaxed mb-4">
-              Sorularınız için: <a href="mailto:support@castflow.app" className="text-indigo-600 hover:underline">support@castflow.app</a>
+              Sorularınız için: <a href="mailto:support@castiqq.app" className="text-indigo-600 hover:underline">support@castiqq.app</a>
             </p>
           </section>
 
@@ -155,7 +155,7 @@ export default async function GizlilikPage({ params }: Props) {
               <li>Kanuna aykırı işleme nedeniyle zararınızın giderilmesini talep etme</li>
             </ul>
             <p className="text-gray-600 leading-relaxed mb-4">
-              Bu haklarınızı kullanmak için <a href="mailto:support@castflow.app" className="text-indigo-600 hover:underline">support@castflow.app</a> adresine yazabilirsiniz.
+              Bu haklarınızı kullanmak için <a href="mailto:support@castiqq.app" className="text-indigo-600 hover:underline">support@castiqq.app</a> adresine yazabilirsiniz.
             </p>
           </section>
 
@@ -203,8 +203,8 @@ export default async function GizlilikPage({ params }: Props) {
             </p>
             <p className="text-gray-600 leading-relaxed mb-4">
               <strong>E-posta:</strong>{' '}
-              <a href="mailto:support@castflow.app" className="text-indigo-600 hover:underline">
-                support@castflow.app
+              <a href="mailto:support@castiqq.app" className="text-indigo-600 hover:underline">
+                support@castiqq.app
               </a>
             </p>
           </section>
@@ -233,15 +233,15 @@ export default async function GizlilikPage({ params }: Props) {
         <section>
           <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">1. Data Controller</h2>
           <p className="text-gray-600 leading-relaxed mb-4">
-            This Privacy Policy applies to the castflow.app platform operated by CastFlow ("we",
+            This Privacy Policy applies to the castiqq.app platform operated by CastFlow ("we",
             "our", "us"), a company based in Turkey. As the data controller, CastFlow is committed
             to fulfilling its obligations under the Turkish Personal Data Protection Law No. 6698
             (KVKK) and the European Union General Data Protection Regulation (GDPR).
           </p>
           <p className="text-gray-600 leading-relaxed mb-4">
             For any questions, contact us at:{' '}
-            <a href="mailto:support@castflow.app" className="text-indigo-600 hover:underline">
-              support@castflow.app
+            <a href="mailto:support@castiqq.app" className="text-indigo-600 hover:underline">
+              support@castiqq.app
             </a>
           </p>
         </section>
@@ -357,8 +357,8 @@ export default async function GizlilikPage({ params }: Props) {
           </ul>
           <p className="text-gray-600 leading-relaxed mb-4">
             To exercise these rights, contact us at{' '}
-            <a href="mailto:support@castflow.app" className="text-indigo-600 hover:underline">
-              support@castflow.app
+            <a href="mailto:support@castiqq.app" className="text-indigo-600 hover:underline">
+              support@castiqq.app
             </a>
             .
           </p>
@@ -408,8 +408,8 @@ export default async function GizlilikPage({ params }: Props) {
           </p>
           <p className="text-gray-600 leading-relaxed mb-4">
             <strong>Email:</strong>{' '}
-            <a href="mailto:support@castflow.app" className="text-indigo-600 hover:underline">
-              support@castflow.app
+            <a href="mailto:support@castiqq.app" className="text-indigo-600 hover:underline">
+              support@castiqq.app
             </a>
           </p>
         </section>

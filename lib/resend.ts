@@ -2,8 +2,8 @@ import { Resend } from 'resend'
 
 export const resend = new Resend(process.env.RESEND_API_KEY)
 
-const FROM = 'CastFlow <noreply@castflow.app>'
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castflow.app'
+const FROM = 'CastFlow <noreply@castiqq.app>'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castiqq.app'
 
 // ── Hoş Geldin ──────────────────────────────────────────────────────
 export async function sendWelcomeEmail(to: string, name: string) {
@@ -89,7 +89,7 @@ function welcomeHtml(name: string, siteUrl: string) {
     </p>
     <a class="btn" href="${siteUrl}/dashboard">Dashboard'a Git →</a>
     <p class="p" style="margin-top:24px;font-size:13px;color:#888">
-      Sorunuz varsa <a href="mailto:support@castflow.app">support@castflow.app</a> adresinden bize yazabilirsiniz.
+      Sorunuz varsa <a href="mailto:support@castiqq.app">support@castiqq.app</a> adresinden bize yazabilirsiniz.
     </p>
   `)
 }

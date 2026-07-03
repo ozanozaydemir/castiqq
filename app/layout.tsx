@@ -10,7 +10,7 @@ const inter = Inter({
   variable: '--font-inter',
 })
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castflow.app'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castiqq.app'
 const SITE_NAME = 'CastFlow'
 const DEFAULT_TITLE = 'CastFlow — Casting Yönetim Platformu'
 const DEFAULT_DESCRIPTION =

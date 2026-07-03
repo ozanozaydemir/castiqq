@@ -19,7 +19,7 @@ export default async function HomePage() {
   const t = await getTranslations('landing')
   const ta = await getTranslations('auth')
 
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castflow.app'
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castiqq.app'
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
@@ -275,7 +275,7 @@ export default async function HomePage() {
               <div className="w-3 h-3 rounded-full bg-[#28c840]" />
               <div className="flex-1 mx-4">
                 <div className="bg-white border border-gray-200 rounded-md py-1 px-3 text-[11px] text-gray-400 text-center max-w-64 mx-auto">
-                  castflow.app/roller/kuzey-yildizi
+                  castiqq.app/roller/kuzey-yildizi
                 </div>
               </div>
             </div>

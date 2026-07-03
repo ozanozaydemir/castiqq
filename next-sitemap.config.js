@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://castflow.app',
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://castiqq.app',
   generateRobotsTxt: true,
   robotsTxtOptions: {
     policies: [
@@ -43,7 +43,7 @@ module.exports = {
     '/en/oyuncu/*',
   ],
   alternateRefs: [
-    { href: 'https://castflow.app', hreflang: 'tr' },
-    { href: 'https://castflow.app/en', hreflang: 'en' },
+    { href: 'https://castiqq.app', hreflang: 'tr' },
+    { href: 'https://castiqq.app/en', hreflang: 'en' },
   ],
 }

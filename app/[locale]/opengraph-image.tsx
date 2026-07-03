@@ -90,7 +90,7 @@ export default async function OGImage() {
 
         {/* URL */}
         <div style={{ position: 'absolute', bottom: 40, color: 'rgba(255,255,255,0.3)', fontSize: 18 }}>
-          castflow.app
+          castiqq.app
         </div>
       </div>
     ),
