@@ -10,10 +10,10 @@ export async function middleware(request: NextRequest) {
   const response = handleI18nRouting(request)
 
   // Step 2: Supabase session refresh — piggyback cookies onto the i18n response
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  if (supabaseUrl && supabaseKey) {
+    const supabase = createServerClient(supabaseUrl, supabaseKey, {
       cookies: {
         getAll() {
           return request.cookies.getAll()
@@ -24,10 +24,9 @@ export async function middleware(request: NextRequest) {
           )
         },
       },
-    },
-  )
-
-  await supabase.auth.getUser()
+    })
+    await supabase.auth.getUser()
+  }
 
   return response
 }
