@@ -488,7 +488,11 @@
     "filterClear": "Temizle",
     "searchPlaceholder": "Rol veya proje ara…",
     "totalCount": "{count} rol",
-    "publicLink": "Herkese Açık Başvuru"
+    "publicLink": "Herkese Açık Başvuru",
+    "publicOn": "Başvuru Açık",
+    "publicOff": "Başvuru Kapalı",
+    "copyLink": "Linki Kopyala",
+    "copied": "Kopyalandı"
   },
   "auditions": {
     "status": {

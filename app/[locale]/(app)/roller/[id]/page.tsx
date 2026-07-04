@@ -2,7 +2,8 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { RolAuditions } from './RolAuditions'
 import { RolStatusSelect } from './RolStatusSelect'
-import { CopyPublicLinkButton } from './CopyPublicLinkButton'
+import { RolDuzenleButton } from './RolDuzenleButton'
+import { RolPublicToggle } from './RolPublicToggle'
 import { Link } from '@/i18n/navigation'
 import { ArrowLeft, User, Calendar, Users } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
@@ -99,25 +100,27 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
 
       {/* Header */}
       <div className="px-6 pt-5 pb-6 border-b border-gray-100">
-        <div className="flex items-center gap-2 mb-1">
-          <RolStatusSelect roleId={id} projectId={project?.id ?? null} currentStatus={role.status} />
-          {project && (
-            <Link href={`/projeler/${project.id}`} className="text-xs text-indigo-500 hover:text-indigo-700 font-medium">
-              {project.title}
-            </Link>
-          )}
+        <div className="flex items-start justify-between gap-3 mb-1">
+          <div className="flex items-center gap-2">
+            <RolStatusSelect roleId={id} projectId={project?.id ?? null} currentStatus={role.status} />
+            {project && (
+              <Link href={`/projeler/${project.id}`} className="text-xs text-indigo-500 hover:text-indigo-700 font-medium">
+                {project.title}
+              </Link>
+            )}
+          </div>
+          <RolDuzenleButton role={role as any} />
         </div>
         <h1 className="text-2xl font-bold text-gray-900">{role.name}</h1>
 
-        {/* Public apply link */}
+        {/* Public apply toggle */}
         {role.public_token && (
-          <div className="mt-3 flex items-center gap-2 flex-wrap">
-            <span className="text-xs text-gray-400">{tr('publicLink')}:</span>
-            <code className="text-xs bg-gray-100 px-2 py-0.5 rounded text-gray-600 max-w-[280px] truncate">
-              {`${siteUrl}/basvur/${role.public_token}`}
-            </code>
-            <CopyPublicLinkButton url={`${siteUrl}/basvur/${role.public_token}`} />
-          </div>
+          <RolPublicToggle
+            roleId={id}
+            initialIsPublic={role.is_public ?? false}
+            publicToken={role.public_token}
+            siteUrl={siteUrl}
+          />
         )}
 
         <div className="flex flex-wrap gap-4 mt-4 text-sm text-gray-500">

@@ -488,7 +488,11 @@
     "filterClear": "Clear",
     "searchPlaceholder": "Search roles or projects…",
     "totalCount": "{count} roles",
-    "publicLink": "Public Application"
+    "publicLink": "Public Application",
+    "publicOn": "Applications Open",
+    "publicOff": "Applications Closed",
+    "copyLink": "Copy Link",
+    "copied": "Copied"
   },
   "auditions": {
     "status": {

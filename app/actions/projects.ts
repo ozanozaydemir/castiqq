@@ -116,7 +116,14 @@ export async function updateRol(id: string, _: ActionState, formData: FormData):
 
   if (error) return { error: error.message }
   revalidatePath(`/projeler/${projectId}`)
+  revalidatePath(`/roller/${id}`)
   return { success: true }
+}
+
+export async function toggleRolePublic(roleId: string, isPublic: boolean) {
+  const { supabase } = await requireOrg()
+  await supabase.from('project_roles').update({ is_public: isPublic }).eq('id', roleId)
+  revalidatePath(`/roller/${roleId}`)
 }
 
 export async function updateRolStatus(id: string, projectId: string | null, status: string) {

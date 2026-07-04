@@ -15,7 +15,7 @@ export default async function PublicApplyPage({
   const admin = createAdminClient()
   const { data: role } = await admin
     .from('project_roles')
-    .select('id, title, status, description, age_min, age_max, gender, projects!project_roles_project_id_fkey(title)')
+    .select('id, name, status, is_public, description, age_min, age_max, gender, projects!project_roles_project_id_fkey(title)')
     .eq('public_token', roleToken)
     .single()
 
@@ -25,7 +25,7 @@ export default async function PublicApplyPage({
   const project = (Array.isArray(projectRaw) ? projectRaw[0] : projectRaw) as { title: string } | null
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castiqq.app'
 
-  const isClosed = role.status !== 'open' && role.status !== 'casting'
+  const isClosed = !role.is_public || (role.status !== 'open' && role.status !== 'casting')
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
@@ -38,7 +38,7 @@ export default async function PublicApplyPage({
             </div>
             CastFlow
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">{role.title}</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{role.name}</h1>
           {project && <p className="text-sm text-gray-500">{project.title}</p>}
         </div>
 
@@ -78,7 +78,7 @@ export default async function PublicApplyPage({
         ) : (
           <ApplyForm
             rolePublicToken={roleToken}
-            roleName={role.title}
+            roleName={role.name}
             projectTitle={project?.title ?? ''}
             siteUrl={siteUrl}
             locale={locale}
