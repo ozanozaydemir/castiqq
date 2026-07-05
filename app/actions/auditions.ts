@@ -208,3 +208,16 @@ export async function deleteVideo(videoId: string, roleId: string): Promise<Acti
   revalidatePath(`/roller/${roleId}`)
   return { success: true }
 }
+
+export async function bulkUpdateAuditionStatus(
+  ids: string[],
+  roleId: string,
+  status: string,
+): Promise<ActionState> {
+  if (!ids.length) return { error: 'Hiç aday seçilmedi.' }
+  const { supabase } = await requireOrg()
+  const { error } = await supabase.from('auditions').update({ status }).in('id', ids)
+  if (error) return { error: error.message }
+  revalidatePath(`/roller/${roleId}`)
+  return { success: true }
+}

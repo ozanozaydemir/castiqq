@@ -582,7 +582,7 @@
     "noTalentYet": "No talent in your pool yet.",
     "allAdded": "All talent have already been added as candidates for this role.",
     "noMatch": "No matching talent found.",
-    "selectedCount": "{count} talent selected",
+    "selectedCount": "{count} selected",
     "adding": "Adding…",
     "inviteTitle": "Invite Talent",
     "inviteReady": "Invite Ready!",
@@ -603,7 +603,10 @@
     "compareHint": "Select up to 4 candidates",
     "noVideo": "No video",
     "deleteVideo": "Delete Video",
-    "deleteVideoConfirm": "Are you sure you want to delete this video? This action cannot be undone."
+    "deleteVideoConfirm": "Are you sure you want to delete this video? This action cannot be undone.",
+    "tagFilterClear": "Clear filter",
+    "bulkStatusPlaceholder": "Change status...",
+    "clearSelection": "Clear selection"
   },
   "talent": {
     "title": "Talent",
@@ -788,7 +791,13 @@
     "shareTitle": "Share List",
     "shareDesc": "Anyone with this link can view this list.",
     "copyLink": "Copy Link",
-    "copied": "Copied!"
+    "copied": "Copied!",
+    "editTitle": "Edit",
+    "nameLabel": "List Name",
+    "descriptionLabel": "Description",
+    "nameRequired": "List name is required.",
+    "cancel": "Cancel",
+    "save": "Save"
   },
   "settings": {
     "title": "Settings",
@@ -815,7 +824,12 @@
       "self": "You",
       "remove": "Remove from team",
       "removeConfirm": "Are you sure you want to remove {name} from the team?",
-      "empty": "No team members yet"
+      "empty": "No team members yet",
+      "pendingInvites": "Pending Invites",
+      "pendingInviteCount": "{count} pending invite",
+      "pendingInviteHint": "Invitation not yet accepted",
+      "cancelInvite": "Cancel invite",
+      "cancelInviteConfirm": "Cancel the invitation sent to {email}?"
     },
     "tabGeneral": "General",
     "tabTeam": "Team",

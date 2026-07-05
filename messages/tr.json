@@ -582,7 +582,7 @@
     "noTalentYet": "Oyuncu havuzunuzda henüz kimse yok.",
     "allAdded": "Tüm oyuncular zaten bu role aday olarak eklendi.",
     "noMatch": "Eşleşen oyuncu bulunamadı.",
-    "selectedCount": "{count} oyuncu seçildi",
+    "selectedCount": "{count} seçili",
     "adding": "Ekleniyor…",
     "inviteTitle": "Oyuncu Davet Et",
     "inviteReady": "Davet Hazır!",
@@ -603,7 +603,10 @@
     "compareHint": "En fazla 4 aday seçebilirsiniz",
     "noVideo": "Video yok",
     "deleteVideo": "Videoyu Sil",
-    "deleteVideoConfirm": "Bu videoyu silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
+    "deleteVideoConfirm": "Bu videoyu silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "tagFilterClear": "Filtreyi kaldır",
+    "bulkStatusPlaceholder": "Statü değiştir...",
+    "clearSelection": "Seçimi iptal et"
   },
   "talent": {
     "title": "Oyuncular",
@@ -788,7 +791,13 @@
     "shareTitle": "Listeyi Paylaş",
     "shareDesc": "Bu link ile listeyi herkesle paylaşabilirsiniz.",
     "copyLink": "Linki Kopyala",
-    "copied": "Kopyalandı!"
+    "copied": "Kopyalandı!",
+    "editTitle": "Düzenle",
+    "nameLabel": "Liste Adı",
+    "descriptionLabel": "Açıklama",
+    "nameRequired": "Liste adı zorunludur.",
+    "cancel": "İptal",
+    "save": "Kaydet"
   },
   "settings": {
     "title": "Ayarlar",
@@ -815,7 +824,12 @@
       "self": "Sen",
       "remove": "Ekipten çıkar",
       "removeConfirm": "{name} adlı üyeyi ekipten çıkarmak istiyor musunuz?",
-      "empty": "Henüz ekip üyesi yok"
+      "empty": "Henüz ekip üyesi yok",
+      "pendingInvites": "Bekleyen Davetler",
+      "pendingInviteCount": "{count} bekleyen davet",
+      "pendingInviteHint": "Daveti henüz kabul etmedi",
+      "cancelInvite": "Daveti iptal et",
+      "cancelInviteConfirm": "{email} adresine gönderilen daveti iptal etmek istiyor musunuz?"
     },
     "tabGeneral": "Genel",
     "tabTeam": "Ekip",

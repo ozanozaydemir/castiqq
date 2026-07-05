@@ -26,10 +26,12 @@ export default async function EkipPage() {
   // Auth'dan e-posta adreslerini çek
   const adminClient = createAdminClient()
   const emailMap: Record<string, string> = {}
+  const confirmedMap: Record<string, boolean> = {}
   await Promise.all(
     members.map(async (p: { id: string; full_name: string; role: string }) => {
       const { data } = await adminClient.auth.admin.getUserById(p.id)
       emailMap[p.id] = data.user?.email ?? ''
+      confirmedMap[p.id] = !!data.user?.email_confirmed_at
     })
   )
 
@@ -38,12 +40,17 @@ export default async function EkipPage() {
     full_name: p.full_name,
     role: p.role,
     email: emailMap[p.id] ?? '',
+    confirmed: confirmedMap[p.id] ?? true,
   }))
+
+  const confirmedMembers = enriched.filter((m: { confirmed: boolean }) => m.confirmed)
+  const pendingInvites   = enriched.filter((m: { confirmed: boolean }) => !m.confirmed)
 
   return (
     <div className="max-w-2xl pb-8">
       <EkipClient
-        members={enriched}
+        members={confirmedMembers}
+        pendingInvites={pendingInvites}
         currentUserId={user!.id}
         isAdmin={isAdmin}
       />

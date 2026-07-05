@@ -47,9 +47,14 @@ export default async function CollectionDetailPage({
           <ArrowLeft className="w-3.5 h-3.5" /> {tc('backToLists')}
         </Link>
       </div>
-      <PageHeader title={col.name} description={col.description ?? tc('pageDesc')} />
-      <div className="px-6 pb-8">
-        <CollectionDetailClient collectionId={id} members={members} shareToken={col.share_token} />
+      <div className="px-6 pb-8 pt-6">
+        <CollectionDetailClient
+          collectionId={id}
+          collectionName={col.name}
+          collectionDescription={col.description ?? null}
+          members={members}
+          shareToken={col.share_token}
+        />
       </div>
     </div>
   )

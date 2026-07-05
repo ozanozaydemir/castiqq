@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition, useCallback, useEffect } from 'react'
+import { useState, useTransition, useCallback, useEffect, useMemo } from 'react'
 import {
   DndContext, closestCenter, KeyboardSensor, PointerSensor,
   useSensor, useSensors, type DragEndEvent,
@@ -13,12 +13,12 @@ import { CSS } from '@dnd-kit/utilities'
 import { Badge } from '@/components/ui/Badge'
 import { AdayEkleModal } from './AdayEkleModal'
 import {
-  updateAuditionStatus, deleteAudition, reorderAuditions, requestAudition,
+  updateAuditionStatus, deleteAudition, reorderAuditions, requestAudition, bulkUpdateAuditionStatus,
 } from '@/app/actions/auditions'
 import { useRouter } from '@/i18n/navigation'
 import {
   UserPlus, Copy, Check, MessageCircle, ChevronDown,
-  Trash2, Users, GripVertical, ArrowUpDown, Video, X, Loader2, Play, MessageSquare, Star, BarChart2,
+  Trash2, Users, GripVertical, ArrowUpDown, Video, X, Loader2, Play, MessageSquare, Star, BarChart2, Tag,
 } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import { VideoModal, type VideoAudition, type TagEntry } from './VideoModal'
@@ -427,6 +427,22 @@ export function RolAuditions({ roleId, roleName, auditions: initial, talents, si
   )
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [compareOpen, setCompareOpen] = useState(false)
+  const [activeTag, setActiveTag] = useState<string | null>(null)
+
+  // All unique tags across all auditions
+  const allTags = useMemo(() => {
+    const seen = new Set<string>()
+    const tags: { id: string; name: string }[] = []
+    for (const a of items) {
+      for (const at of a.audition_tags ?? []) {
+        if (at.tags && !seen.has(at.tags.id)) {
+          seen.add(at.tags.id)
+          tags.push(at.tags)
+        }
+      }
+    }
+    return tags.sort((a, b) => a.name.localeCompare(b.name, 'tr'))
+  }, [items])
 
   function toggleSelect(id: string) {
     setSelectedIds(prev => {
@@ -476,8 +492,24 @@ export function RolAuditions({ roleId, roleName, auditions: initial, talents, si
     })
   }
 
-  const displayItems = sorted()
+  const displayItems = useMemo(() => {
+    const base = sorted()
+    if (!activeTag) return base
+    return base.filter(a => a.audition_tags?.some(at => at.tags?.id === activeTag))
+  }, [sorted, activeTag])
+
   const isDragMode = sortKey === 'manual'
+
+  function handleBulkStatus(status: string) {
+    const ids = [...selectedIds]
+    // Optimistic update
+    setItems(prev => prev.map(a => ids.includes(a.id) ? { ...a, status } : a))
+    setSelectedIds(new Set())
+    startTransition(async () => {
+      await bulkUpdateAuditionStatus(ids, roleId, status)
+      router.refresh()
+    })
+  }
 
   const candidateCount = items.filter(i => i.status === 'candidate').length
   const auditionCount = items.filter(i => i.status !== 'candidate').length
@@ -543,6 +575,61 @@ export function RolAuditions({ roleId, roleName, auditions: initial, talents, si
           </button>
         </div>
       </div>
+
+      {/* Tag filter */}
+      {allTags.length > 0 && (
+        <div className="px-5 py-2.5 border-b border-gray-100 flex items-center gap-2 flex-wrap">
+          <Tag className="w-3 h-3 text-gray-300 flex-shrink-0" />
+          {allTags.map(tag => (
+            <button
+              key={tag.id}
+              onClick={() => setActiveTag(activeTag === tag.id ? null : tag.id)}
+              className={`text-[11px] font-medium px-2 py-0.5 rounded-full transition-colors ${
+                activeTag === tag.id
+                  ? 'bg-indigo-500 text-white'
+                  : 'bg-gray-100 text-gray-500 hover:bg-indigo-50 hover:text-indigo-600'
+              }`}
+            >
+              {tag.name}
+            </button>
+          ))}
+          {activeTag && (
+            <button
+              onClick={() => setActiveTag(null)}
+              className="text-[11px] text-gray-400 hover:text-gray-600 flex items-center gap-0.5 ml-1"
+            >
+              <X className="w-3 h-3" /> {t('tagFilterClear')}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Bulk action bar */}
+      {selectedIds.size > 0 && (
+        <div className="px-5 py-2.5 bg-indigo-50 border-b border-indigo-100 flex items-center gap-3 flex-wrap">
+          <span className="text-xs font-medium text-indigo-700">
+            {t('selectedCount', { count: selectedIds.size })}
+          </span>
+          <select
+            className="text-xs border border-indigo-200 rounded-lg px-2 py-1 bg-white text-gray-600 focus:outline-none focus:border-indigo-400"
+            value=""
+            onChange={e => { if (e.target.value) handleBulkStatus(e.target.value) }}
+          >
+            <option value="">{t('bulkStatusPlaceholder')}</option>
+            <option value="reviewing">{t('status.reviewing')}</option>
+            <option value="shortlisted">{t('status.shortlisted')}</option>
+            <option value="selected">{t('status.selected')}</option>
+            <option value="rejected">{t('status.rejected')}</option>
+            <option value="pending">{t('status.pending')}</option>
+          </select>
+          <button
+            onClick={() => setSelectedIds(new Set())}
+            className="text-xs text-gray-400 hover:text-gray-600 ml-auto flex items-center gap-1"
+          >
+            <X className="w-3 h-3" /> {t('clearSelection')}
+          </button>
+        </div>
+      )}
 
       {/* Table */}
       {items.length === 0 ? (

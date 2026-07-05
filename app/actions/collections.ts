@@ -47,6 +47,24 @@ export async function addToCollection(
   return {}
 }
 
+export async function updateCollection(
+  id: string,
+  name: string,
+  description: string | null,
+): Promise<CollectionActionState> {
+  const { supabase } = await requireOrg()
+  const trimmed = name.trim()
+  if (!trimmed) return { error: 'Liste adı zorunludur.' }
+  const { error } = await supabase
+    .from('collections')
+    .update({ name: trimmed, description: description?.trim() || null })
+    .eq('id', id)
+  if (error) return { error: error.message }
+  revalidatePath(`/listeler/${id}`)
+  revalidatePath('/listeler')
+  return {}
+}
+
 export async function removeFromCollection(
   collectionId: string,
   talentId: string,

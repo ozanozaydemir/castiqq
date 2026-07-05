@@ -4,9 +4,9 @@ import { useState, useActionState, useTransition } from 'react'
 import { useFormStatus } from 'react-dom'
 import { useRouter } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
-import { inviteTeamMember, updateMemberRole, removeMember } from '@/app/actions/team'
+import { inviteTeamMember, updateMemberRole, removeMember, cancelInvite } from '@/app/actions/team'
 import {
-  UserPlus, Trash2, ChevronDown, X, Loader2, CheckCircle2, Mail,
+  UserPlus, Trash2, ChevronDown, X, Loader2, CheckCircle2, Mail, Clock,
 } from 'lucide-react'
 
 // ── Types ─────────────────────────────────────────────────────────
@@ -16,6 +16,7 @@ type Member = {
   full_name: string
   role: string
   email: string
+  confirmed?: boolean
 }
 
 const ROLE_COLORS: Record<string, string> = {
@@ -166,8 +167,44 @@ function MemberRow({ member, currentUserId, isAdmin }: {
 
 // ── Main export ───────────────────────────────────────────────────
 
-export function EkipClient({ members, currentUserId, isAdmin }: {
+function PendingInviteRow({ member, isAdmin }: { member: Member; isAdmin: boolean }) {
+  const t = useTranslations('settings')
+  const router = useRouter()
+  const [, startTransition] = useTransition()
+
+  function handleCancel() {
+    if (!confirm(t('team.cancelInviteConfirm', { email: member.email }))) return
+    startTransition(async () => {
+      await cancelInvite(member.id)
+      router.refresh()
+    })
+  }
+
+  return (
+    <div className="flex items-center gap-3 py-3 px-5 border-b border-gray-50 last:border-0">
+      <div className="w-8 h-8 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center flex-shrink-0">
+        <Clock className="w-3.5 h-3.5 text-amber-500" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm text-gray-500 truncate">{member.email}</p>
+        <p className="text-xs text-amber-500">{t('team.pendingInviteHint')}</p>
+      </div>
+      {isAdmin && (
+        <button
+          onClick={handleCancel}
+          className="flex-shrink-0 text-xs text-gray-400 hover:text-red-500 transition-colors px-2 py-1 rounded-lg hover:bg-red-50"
+          title={t('team.cancelInvite')}
+        >
+          {t('team.cancelInvite')}
+        </button>
+      )}
+    </div>
+  )
+}
+
+export function EkipClient({ members, pendingInvites, currentUserId, isAdmin }: {
   members: Member[]
+  pendingInvites: Member[]
   currentUserId: string
   isAdmin: boolean
 }) {
@@ -211,6 +248,20 @@ export function EkipClient({ members, currentUserId, isAdmin }: {
           </div>
         )}
       </div>
+
+      {pendingInvites.length > 0 && (
+        <div className="sb-card overflow-hidden mt-4">
+          <div className="px-5 py-4 border-b border-gray-100">
+            <h3 className="text-sm font-semibold text-gray-900">{t('team.pendingInvites')}</h3>
+            <p className="text-xs text-gray-400 mt-0.5">{t('team.pendingInviteCount', { count: pendingInvites.length })}</p>
+          </div>
+          <div>
+            {pendingInvites.map(m => (
+              <PendingInviteRow key={m.id} member={m} isAdmin={isAdmin} />
+            ))}
+          </div>
+        </div>
+      )}
 
       {showInvite && <InviteForm onClose={() => setShowInvite(false)} />}
     </>

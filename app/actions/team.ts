@@ -83,3 +83,20 @@ export async function removeMember(memberId: string): Promise<ActionState> {
   revalidatePath('/ayarlar/ekip')
   return { success: true }
 }
+
+export async function cancelInvite(memberId: string): Promise<ActionState> {
+  const { supabase, orgId, userId } = await requireOrg()
+
+  const { data: myProfile } = await supabase
+    .from('profiles').select('role').eq('id', userId).single()
+  if (myProfile?.role !== 'admin') return { error: 'Sadece yöneticiler davet iptal edebilir.' }
+
+  // Profili sil (auth user'ı da silebiliriz, ama mevcut hesapları etkilemez)
+  await supabase.from('profiles').delete().eq('id', memberId).eq('organization_id', orgId)
+
+  const adminClient = createAdminClient()
+  await adminClient.auth.admin.deleteUser(memberId)
+
+  revalidatePath('/ayarlar/ekip')
+  return { success: true }
+}
