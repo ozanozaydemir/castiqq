@@ -45,7 +45,7 @@ export default async function PublicCollectionPage({
         {/* Header */}
         <div className="text-center space-y-1">
           <div className="inline-flex items-center gap-2 text-indigo-600 font-bold text-lg mb-4">
-            🎬 CastFlow
+            🎬 Castiqq
           </div>
           <h1 className="text-2xl font-bold text-gray-900">{collection.name}</h1>
           {collection.description && (
@@ -88,7 +88,7 @@ export default async function PublicCollectionPage({
 
         <p className="text-center text-xs text-gray-400">
           {locale === 'en' ? 'Powered by' : 'Teknoloji:'}{' '}
-          <a href="https://castiqq.app" className="text-indigo-500 hover:underline">CastFlow</a>
+          <a href="https://castiqq.app" className="text-indigo-500 hover:underline">Castiqq</a>
         </p>
       </div>
     </div>

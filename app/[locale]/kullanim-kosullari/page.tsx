@@ -10,10 +10,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const isTr = locale !== 'en'
 
   return {
-    title: isTr ? 'Kullanım Koşulları — CastFlow' : 'Terms of Service — CastFlow',
+    title: isTr ? 'Kullanım Koşulları — Castiqq' : 'Terms of Service — Castiqq',
     description: isTr
-      ? 'CastFlow kullanım koşulları ve hizmet sözleşmesi.'
-      : 'CastFlow terms of service and service agreement.',
+      ? 'Castiqq kullanım koşulları ve hizmet sözleşmesi.'
+      : 'Castiqq terms of service and service agreement.',
   }
 }
 
@@ -35,7 +35,7 @@ export default async function KullanimKosullariPage({ params }: Props) {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">1. Taraflar ve Kabul</h2>
             <p className="text-gray-600 leading-relaxed mb-4">
-              Bu Kullanım Koşulları ("Koşullar"), CastFlow ("CastFlow", "biz") ile castiqq.app
+              Bu Kullanım Koşulları ("Koşullar"), Castiqq ("Castiqq", "biz") ile castiqq.app
               platformuna erişen veya kullanan bireyler ya da kuruluşlar ("Kullanıcı", "siz")
               arasındaki bağlayıcı sözleşmeyi oluşturur.
             </p>
@@ -48,7 +48,7 @@ export default async function KullanimKosullariPage({ params }: Props) {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">2. Hesap Oluşturma</h2>
             <p className="text-gray-600 leading-relaxed mb-4">
-              CastFlow'u kullanabilmek için geçerli bir e-posta adresiyle hesap oluşturmanız
+              Castiqq'u kullanabilmek için geçerli bir e-posta adresiyle hesap oluşturmanız
               gerekmektedir. Hesap oluşturma sırasında sağladığınız bilgilerin doğru ve güncel
               olmasından siz sorumlusunuz.
             </p>
@@ -62,7 +62,7 @@ export default async function KullanimKosullariPage({ params }: Props) {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">3. Ödeme ve Abonelik</h2>
             <p className="text-gray-600 leading-relaxed mb-4">
-              CastFlow'un ücretli planları, Merchant of Record olarak görev yapan{' '}
+              Castiqq'un ücretli planları, Merchant of Record olarak görev yapan{' '}
               <strong>Polar.sh</strong> aracılığıyla sunulmaktadır. Tüm ödeme işlemleri, vergi
               hesaplamaları ve faturalandırma Polar.sh tarafından yönetilmektedir.
             </p>
@@ -131,13 +131,13 @@ export default async function KullanimKosullariPage({ params }: Props) {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">6. Fikri Mülkiyet</h2>
             <p className="text-gray-600 leading-relaxed mb-4">
-              CastFlow platformunun yazılımı, tasarımı, logosu ve markası CastFlow'a aittir.
+              Castiqq platformunun yazılımı, tasarımı, logosu ve markası Castiqq'a aittir.
               Platform üzerinde size tanınan lisans; kişisel, devredilemez, münhasır olmayan ve
               sınırlı bir kullanım hakkından ibarettir.
             </p>
             <p className="text-gray-600 leading-relaxed mb-4">
               Platforma yüklediğiniz içerikler (videolar, fotoğraflar, notlar vb.) size veya
-              içeriği oluşturan oyuncuya aittir. CastFlow, bu içerikleri yalnızca hizmeti sunmak
+              içeriği oluşturan oyuncuya aittir. Castiqq, bu içerikleri yalnızca hizmeti sunmak
               amacıyla depolar ve işler; başka herhangi bir amaçla kullanmaz.
             </p>
           </section>
@@ -145,7 +145,7 @@ export default async function KullanimKosullariPage({ params }: Props) {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">7. Hizmetin Kullanılabilirliği</h2>
             <p className="text-gray-600 leading-relaxed mb-4">
-              CastFlow, platformu makul düzeyde kesintisiz ve hatasız sunmaya çalışır; ancak
+              Castiqq, platformu makul düzeyde kesintisiz ve hatasız sunmaya çalışır; ancak
               %100 kesintisizlik garantisi vermez. Bakım, güncelleme veya teknik sorunlar
               nedeniyle geçici kesintiler yaşanabilir.
             </p>
@@ -159,12 +159,12 @@ export default async function KullanimKosullariPage({ params }: Props) {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">8. Sorumluluk Sınırlaması</h2>
             <p className="text-gray-600 leading-relaxed mb-4">
-              Yürürlükteki yasaların izin verdiği azami ölçüde, CastFlow; hizmet kesintileri,
+              Yürürlükteki yasaların izin verdiği azami ölçüde, Castiqq; hizmet kesintileri,
               veri kaybı, kar kaybı veya dolaylı zararlar dahil olmak üzere dolaylı, arızi
               veya sonuç olarak ortaya çıkan zararlardan sorumlu tutulamaz.
             </p>
             <p className="text-gray-600 leading-relaxed mb-4">
-              CastFlow'un herhangi bir olay nedeniyle toplam sorumluluğu, zararın meydana geldiği
+              Castiqq'un herhangi bir olay nedeniyle toplam sorumluluğu, zararın meydana geldiği
               tarihten önceki son 3 (üç) ay içinde ödediğiniz abonelik ücretini aşamaz.
             </p>
           </section>
@@ -172,7 +172,7 @@ export default async function KullanimKosullariPage({ params }: Props) {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">9. Koşullardaki Değişiklikler</h2>
             <p className="text-gray-600 leading-relaxed mb-4">
-              CastFlow, bu Kullanım Koşullarını önceden bildirmek kaydıyla değiştirme hakkını
+              Castiqq, bu Kullanım Koşullarını önceden bildirmek kaydıyla değiştirme hakkını
               saklı tutar. Önemli değişiklikler, yürürlüğe girmeden en az 30 gün önce kayıtlı
               e-posta adresinize bildirilir.
             </p>
@@ -227,8 +227,8 @@ export default async function KullanimKosullariPage({ params }: Props) {
         <section>
           <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">1. Parties and Acceptance</h2>
           <p className="text-gray-600 leading-relaxed mb-4">
-            These Terms of Service ("Terms") constitute a binding agreement between CastFlow
-            ("CastFlow", "we", "us") and any individual or organization ("User", "you") accessing
+            These Terms of Service ("Terms") constitute a binding agreement between Castiqq
+            ("Castiqq", "we", "us") and any individual or organization ("User", "you") accessing
             or using the castiqq.app platform.
           </p>
           <p className="text-gray-600 leading-relaxed mb-4">
@@ -240,7 +240,7 @@ export default async function KullanimKosullariPage({ params }: Props) {
         <section>
           <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">2. Account Creation</h2>
           <p className="text-gray-600 leading-relaxed mb-4">
-            To use CastFlow, you must create an account with a valid email address. You are
+            To use Castiqq, you must create an account with a valid email address. You are
             responsible for ensuring that the information you provide during registration is
             accurate and up to date.
           </p>
@@ -258,7 +258,7 @@ export default async function KullanimKosullariPage({ params }: Props) {
         <section>
           <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">3. Payment and Subscriptions</h2>
           <p className="text-gray-600 leading-relaxed mb-4">
-            CastFlow's paid plans are provided through <strong>Polar.sh</strong>, which acts as the
+            Castiqq's paid plans are provided through <strong>Polar.sh</strong>, which acts as the
             Merchant of Record. All payment processing, tax calculations, and invoicing are managed
             by Polar.sh.
           </p>
@@ -327,13 +327,13 @@ export default async function KullanimKosullariPage({ params }: Props) {
         <section>
           <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">6. Intellectual Property</h2>
           <p className="text-gray-600 leading-relaxed mb-4">
-            The CastFlow platform's software, design, logo, and brand belong to CastFlow. The
+            The Castiqq platform's software, design, logo, and brand belong to Castiqq. The
             license granted to you on the platform constitutes a personal, non-transferable,
             non-exclusive, and limited right of use.
           </p>
           <p className="text-gray-600 leading-relaxed mb-4">
             Content you upload to the platform (videos, photos, notes, etc.) belongs to you or to
-            the talent who created it. CastFlow stores and processes such content solely for the
+            the talent who created it. Castiqq stores and processes such content solely for the
             purpose of providing the service and does not use it for any other purpose.
           </p>
         </section>
@@ -341,7 +341,7 @@ export default async function KullanimKosullariPage({ params }: Props) {
         <section>
           <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">7. Service Availability</h2>
           <p className="text-gray-600 leading-relaxed mb-4">
-            CastFlow endeavors to provide the platform with reasonable continuity and without
+            Castiqq endeavors to provide the platform with reasonable continuity and without
             errors, but does not guarantee 100% uptime. Temporary interruptions may occur due to
             maintenance, updates, or technical issues.
           </p>
@@ -354,12 +354,12 @@ export default async function KullanimKosullariPage({ params }: Props) {
         <section>
           <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">8. Limitation of Liability</h2>
           <p className="text-gray-600 leading-relaxed mb-4">
-            To the maximum extent permitted by applicable law, CastFlow shall not be liable for
+            To the maximum extent permitted by applicable law, Castiqq shall not be liable for
             indirect, incidental, or consequential damages, including but not limited to service
             interruptions, data loss, loss of profits, or indirect damages.
           </p>
           <p className="text-gray-600 leading-relaxed mb-4">
-            CastFlow's total liability for any event shall not exceed the subscription fees you
+            Castiqq's total liability for any event shall not exceed the subscription fees you
             paid in the 3 (three) months immediately preceding the date the damage occurred.
           </p>
         </section>
@@ -367,7 +367,7 @@ export default async function KullanimKosullariPage({ params }: Props) {
         <section>
           <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">9. Changes to Terms</h2>
           <p className="text-gray-600 leading-relaxed mb-4">
-            CastFlow reserves the right to modify these Terms of Service with prior notice.
+            Castiqq reserves the right to modify these Terms of Service with prior notice.
             Material changes will be notified to your registered email address at least 30 days
             before they take effect.
           </p>

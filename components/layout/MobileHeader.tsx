@@ -8,7 +8,7 @@ interface MobileHeaderProps {
   onMenuOpen: () => void
 }
 
-export function MobileHeader({ orgName = 'CastFlow', onMenuOpen }: MobileHeaderProps) {
+export function MobileHeader({ orgName = 'Castiqq', onMenuOpen }: MobileHeaderProps) {
   const t = useTranslations('nav')
   return (
     <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200">

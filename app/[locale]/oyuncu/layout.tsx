@@ -6,7 +6,7 @@ export default function OyuncuLayout({ children }: { children: React.ReactNode }
           <div className="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center">
             <span className="text-white text-xs font-bold">C</span>
           </div>
-          <span className="font-semibold text-gray-800">CastFlow</span>
+          <span className="font-semibold text-gray-800">Castiqq</span>
         </div>
         {children}
       </div>

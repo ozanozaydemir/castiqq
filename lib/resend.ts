@@ -8,7 +8,7 @@ function getResend(): Resend {
 }
 export const resend = { emails: { send: (...args: Parameters<Resend['emails']['send']>) => getResend().emails.send(...args) } }
 
-const FROM = 'CastFlow <noreply@castiqq.app>'
+const FROM = 'Castiqq <noreply@castiqq.app>'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castiqq.app'
 
 // ── Hoş Geldin ──────────────────────────────────────────────────────
@@ -16,7 +16,7 @@ export async function sendWelcomeEmail(to: string, name: string, locale: 'tr' | 
   return resend.emails.send({
     from: FROM,
     to,
-    subject: locale === 'en' ? `Welcome to CastFlow 🎬` : `CastFlow'a hoş geldiniz 🎬`,
+    subject: locale === 'en' ? `Welcome to Castiqq 🎬` : `Castiqq'a hoş geldiniz 🎬`,
     html: locale === 'en' ? welcomeHtmlEN(name, SITE_URL) : welcomeHtml(name, SITE_URL),
   })
 }
@@ -27,8 +27,8 @@ export async function sendTeamInviteEmail(to: string, orgName: string, inviteUrl
     from: FROM,
     to,
     subject: locale === 'en'
-      ? `${orgName} invited you to CastFlow`
-      : `${orgName} sizi CastFlow'a davet etti`,
+      ? `${orgName} invited you to Castiqq`
+      : `${orgName} sizi Castiqq'a davet etti`,
     html: locale === 'en' ? teamInviteHtmlEN(orgName, inviteUrl, SITE_URL) : teamInviteHtml(orgName, inviteUrl, SITE_URL),
   })
 }
@@ -79,10 +79,10 @@ function baseHtml(content: string) {
 <body>
 <div class="wrap">
   <div class="card">
-    <div class="header"><a class="logo" href="${SITE_URL}">🎬 CastFlow</a></div>
+    <div class="header"><a class="logo" href="${SITE_URL}">🎬 Castiqq</a></div>
     <div class="body">${content}</div>
     <div class="footer">
-      CastFlow · <a href="${SITE_URL}/gizlilik">Gizlilik Politikası</a> · <a href="${SITE_URL}/kullanim-kosullari">Kullanım Koşulları</a><br>
+      Castiqq · <a href="${SITE_URL}/gizlilik">Gizlilik Politikası</a> · <a href="${SITE_URL}/kullanim-kosullari">Kullanım Koşulları</a><br>
       Bu emaili almak istemiyorsanız hesabınızı silmeniz yeterlidir.
     </div>
   </div>
@@ -93,7 +93,7 @@ function baseHtml(content: string) {
 function welcomeHtml(name: string, siteUrl: string) {
   return baseHtml(`
     <p class="h1">Hoş geldiniz, ${name}! 👋</p>
-    <p class="p">CastFlow hesabınız hazır. Hemen ilk projenizi oluşturun ve casting sürecinizi kolaylaştırmaya başlayın.</p>
+    <p class="p">Castiqq hesabınız hazır. Hemen ilk projenizi oluşturun ve casting sürecinizi kolaylaştırmaya başlayın.</p>
     <p class="p">
       ✅ Proje ve rol yönetimi<br>
       ✅ Oyuncu veritabanı<br>
@@ -110,7 +110,7 @@ function welcomeHtml(name: string, siteUrl: string) {
 function teamInviteHtml(orgName: string, inviteUrl: string, siteUrl: string) {
   return baseHtml(`
     <p class="h1">${orgName} sizi davet etti</p>
-    <p class="p"><strong>${orgName}</strong> ekibi sizi CastFlow'a katılmaya davet etti. Daveti kabul ederek casting sürecinize katkıda bulunabilirsiniz.</p>
+    <p class="p"><strong>${orgName}</strong> ekibi sizi Castiqq'a katılmaya davet etti. Daveti kabul ederek casting sürecinize katkıda bulunabilirsiniz.</p>
     <a class="btn" href="${inviteUrl}">Daveti Kabul Et →</a>
     <p class="p" style="margin-top:20px;font-size:13px;color:#888">
       Bu davet 7 gün geçerlidir. Hesap oluşturmak için bir şifre belirlemeniz gerekecektir.<br><br>
@@ -143,7 +143,7 @@ function auditionInviteHtml(
 function welcomeHtmlEN(name: string, siteUrl: string) {
   return baseHtml(`
     <p class="h1">Welcome, ${name}! 👋</p>
-    <p class="p">Your CastFlow account is ready. Create your first project and streamline your casting process.</p>
+    <p class="p">Your Castiqq account is ready. Create your first project and streamline your casting process.</p>
     <p class="p">
       ✅ Project and role management<br>
       ✅ Talent database<br>
@@ -160,7 +160,7 @@ function welcomeHtmlEN(name: string, siteUrl: string) {
 function teamInviteHtmlEN(orgName: string, inviteUrl: string, siteUrl: string) {
   return baseHtml(`
     <p class="h1">${orgName} invited you</p>
-    <p class="p"><strong>${orgName}</strong> has invited you to join CastFlow and collaborate on casting projects.</p>
+    <p class="p"><strong>${orgName}</strong> has invited you to join Castiqq and collaborate on casting projects.</p>
     <a class="btn" href="${inviteUrl}">Accept Invitation →</a>
     <p class="p" style="margin-top:20px;font-size:13px;color:#888">
       This invitation expires in 7 days. You will need to set a password to create your account.<br><br>

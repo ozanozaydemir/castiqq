@@ -24,7 +24,7 @@ export default async function HomePage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'CastFlow',
+    name: 'Castiqq',
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web',
     url: SITE_URL,
@@ -33,7 +33,7 @@ export default async function HomePage() {
       '@type': 'Offer',
       price: '0',
       priceCurrency: 'USD',
-      description: '14 gün ücretsiz deneme',
+      description: 'Ücretsiz başlangıç planı mevcut.',
     },
     aggregateRating: {
       '@type': 'AggregateRating',
@@ -165,7 +165,7 @@ export default async function HomePage() {
             <div className="w-8 h-8 bg-indigo-500 rounded-xl flex items-center justify-center shadow-sm shadow-indigo-500/30">
               <Clapperboard className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-gray-900 text-lg tracking-tight">CastFlow</span>
+            <span className="font-bold text-gray-900 text-lg tracking-tight">Castiqq</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">
@@ -291,7 +291,7 @@ export default async function HomePage() {
                   <div className="w-5 h-5 bg-indigo-500 rounded-md flex items-center justify-center">
                     <Clapperboard className="w-3 h-3 text-white" />
                   </div>
-                  <span className="text-xs font-bold text-gray-900">CastFlow</span>
+                  <span className="text-xs font-bold text-gray-900">Castiqq</span>
                 </div>
                 <p className="text-[9px] font-semibold text-gray-300 uppercase tracking-widest px-2 mb-2">{t('mockup.management')}</p>
                 {[
@@ -769,9 +769,9 @@ export default async function HomePage() {
             <div className="w-6 h-6 bg-indigo-500 rounded-lg flex items-center justify-center">
               <Clapperboard className="w-3 h-3 text-white" />
             </div>
-            <span className="font-bold text-white text-sm">CastFlow</span>
+            <span className="font-bold text-white text-sm">Castiqq</span>
           </div>
-          <p className="text-gray-600 text-xs">© {new Date().getFullYear()} CastFlow. {t('footer.rights')}</p>
+          <p className="text-gray-600 text-xs">© {new Date().getFullYear()} Castiqq. {t('footer.rights')}</p>
           <div className="flex items-center gap-4">
             {[
               { label: t('footer.privacy'), href: '#' },

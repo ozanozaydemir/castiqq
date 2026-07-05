@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
-export const alt = 'CastFlow — Casting Yönetim Platformu'
+export const alt = 'Castiqq — Casting Yönetim Platformu'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -51,7 +51,7 @@ export default async function OGImage() {
             🎬
           </div>
           <span style={{ fontSize: 48, fontWeight: 800, color: '#ffffff', letterSpacing: -2 }}>
-            CastFlow
+            Castiqq
           </span>
         </div>
 

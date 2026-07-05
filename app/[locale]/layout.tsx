@@ -31,20 +31,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       locale: isTr ? 'tr_TR' : 'en_US',
       alternateLocale: isTr ? 'en_US' : 'tr_TR',
-      siteName: 'CastFlow',
+      siteName: 'Castiqq',
       type: 'website',
       images: [
         {
           url: `${SITE_URL}/og-image.png`,
           width: 1200,
           height: 630,
-          alt: 'CastFlow — Casting Yönetim Platformu',
+          alt: 'Castiqq — Casting Yönetim Platformu',
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      site: '@castflowapp',
+      site: '@castiqq',
       images: [`${SITE_URL}/og-image.png`],
     },
   }

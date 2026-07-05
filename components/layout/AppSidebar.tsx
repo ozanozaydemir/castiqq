@@ -16,7 +16,7 @@ interface AppSidebarProps {
   onClose?: () => void
 }
 
-export function AppSidebar({ orgName = 'CastFlow', isOpen = false, onClose }: AppSidebarProps) {
+export function AppSidebar({ orgName = 'Castiqq', isOpen = false, onClose }: AppSidebarProps) {
   const pathname = usePathname()
   const t = useTranslations('nav')
 

@@ -10,8 +10,8 @@ const inter = Inter({
 })
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castiqq.app'
-const SITE_NAME = 'CastFlow'
-const DEFAULT_TITLE = 'CastFlow — Casting Yönetim Platformu'
+const SITE_NAME = 'Castiqq'
+const DEFAULT_TITLE = 'Castiqq — Casting Yönetim Platformu'
 const DEFAULT_DESCRIPTION =
   'Yapım şirketleri, casting ajansları ve cast direktörleri için profesyonel casting yönetim platformu. Proje, rol ve oyuncu yönetimi tek sistemde.'
 
@@ -22,8 +22,8 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description: DEFAULT_DESCRIPTION,
-  authors: [{ name: 'CastFlow', url: SITE_URL }],
-  creator: 'CastFlow',
+  authors: [{ name: 'Castiqq', url: SITE_URL }],
+  creator: 'Castiqq',
   robots: { index: true, follow: true },
 }
 

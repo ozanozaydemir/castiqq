@@ -10,10 +10,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const isTr = locale !== 'en'
 
   return {
-    title: isTr ? 'Gizlilik Politikası — CastFlow' : 'Privacy Policy — CastFlow',
+    title: isTr ? 'Gizlilik Politikası — Castiqq' : 'Privacy Policy — Castiqq',
     description: isTr
-      ? 'CastFlow gizlilik politikası ve kişisel veri işleme hakkında bilgi.'
-      : 'CastFlow privacy policy and information about personal data processing.',
+      ? 'Castiqq gizlilik politikası ve kişisel veri işleme hakkında bilgi.'
+      : 'Castiqq privacy policy and information about personal data processing.',
   }
 }
 
@@ -35,8 +35,8 @@ export default async function GizlilikPage({ params }: Props) {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">1. Veri Sorumlusu</h2>
             <p className="text-gray-600 leading-relaxed mb-4">
-              Bu gizlilik politikası, CastFlow ("biz", "bizim") tarafından işletilen castiqq.app
-              platformuna ilişkindir. Veri sorumlusu olarak Türkiye'de faaliyet gösteren CastFlow,
+              Bu gizlilik politikası, Castiqq ("biz", "bizim") tarafından işletilen castiqq.app
+              platformuna ilişkindir. Veri sorumlusu olarak Türkiye'de faaliyet gösteren Castiqq,
               6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) ve Avrupa Birliği Genel Veri
               Koruma Tüzüğü (GDPR) kapsamındaki yükümlülüklerini yerine getirmeyi taahhüt eder.
             </p>
@@ -180,7 +180,7 @@ export default async function GizlilikPage({ params }: Props) {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">8. Çerezler ve İzleme</h2>
             <p className="text-gray-600 leading-relaxed mb-4">
-              CastFlow, oturum yönetimi için zorunlu çerezler kullanmaktadır. Analitik amaçlı
+              Castiqq, oturum yönetimi için zorunlu çerezler kullanmaktadır. Analitik amaçlı
               PostHog izlemesi yalnızca açık rızanız alınarak etkinleştirilir. Tarayıcı
               ayarlarınızdan çerezleri yönetebilirsiniz; ancak zorunlu çerezlerin devre dışı
               bırakılması platformun düzgün çalışmasını engelleyebilir.
@@ -233,8 +233,8 @@ export default async function GizlilikPage({ params }: Props) {
         <section>
           <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">1. Data Controller</h2>
           <p className="text-gray-600 leading-relaxed mb-4">
-            This Privacy Policy applies to the castiqq.app platform operated by CastFlow ("we",
-            "our", "us"), a company based in Turkey. As the data controller, CastFlow is committed
+            This Privacy Policy applies to the castiqq.app platform operated by Castiqq ("we",
+            "our", "us"), a company based in Turkey. As the data controller, Castiqq is committed
             to fulfilling its obligations under the Turkish Personal Data Protection Law No. 6698
             (KVKK) and the European Union General Data Protection Regulation (GDPR).
           </p>
@@ -385,7 +385,7 @@ export default async function GizlilikPage({ params }: Props) {
         <section>
           <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">8. Cookies and Tracking</h2>
           <p className="text-gray-600 leading-relaxed mb-4">
-            CastFlow uses essential cookies for session management. PostHog analytics tracking is
+            Castiqq uses essential cookies for session management. PostHog analytics tracking is
             activated only with your explicit consent. You can manage cookies through your browser
             settings; however, disabling essential cookies may prevent the platform from functioning
             correctly.

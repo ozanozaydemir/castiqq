@@ -51,7 +51,7 @@ export default function ResetPasswordPage() {
         <div className="w-9 h-9 bg-indigo-500 rounded-xl flex items-center justify-center shadow-sm shadow-indigo-500/30">
           <Clapperboard className="w-4 h-4 text-white" />
         </div>
-        <span className="font-bold text-gray-900 text-xl tracking-tight">CastFlow</span>
+        <span className="font-bold text-gray-900 text-xl tracking-tight">Castiqq</span>
       </Link>
 
       {/* Card */}

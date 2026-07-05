@@ -47,7 +47,7 @@
     "freeStart": "Ücretsiz başlayın",
     "wrongCredentials": "E-posta veya şifre hatalı.",
     "createAccount": "Hesap oluşturun",
-    "createAccountSubtitle": "14 gün ücretsiz, kredi kartı gerekmez.",
+    "createAccountSubtitle": "Kredi kartı gerekmez.",
     "orgNameLabel": "Organizasyon Adı",
     "orgNamePlaceholder": "Atlas Yapım A.Ş.",
     "fullNameLabel": "Ad Soyad",
@@ -71,7 +71,7 @@
     "verifyEmailSentTo": "adresine bir doğrulama bağlantısı gönderdik.",
     "verifyEmailHint": "Bağlantıya tıkladıktan sonra hesabınız aktif olur ve doğrudan panele yönlendirilirsiniz.",
     "verifyStep1": "Gelen kutunuzu açın",
-    "verifyStep2": "CastFlow e-postasını bulun",
+    "verifyStep2": "Castiqq e-postasını bulun",
     "verifyStep3": "\"E-postayı Doğrula\" butonuna tıklayın",
     "noEmailSeen": "E-posta görünmüyor mu? Spam klasörünü kontrol edin.",
     "backToLogin": "Giriş sayfasına dön",
@@ -91,7 +91,7 @@
     "strengthWeak": "Zayıf",
     "strengthMedium": "Orta",
     "strengthStrong": "Güçlü",
-    "copyright": "CastFlow"
+    "copyright": "Castiqq"
   },
   "landing": {
     "hero": {
@@ -101,7 +101,7 @@
       "subtitle": "Proje yönetiminden final seçime — tüm casting süreciniz tek platformda. Video izleyin, puanlayın, ekibinizle anlık karar verin.",
       "ctaPrimary": "Ücretsiz Hesap Oluştur",
       "ctaSecondary": "Özellikleri İncele",
-      "disclaimer": "14 gün ücretsiz · Kredi kartı gerekmez · İstediğin zaman iptal",
+      "disclaimer": "Kredi kartı gerekmez · İstediğin zaman iptal",
       "freeBadge": "Ücretsiz Başla"
     },
     "nav": {
@@ -249,12 +249,12 @@
     "pricing": {
       "sectionLabel": "Fiyatlar",
       "title": "Ekibinize uygun plan seçin",
-      "subtitle": "Her plan 14 gün ücretsiz deneme ile başlar. Kredi kartı gerekmez.",
+      "subtitle": "Basit, şeffaf fiyatlandırma. Kredi kartı gerekmez.",
       "popular": "En Popüler",
       "free": "Ücretsiz",
       "perMonth": "/ay",
       "cta": "Hemen Başla",
-      "trialCta": "14 Gün Ücretsiz Dene",
+      "trialCta": "Hemen Başla",
       "extraStorage": "Ek depolama ihtiyacınız mı var?",
       "extraStorageDetail": "+100 GB blok yalnızca /ay",
       "plans": {
@@ -312,7 +312,7 @@
       }
     },
     "testimonial": {
-      "quote": "Cast direktörü olarak yıllardır e-posta ve drive klasörleriyle çalışıyordum. CastFlow ile casting sürecimiz",
+      "quote": "Cast direktörü olarak yıllardır e-posta ve drive klasörleriyle çalışıyordum. Castiqq ile casting sürecimiz",
       "quoteHighlight": "3 kat hızlandı.",
       "name": "Zeynep Yıldız",
       "role": "Cast Direktörü, Atlas Yapım"
@@ -320,11 +320,11 @@
     "cta": {
       "title": "Bugün başlayın.",
       "titleGradient": "Ücretsiz.",
-      "subtitle": "14 gün tüm özellikler açık. Kredi kartı gerekmez.",
+      "subtitle": "Hemen kullanmaya başlayın. Kredi kartı gerekmez.",
       "ctaPrimary": "Ücretsiz Hesap Oluştur",
       "ctaLogin": "Giriş Yap →",
       "items": {
-        "trial": "14 gün ücretsiz",
+        "trial": "Anında başla",
         "noSetup": "Kurulum yok",
         "cancel": "İstediğin zaman iptal"
       }

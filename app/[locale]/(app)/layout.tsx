@@ -47,7 +47,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <OrgProvider value={profile?.organization_id ?? ''}>
-      <AppShell orgName={org?.name ?? 'CastFlow'} logoUrl={org?.logo_url ?? null}>
+      <AppShell orgName={org?.name ?? 'Castiqq'} logoUrl={org?.logo_url ?? null}>
         {children}
       </AppShell>
     </OrgProvider>

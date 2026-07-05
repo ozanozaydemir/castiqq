@@ -36,7 +36,7 @@ export default async function PublicApplyPage({
             <div className="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center">
               <span className="text-white text-xs font-bold">C</span>
             </div>
-            CastFlow
+            Castiqq
           </div>
           <h1 className="text-2xl font-bold text-gray-900">{role.name}</h1>
           {project && <p className="text-sm text-gray-500">{project.title}</p>}

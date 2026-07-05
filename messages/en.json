@@ -47,7 +47,7 @@
     "freeStart": "Start for free",
     "wrongCredentials": "Incorrect email or password.",
     "createAccount": "Create account",
-    "createAccountSubtitle": "14-day free trial, no credit card required.",
+    "createAccountSubtitle": "No credit card required.",
     "orgNameLabel": "Organization Name",
     "orgNamePlaceholder": "Atlas Productions Inc.",
     "fullNameLabel": "Full Name",
@@ -71,7 +71,7 @@
     "verifyEmailSentTo": "We sent a verification link to",
     "verifyEmailHint": "After clicking the link, your account will be activated and you will be redirected to the dashboard.",
     "verifyStep1": "Open your inbox",
-    "verifyStep2": "Find the CastFlow email",
+    "verifyStep2": "Find the Castiqq email",
     "verifyStep3": "Click \"Verify Email\" button",
     "noEmailSeen": "Can't find the email? Check your spam folder.",
     "backToLogin": "Back to login",
@@ -91,7 +91,7 @@
     "strengthWeak": "Weak",
     "strengthMedium": "Medium",
     "strengthStrong": "Strong",
-    "copyright": "CastFlow"
+    "copyright": "Castiqq"
   },
   "landing": {
     "hero": {
@@ -101,7 +101,7 @@
       "subtitle": "From project management to final selection — your entire casting workflow in one platform. Review videos, rate talent, and make instant decisions with your team.",
       "ctaPrimary": "Create Free Account",
       "ctaSecondary": "Explore Features",
-      "disclaimer": "14-day free trial · No credit card required · Cancel anytime",
+      "disclaimer": "No credit card required · Cancel anytime",
       "freeBadge": "Start Free"
     },
     "nav": {
@@ -249,12 +249,12 @@
     "pricing": {
       "sectionLabel": "Pricing",
       "title": "Choose the right plan for your team",
-      "subtitle": "Every plan starts with a 14-day free trial. No credit card required.",
+      "subtitle": "Simple, transparent pricing. No credit card required.",
       "popular": "Most Popular",
       "free": "Free",
       "perMonth": "/mo",
       "cta": "Get Started",
-      "trialCta": "Start 14-Day Free Trial",
+      "trialCta": "Get Started",
       "extraStorage": "Need more storage?",
       "extraStorageDetail": "+100 GB blocks for just $8/month",
       "plans": {
@@ -312,7 +312,7 @@
       }
     },
     "testimonial": {
-      "quote": "As a casting director, I had been working with emails and drive folders for years. With CastFlow, our casting process",
+      "quote": "As a casting director, I had been working with emails and drive folders for years. With Castiqq, our casting process",
       "quoteHighlight": "is 3x faster.",
       "name": "Zeynep Yildiz",
       "role": "Casting Director, Atlas Productions"
@@ -320,11 +320,11 @@
     "cta": {
       "title": "Start today.",
       "titleGradient": "Free.",
-      "subtitle": "14 days with all features unlocked. No credit card required.",
+      "subtitle": "Get started right away. No credit card required.",
       "ctaPrimary": "Create Free Account",
       "ctaLogin": "Log In →",
       "items": {
-        "trial": "14-day free trial",
+        "trial": "Instant access",
         "noSetup": "No setup",
         "cancel": "Cancel anytime"
       }
