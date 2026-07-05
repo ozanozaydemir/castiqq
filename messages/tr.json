@@ -363,7 +363,10 @@
       "draft": "Taslak",
       "completed": "Tamamlandı",
       "archived": "Arşiv"
-    }
+    },
+    "newThisWeek": "+{count} bu hafta",
+    "storageLabel": "Depolama",
+    "storageUpgrade": "Planı Yükselt →"
   },
   "projects": {
     "title": "Projeler",
@@ -762,7 +765,15 @@
       "shortlisted": "Kısa Liste",
       "rejected": "Reddedildi",
       "selected": "Seçildi"
-    }
+    },
+    "sortLabel": "Sırala",
+    "sortNameAsc": "A → Z",
+    "sortNameDesc": "Z → A",
+    "sortAvailability": "Müsaitliğe Göre",
+    "sortRecent": "Son Eklenen",
+    "selected": "{count} seçildi",
+    "bulkAddToList": "Listeye Ekle",
+    "clearSelection": "Temizle"
   },
   "collections": {
     "title": "Listeler",
@@ -797,7 +808,9 @@
     "descriptionLabel": "Açıklama",
     "nameRequired": "Liste adı zorunludur.",
     "cancel": "İptal",
-    "save": "Kaydet"
+    "save": "Kaydet",
+    "selectCollection": "Liste Seç",
+    "bulkAdded": "{count} oyuncu listeye eklendi."
   },
   "settings": {
     "title": "Ayarlar",

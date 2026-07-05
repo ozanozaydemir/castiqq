@@ -363,7 +363,10 @@
       "draft": "Draft",
       "completed": "Completed",
       "archived": "Archived"
-    }
+    },
+    "newThisWeek": "+{count} this week",
+    "storageLabel": "Storage",
+    "storageUpgrade": "Upgrade Plan →"
   },
   "projects": {
     "title": "Projects",
@@ -762,7 +765,15 @@
       "shortlisted": "Shortlisted",
       "rejected": "Rejected",
       "selected": "Selected"
-    }
+    },
+    "sortLabel": "Sort",
+    "sortNameAsc": "A → Z",
+    "sortNameDesc": "Z → A",
+    "sortAvailability": "By Availability",
+    "sortRecent": "Recently Added",
+    "selected": "{count} selected",
+    "bulkAddToList": "Add to List",
+    "clearSelection": "Clear"
   },
   "collections": {
     "title": "Lists",
@@ -797,7 +808,9 @@
     "descriptionLabel": "Description",
     "nameRequired": "List name is required.",
     "cancel": "Cancel",
-    "save": "Save"
+    "save": "Save",
+    "selectCollection": "Select List",
+    "bulkAdded": "{count} talents added to list."
   },
   "settings": {
     "title": "Settings",

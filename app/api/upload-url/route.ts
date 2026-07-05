@@ -4,12 +4,26 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { r2, R2_BUCKET } from '@/lib/r2'
 import { PLAN_LIMITS, type Plan } from '@/lib/plan'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown'
+  const rl = rateLimit(`upload-url:${ip}`, 20, 60_000)
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: 'Çok fazla istek gönderdiniz. Lütfen bir dakika bekleyin.' },
+      { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } }
+    )
+  }
+
   const { token, fileName, fileType, fileSize } = await req.json()
 
   if (!token || !fileName || !fileType) {
     return NextResponse.json({ error: 'Eksik parametre' }, { status: 400 })
+  }
+
+  if (!fileType.startsWith('video/')) {
+    return NextResponse.json({ error: 'Yalnızca video dosyaları yükleyebilirsiniz.' }, { status: 400 })
   }
 
   const admin = createAdminClient()
@@ -25,6 +39,18 @@ export async function POST(req: NextRequest) {
 
   if (audition.submitted_at) {
     return NextResponse.json({ error: 'Bu audition zaten tamamlandı' }, { status: 409 })
+  }
+
+  const { count: videoCount } = await admin
+    .from('audition_videos')
+    .select('*', { count: 'exact', head: true })
+    .eq('audition_id', audition.id)
+
+  if ((videoCount ?? 0) >= 3) {
+    return NextResponse.json(
+      { error: 'Bu audition için maksimum 3 video yükleyebilirsiniz.' },
+      { status: 409 }
+    )
   }
 
   if (fileSize) {

@@ -12,6 +12,7 @@ import {
   Clapperboard, Play, Mic, Film, Banknote, Users,
 } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
+import { MediaEmbed } from './MediaEmbed'
 
 const LANG_LEVEL_LABELS: Record<string, string> = {
   native: 'Ana dil', C2: 'C2', C1: 'C1', B2: 'B2', B1: 'B1', A2: 'A2', A1: 'A1',
@@ -346,36 +347,21 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
           {/* Media */}
           {(talent.showreel_url || talent.voice_sample_url || talent.selftape_drama_url || talent.selftape_comedy_url || talent.selftape_ad_url) && (
             <Section title={t('media')} icon={<Play className="w-4 h-4" />}>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {talent.showreel_url && (
-                  <a href={talent.showreel_url} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-700 hover:underline">
-                    <Clapperboard className="w-3.5 h-3.5" /> Showreel
-                  </a>
+                  <MediaEmbed url={talent.showreel_url} label="Showreel" icon={<Clapperboard className="w-3.5 h-3.5" />} />
                 )}
                 {talent.voice_sample_url && (
-                  <a href={talent.voice_sample_url} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-700 hover:underline">
-                    <Mic className="w-3.5 h-3.5" /> Ses Örneği
-                  </a>
+                  <MediaEmbed url={talent.voice_sample_url} label="Ses Örneği" icon={<Mic className="w-3.5 h-3.5" />} />
                 )}
                 {talent.selftape_drama_url && (
-                  <a href={talent.selftape_drama_url} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-700 hover:underline">
-                    <Play className="w-3.5 h-3.5" /> Self-tape: Drama
-                  </a>
+                  <MediaEmbed url={talent.selftape_drama_url} label="Self-tape: Drama" icon={<Play className="w-3.5 h-3.5" />} />
                 )}
                 {talent.selftape_comedy_url && (
-                  <a href={talent.selftape_comedy_url} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-700 hover:underline">
-                    <Play className="w-3.5 h-3.5" /> Self-tape: Komedi
-                  </a>
+                  <MediaEmbed url={talent.selftape_comedy_url} label="Self-tape: Komedi" icon={<Play className="w-3.5 h-3.5" />} />
                 )}
                 {talent.selftape_ad_url && (
-                  <a href={talent.selftape_ad_url} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-700 hover:underline">
-                    <Play className="w-3.5 h-3.5" /> Self-tape: Reklam
-                  </a>
+                  <MediaEmbed url={talent.selftape_ad_url} label="Self-tape: Reklam" icon={<Play className="w-3.5 h-3.5" />} />
                 )}
               </div>
             </Section>

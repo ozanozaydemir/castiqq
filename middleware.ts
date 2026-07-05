@@ -6,8 +6,11 @@ import { routing } from './i18n/routing'
 const handleI18nRouting = createMiddleware(routing)
 
 export async function middleware(request: NextRequest) {
-  // Step 1: next-intl locale routing (adds locale prefix, detects language)
-  const response = handleI18nRouting(request)
+  const pathname = request.nextUrl.pathname
+
+  // API routes: skip i18n routing, only refresh Supabase session
+  const isApiRoute = pathname.startsWith('/api/')
+  const response = isApiRoute ? NextResponse.next() : handleI18nRouting(request)
 
   // Step 2: Supabase session refresh — piggyback cookies onto the i18n response
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL

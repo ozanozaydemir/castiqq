@@ -22,8 +22,9 @@ export default async function DashboardPage() {
 
   const orgId = profile?.organization_id
 
-  const today         = new Date().toISOString().split('T')[0]
+  const today          = new Date().toISOString().split('T')[0]
   const sevenDaysLater = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  const oneWeekAgo     = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
 
   const [
     { count: projectCount },
@@ -35,6 +36,9 @@ export default async function DashboardPage() {
     { data: recentProjects },
     { data: upcomingDeadlines },
     { data: orgData },
+    { count: newTalentCount },
+    { count: newProjectCount },
+    { count: newAuditionCount },
   ] = await Promise.all([
     supabase.from('projects').select('*', { count: 'exact', head: true }).eq('organization_id', orgId!).eq('status', 'active'),
     supabase.from('project_roles').select('*', { count: 'exact', head: true }).eq('organization_id', orgId!).eq('status', 'open'),
@@ -52,14 +56,17 @@ export default async function DashboardPage() {
       .lte('deadline', sevenDaysLater)
       .order('deadline') as Promise<{ data: { id: string; title: string; deadline: string }[] | null }>,
     supabase.from('organizations').select('subscription_plan, storage_used_bytes').eq('id', orgId!).single() as Promise<{ data: { subscription_plan: string; storage_used_bytes: number } | null }>,
+    supabase.from('talent').select('*', { count: 'exact', head: true }).eq('organization_id', orgId!).gte('created_at', oneWeekAgo),
+    supabase.from('projects').select('*', { count: 'exact', head: true }).eq('organization_id', orgId!).gte('created_at', oneWeekAgo),
+    supabase.from('auditions').select('*', { count: 'exact', head: true }).eq('organization_id', orgId!).gte('created_at', oneWeekAgo),
   ])
 
   const stats = [
-    { label: t('stats.activeProjects'), value: projectCount ?? 0,   icon: Film,       color: 'text-indigo-500', bg: 'bg-indigo-50',  href: '/projeler' },
-    { label: t('stats.openRoles'),      value: roleCount ?? 0,      icon: UserSearch, color: 'text-purple-500', bg: 'bg-purple-50',  href: '/roller' },
-    { label: t('stats.totalTalent'),    value: talentCount ?? 0,    icon: Users,      color: 'text-blue-500',   bg: 'bg-blue-50',    href: '/oyuncular' },
-    { label: t('stats.candidates'),     value: candidateCount ?? 0, icon: UserCheck,  color: 'text-teal-500',   bg: 'bg-teal-50',    href: '/roller' },
-    { label: t('stats.pendingAuditions'), value: auditionCount ?? 0, icon: Video,     color: 'text-orange-500', bg: 'bg-orange-50',  href: '/roller' },
+    { label: t('stats.activeProjects'),   value: projectCount ?? 0,   trend: newProjectCount ?? 0,  icon: Film,       color: 'text-indigo-500', bg: 'bg-indigo-50',  href: '/projeler' },
+    { label: t('stats.openRoles'),        value: roleCount ?? 0,      trend: 0,                     icon: UserSearch, color: 'text-purple-500', bg: 'bg-purple-50',  href: '/roller' },
+    { label: t('stats.totalTalent'),      value: talentCount ?? 0,    trend: newTalentCount ?? 0,   icon: Users,      color: 'text-blue-500',   bg: 'bg-blue-50',    href: '/oyuncular' },
+    { label: t('stats.candidates'),       value: candidateCount ?? 0, trend: 0,                     icon: UserCheck,  color: 'text-teal-500',   bg: 'bg-teal-50',    href: '/roller' },
+    { label: t('stats.pendingAuditions'), value: auditionCount ?? 0,  trend: newAuditionCount ?? 0, icon: Video,      color: 'text-orange-500', bg: 'bg-orange-50',  href: '/roller' },
   ]
 
   const AVAIL: Record<string, string> = { available: 'bg-green-400', busy: 'bg-amber-400', unavailable: 'bg-gray-300' }
@@ -128,7 +135,7 @@ export default async function DashboardPage() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between mb-1.5">
                   <span className={`text-xs font-semibold ${critical ? 'text-red-700' : warn ? 'text-amber-700' : 'text-gray-600'}`}>
-                    Depolama
+                    {t('storageLabel')}
                   </span>
                   <span className={`text-xs ${critical ? 'text-red-600' : warn ? 'text-amber-600' : 'text-gray-500'}`}>
                     {usedGB.toFixed(1)} GB / {limitGB} GB
@@ -143,7 +150,7 @@ export default async function DashboardPage() {
               </div>
               {(critical || warn) && (
                 <Link href="/ayarlar" className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 whitespace-nowrap">
-                  Planı Yükselt →
+                  {t('storageUpgrade')}
                 </Link>
               )}
             </div>
@@ -152,13 +159,18 @@ export default async function DashboardPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-          {stats.map(({ label, value, icon: Icon, color, bg, href }) => (
+          {stats.map(({ label, value, trend, icon: Icon, color, bg, href }) => (
             <Link key={label} href={href} className="sb-card p-5 hover:border-indigo-200 transition-colors group">
               <div className={`w-9 h-9 rounded-lg ${bg} flex items-center justify-center mb-3`}>
                 <Icon className={`w-4 h-4 ${color}`} />
               </div>
               <div className="text-2xl font-bold text-gray-900">{value}</div>
               <div className="text-sm text-gray-500 mt-0.5">{label}</div>
+              {trend > 0 && (
+                <div className="text-xs text-green-600 font-semibold mt-1">
+                  {t('newThisWeek', { count: trend })}
+                </div>
+              )}
             </Link>
           ))}
         </div>

@@ -65,6 +65,25 @@ export async function updateCollection(
   return {}
 }
 
+export async function bulkAddToCollection(
+  talentIds: string[],
+  collectionId: string,
+): Promise<{ error?: string; count?: number }> {
+  if (!talentIds.length) return { error: 'Oyuncu seçilmedi.' }
+  const { supabase, userId } = await requireOrg()
+  const rows = talentIds.map(talentId => ({
+    collection_id: collectionId,
+    talent_id: talentId,
+    added_by: userId,
+  }))
+  const { error } = await supabase
+    .from('collection_items')
+    .upsert(rows, { onConflict: 'collection_id,talent_id', ignoreDuplicates: true })
+  if (error) return { error: error.message }
+  revalidatePath(`/listeler/${collectionId}`)
+  return { count: talentIds.length }
+}
+
 export async function removeFromCollection(
   collectionId: string,
   talentId: string,
