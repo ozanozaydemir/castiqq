@@ -914,7 +914,10 @@
     "closed": "Bu rol için başvuru kapalı.",
     "notFound": "Başvuru bulunamadı.",
     "gdprNote": "Bilgileriniz yalnızca bu başvuru için kullanılacaktır.",
-    "privacyPolicy": "Gizlilik Politikası"
+    "privacyPolicy": "Gizlilik Politikası",
+    "nameRequired": "Ad Soyad zorunludur.",
+    "successUploadHint": "Şimdi videonuzu yükleyebilirsiniz.",
+    "alreadyApplied": "Daha önce başvurdunuz. Ek video yükleyebilirsiniz."
   },
   "onboarding": {
     "title": "Başlangıç Rehberi",

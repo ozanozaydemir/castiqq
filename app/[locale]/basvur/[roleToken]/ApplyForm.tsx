@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useTranslations } from 'next-intl'
 import { submitPublicApplication } from '@/app/actions/public-apply'
+import { UploadSection } from '../../oyuncu/[token]/UploadSection'
 
 interface ApplyFormProps {
   rolePublicToken: string
@@ -12,20 +13,21 @@ interface ApplyFormProps {
   locale: string
 }
 
-export function ApplyForm({ rolePublicToken, siteUrl, locale }: ApplyFormProps) {
+export function ApplyForm({ rolePublicToken, locale }: ApplyFormProps) {
   const t = useTranslations('applyForm')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [uploadToken, setUploadToken] = useState<string | null>(null)
+  const [isExisting, setIsExisting] = useState(false)
   const [isPending, startTransition] = useTransition()
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
     if (!name.trim()) {
-      setError(t('name') + ' zorunludur.')
+      setError(t('nameRequired'))
       return
     }
 
@@ -39,31 +41,35 @@ export function ApplyForm({ rolePublicToken, siteUrl, locale }: ApplyFormProps) 
         setError(result.error)
         return
       }
+      setIsExisting(result.isExisting ?? false)
       setUploadToken(result.uploadToken)
     })
   }
 
+  // Step 2: show video upload inline
   if (uploadToken) {
-    const uploadUrl = `${siteUrl}/oyuncu/${uploadToken}`
     return (
-      <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center space-y-4">
-        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-          <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
+      <div className="space-y-5">
+        <div className="bg-white rounded-2xl border border-gray-200 p-6 flex items-start gap-4">
+          <div className="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+            <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <div>
+            <h2 className="font-semibold text-gray-900">{t('success')}</h2>
+            <p className="text-sm text-gray-500 mt-0.5">
+              {isExisting ? t('alreadyApplied') : t('successUploadHint')}
+            </p>
+          </div>
         </div>
-        <h2 className="text-lg font-semibold text-gray-900">{t('success')}</h2>
-        <p className="text-sm text-gray-500">{t('successDesc')}</p>
-        <a
-          href={uploadUrl}
-          className="inline-block bg-indigo-600 text-white text-sm font-semibold px-6 py-3 rounded-xl hover:bg-indigo-700 transition-colors"
-        >
-          {t('uploadVideo')}
-        </a>
+
+        <UploadSection token={uploadToken} initialVideos={[]} />
       </div>
     )
   }
 
+  // Step 1: application form
   return (
     <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-200 p-8 space-y-5">
       <div>
@@ -85,6 +91,7 @@ export function ApplyForm({ rolePublicToken, siteUrl, locale }: ApplyFormProps) 
           type="email"
           value={email}
           onChange={e => setEmail(e.target.value)}
+          placeholder="ornek@mail.com"
           className="sb-input w-full"
         />
       </div>
@@ -94,10 +101,15 @@ export function ApplyForm({ rolePublicToken, siteUrl, locale }: ApplyFormProps) 
           type="tel"
           value={phone}
           onChange={e => setPhone(e.target.value)}
+          placeholder="+90 5xx xxx xx xx"
           className="sb-input w-full"
         />
       </div>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && (
+        <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
+          {error}
+        </p>
+      )}
       <button
         type="submit"
         disabled={isPending}

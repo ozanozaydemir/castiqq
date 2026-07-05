@@ -3,7 +3,7 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 
 export type PublicApplyResult =
-  | { success: true; uploadToken: string }
+  | { success: true; uploadToken: string; isExisting?: boolean }
   | { error: string }
 
 export async function submitPublicApplication(
@@ -14,16 +14,31 @@ export async function submitPublicApplication(
 
   const admin = createAdminClient()
 
-  // Find role by public_token
+  // Find role by public_token — check is_public AND status
   const { data: role } = await admin
     .from('project_roles')
-    .select('id, title, organization_id, status')
+    .select('id, name, organization_id, status, is_public')
     .eq('public_token', rolePublicToken)
     .single()
 
   if (!role) return { error: 'Rol bulunamadı.' }
+  if (!role.is_public) return { error: 'Bu rol için başvuru kapalı.' }
   if (role.status !== 'open' && role.status !== 'casting') {
     return { error: 'Bu rol için başvuru kapalı.' }
+  }
+
+  // Duplicate detection — same email for same role returns existing token
+  if (data.email) {
+    const { data: existing } = await admin
+      .from('auditions')
+      .select('token')
+      .eq('role_id', role.id)
+      .eq('talent_email', data.email.trim())
+      .maybeSingle()
+
+    if (existing?.token) {
+      return { success: true, uploadToken: existing.token, isExisting: true }
+    }
   }
 
   // Create talent record
@@ -32,8 +47,8 @@ export async function submitPublicApplication(
     .insert({
       organization_id: role.organization_id,
       full_name: data.full_name.trim(),
-      email: data.email || null,
-      phone: data.phone || null,
+      email: data.email?.trim() || null,
+      phone: data.phone?.trim() || null,
       availability: 'available',
       visibility: 'private',
     })
@@ -41,7 +56,7 @@ export async function submitPublicApplication(
     .single()
 
   if (talentError) {
-    console.error('Public apply talent error:', talentError.message)
+    console.error('Public apply talent error:', talentError.message, talentError.code)
     return { error: 'Başvuru oluşturulamadı.' }
   }
 
@@ -53,15 +68,15 @@ export async function submitPublicApplication(
       role_id: role.id,
       talent_id: talent.id,
       talent_name: data.full_name.trim(),
-      talent_email: data.email || null,
-      invite_phone: data.phone || null,
+      talent_email: data.email?.trim() || null,
+      invite_phone: data.phone?.trim() || null,
       status: 'pending',
     })
     .select('token')
     .single()
 
   if (auditionError) {
-    console.error('Public apply audition error:', auditionError.message)
+    console.error('Public apply audition error:', auditionError.message, auditionError.code)
     return { error: 'Başvuru oluşturulamadı.' }
   }
 

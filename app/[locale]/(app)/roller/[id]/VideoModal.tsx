@@ -230,9 +230,10 @@ function NotesPanel({ auditionId, roleId, initialNotes }: {
   auditionId: string; roleId: string; initialNotes: string | null
 }) {
   const t = useTranslations('auditions')
-  const [notes, setNotes] = useState(initialNotes ?? '')
-  const [saved, setSaved]  = useState(false)
-  const [isPending, start] = useTransition()
+  const [notes, setNotes]     = useState(initialNotes ?? '')
+  const [saved, setSaved]     = useState(false)
+  const [saveErr, setSaveErr] = useState<string | null>(null)
+  const [isPending, start]    = useTransition()
   const router = useRouter()
 
   const NOTE_PRESETS = [
@@ -246,11 +247,17 @@ function NotesPanel({ auditionId, roleId, initialNotes }: {
   function applyPreset(text: string) {
     setNotes(prev => prev ? `${prev}\n${text}` : text)
     setSaved(false)
+    setSaveErr(null)
   }
 
   function handleSave() {
+    setSaveErr(null)
     start(async () => {
-      await updateAuditionNotes(auditionId, roleId, notes)
+      const result = await updateAuditionNotes(auditionId, roleId, notes)
+      if (result?.error) {
+        setSaveErr(result.error)
+        return
+      }
       setSaved(true)
       router.refresh()
       setTimeout(() => setSaved(false), 2000)
@@ -271,11 +278,16 @@ function NotesPanel({ auditionId, roleId, initialNotes }: {
       </div>
       <textarea
         value={notes}
-        onChange={e => { setNotes(e.target.value); setSaved(false) }}
+        onChange={e => { setNotes(e.target.value); setSaved(false); setSaveErr(null) }}
         placeholder={t('notesPlaceholder')}
         rows={4}
         className="w-full text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 resize-none focus:outline-none focus:border-indigo-400 transition-colors placeholder-gray-300"
       />
+      {saveErr && (
+        <p className="text-[11px] text-red-500 bg-red-50 border border-red-100 rounded-lg px-2.5 py-1.5">
+          {saveErr}
+        </p>
+      )}
       <button onClick={handleSave} disabled={isPending}
         className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition-colors"
       >

@@ -914,7 +914,10 @@
     "closed": "Applications for this role are closed.",
     "notFound": "Application not found.",
     "gdprNote": "Your information will only be used for this application.",
-    "privacyPolicy": "Privacy Policy"
+    "privacyPolicy": "Privacy Policy",
+    "nameRequired": "Full name is required.",
+    "successUploadHint": "You can now upload your audition video.",
+    "alreadyApplied": "You have already applied. You can add more videos."
   },
   "onboarding": {
     "title": "Getting Started",
