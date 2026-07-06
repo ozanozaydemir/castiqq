@@ -41,9 +41,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   const { data: org } = await supabase
     .from('organizations')
-    .select('name, logo_url')
+    .select('name, logo_url, polar_subscription_id')
     .eq('id', profile?.organization_id ?? '')
     .single()
+
+  // Ödeme zorunlu: aboneliği olmayan kullanıcıları plan seçimine yönlendir
+  if (!org?.polar_subscription_id) {
+    redirect('/plan-sec')
+  }
 
   return (
     <OrgProvider value={profile?.organization_id ?? ''}>

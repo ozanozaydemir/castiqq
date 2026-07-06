@@ -5,7 +5,7 @@ import { rateLimit } from '@/lib/rate-limit'
 
 const polarCheckout = Checkout({
   accessToken: process.env.POLAR_ACCESS_TOKEN!,
-  successUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard?upgraded=1`,
+  successUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/payment/processing`,
   server: (process.env.POLAR_SERVER ?? 'sandbox') as 'sandbox' | 'production',
 })
 
