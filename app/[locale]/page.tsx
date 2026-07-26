@@ -35,11 +35,6 @@ export default async function HomePage() {
       priceCurrency: 'USD',
       description: 'Ücretsiz başlangıç planı mevcut.',
     },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.9',
-      ratingCount: '47',
-    },
   }
 
   const FEATURES = [

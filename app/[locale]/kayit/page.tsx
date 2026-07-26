@@ -247,9 +247,9 @@ export default function RegisterPage() {
 
         <p className="text-center text-xs text-gray-400 mt-5 leading-relaxed">
           {t('termsText')}{' '}
-          <a href="#" className="text-gray-500 hover:text-gray-700 underline underline-offset-2">{t('termsLink')}</a>
+          <Link href="/kullanim-kosullari" className="text-gray-500 hover:text-gray-700 underline underline-offset-2">{t('termsLink')}</Link>
           {' '}{t('andText')}{' '}
-          <a href="#" className="text-gray-500 hover:text-gray-700 underline underline-offset-2">{t('privacyLink')}</a>
+          <Link href="/gizlilik" className="text-gray-500 hover:text-gray-700 underline underline-offset-2">{t('privacyLink')}</Link>
           {t('termsAccept')}
         </p>
 
