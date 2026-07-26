@@ -9,7 +9,7 @@ import { logout } from '@/app/actions/auth'
 const PLANS = {
   pro: {
     name: 'Pro',
-    price: '$39',
+    price: '₺1.999',
     desc: { tr: 'Aktif casting ajansları ve prodüksiyon ekipleri için.', en: 'For active casting agencies and production teams.' },
     features: {
       tr: ['3 kullanıcı', '200 GB video depolama', 'Ekip işbirliği', '5 yıldız puanlama', 'Etiket & koleksiyonlar', 'Zaman damgalı notlar', 'WhatsApp entegrasyonu', 'Sürükle-bırak sıralama'],
@@ -18,7 +18,7 @@ const PLANS = {
   },
   agency: {
     name: 'Ajans',
-    price: '$99',
+    price: '₺4.999',
     desc: { tr: 'Büyük yapım şirketleri ve çok ekipli yapılar için.', en: 'For large production companies and multi-team setups.' },
     features: {
       tr: ['Sınırsız kullanıcı', '1 TB video depolama', 'Pro\'daki her şey', 'Öncelikli destek', 'Özel entegrasyonlar', 'SLA garantisi'],

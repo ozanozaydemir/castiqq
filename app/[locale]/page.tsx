@@ -114,19 +114,8 @@ export default async function HomePage() {
 
   const PLANS = [
     {
-      name: t('pricing.plans.starter.name'),
-      price: t('pricing.free'),
-      period: '',
-      desc: t('pricing.plans.starter.desc'),
-      cta: t('pricing.cta'),
-      href: '/kayit',
-      popular: false,
-      include: t.raw('pricing.plans.starter.include') as string[],
-      exclude: t.raw('pricing.plans.starter.exclude') as string[],
-    },
-    {
       name: t('pricing.plans.pro.name'),
-      price: '$39',
+      price: '₺1.999',
       period: t('pricing.perMonth'),
       desc: t('pricing.plans.pro.desc'),
       cta: t('pricing.trialCta'),
@@ -137,7 +126,7 @@ export default async function HomePage() {
     },
     {
       name: t('pricing.plans.agency.name'),
-      price: '$99',
+      price: '₺4.999',
       period: t('pricing.perMonth'),
       desc: t('pricing.plans.agency.desc'),
       cta: t('pricing.trialCta'),
@@ -627,7 +616,7 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 items-start">
+          <div className="grid md:grid-cols-2 max-w-2xl mx-auto gap-6 items-start">
             {PLANS.map(({ name, price, period, desc, cta, href, popular, include, exclude }, i) => (
               <div
                 key={name}

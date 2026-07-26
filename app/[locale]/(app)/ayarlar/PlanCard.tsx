@@ -18,8 +18,8 @@ export function PlanCard({ plan, status, endsAt, hasPortal, orgId }: Props) {
   const isCancelled = status === 'cancelled'
 
   const UPGRADE_PLANS = [
-    { plan: 'pro' as const,    label: 'Pro',          price: `$39${t('perMonth')}`, desc: `200 GB · 3 ${t('users')}` },
-    { plan: 'agency' as const, label: t('agency'),    price: `$99${t('perMonth')}`, desc: `1 TB · ${t('unlimited')} ${t('users')}` },
+    { plan: 'pro' as const,    label: 'Pro',          price: `₺1.999${t('perMonth')}`, desc: `200 GB · 3 ${t('users')}` },
+    { plan: 'agency' as const, label: t('agency'),    price: `₺4.999${t('perMonth')}`, desc: `1 TB · ${t('unlimited')} ${t('users')}` },
   ]
 
   function goToCheckout(targetPlan: 'pro' | 'agency') {

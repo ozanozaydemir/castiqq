@@ -44,10 +44,10 @@
     "passwordPlaceholder": "••••••••",
     "forgotPasswordLink": "Forgot password",
     "loggingIn": "Signing in…",
-    "freeStart": "Start for free",
+    "freeStart": "Try free for 14 days",
     "wrongCredentials": "Incorrect email or password.",
     "createAccount": "Create account",
-    "createAccountSubtitle": "No credit card required.",
+    "createAccountSubtitle": "First 14 days free.",
     "orgNameLabel": "Organization Name",
     "orgNamePlaceholder": "Atlas Productions Inc.",
     "fullNameLabel": "Full Name",
@@ -99,10 +99,10 @@
       "title": "Redefine your",
       "titleGradient": "casting process.",
       "subtitle": "From project management to final selection — your entire casting workflow in one platform. Review videos, rate talent, and make instant decisions with your team.",
-      "ctaPrimary": "Create Free Account",
+      "ctaPrimary": "Try Free for 14 Days",
       "ctaSecondary": "Explore Features",
-      "disclaimer": "No credit card required · Cancel anytime",
-      "freeBadge": "Start Free"
+      "disclaimer": "Free for 14 days · Cancel anytime",
+      "freeBadge": "14 Days Free"
     },
     "nav": {
       "features": "Features",
@@ -249,7 +249,7 @@
     "pricing": {
       "sectionLabel": "Pricing",
       "title": "Choose the right plan for your team",
-      "subtitle": "Simple, transparent pricing. No credit card required.",
+      "subtitle": "Simple, transparent pricing. First 14 days free.",
       "popular": "Most Popular",
       "free": "Free",
       "perMonth": "/mo",
@@ -281,7 +281,7 @@
           "include": [
             "3 users",
             "200 GB video storage",
-            "Everything in Starter",
+            "Unlimited projects & roles",
             "Team collaboration",
             "5-star rating",
             "Tags & collections",
@@ -319,9 +319,9 @@
     },
     "cta": {
       "title": "Start today.",
-      "titleGradient": "Free.",
-      "subtitle": "Get started right away. No credit card required.",
-      "ctaPrimary": "Create Free Account",
+      "titleGradient": "14 days free.",
+      "subtitle": "Get started right away. First 14 days free.",
+      "ctaPrimary": "Try Free for 14 Days",
       "ctaLogin": "Log In →",
       "items": {
         "trial": "Instant access",

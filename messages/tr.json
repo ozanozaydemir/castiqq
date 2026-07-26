@@ -44,10 +44,10 @@
     "passwordPlaceholder": "••••••••",
     "forgotPasswordLink": "Şifremi unuttum",
     "loggingIn": "Giriş yapılıyor…",
-    "freeStart": "Ücretsiz başlayın",
+    "freeStart": "14 gün ücretsiz deneyin",
     "wrongCredentials": "E-posta veya şifre hatalı.",
     "createAccount": "Hesap oluşturun",
-    "createAccountSubtitle": "Kredi kartı gerekmez.",
+    "createAccountSubtitle": "İlk 14 gün ücretsiz.",
     "orgNameLabel": "Organizasyon Adı",
     "orgNamePlaceholder": "Atlas Yapım A.Ş.",
     "fullNameLabel": "Ad Soyad",
@@ -99,10 +99,10 @@
       "title": "Casting sürecini",
       "titleGradient": "yeniden tanımla.",
       "subtitle": "Proje yönetiminden final seçime — tüm casting süreciniz tek platformda. Video izleyin, puanlayın, ekibinizle anlık karar verin.",
-      "ctaPrimary": "Ücretsiz Hesap Oluştur",
+      "ctaPrimary": "14 Gün Ücretsiz Dene",
       "ctaSecondary": "Özellikleri İncele",
-      "disclaimer": "Kredi kartı gerekmez · İstediğin zaman iptal",
-      "freeBadge": "Ücretsiz Başla"
+      "disclaimer": "14 gün ücretsiz dene · İstediğin zaman iptal",
+      "freeBadge": "14 Gün Ücretsiz"
     },
     "nav": {
       "features": "Özellikler",
@@ -249,7 +249,7 @@
     "pricing": {
       "sectionLabel": "Fiyatlar",
       "title": "Ekibinize uygun plan seçin",
-      "subtitle": "Basit, şeffaf fiyatlandırma. Kredi kartı gerekmez.",
+      "subtitle": "Basit, şeffaf fiyatlandırma. İlk 14 gün ücretsiz.",
       "popular": "En Popüler",
       "free": "Ücretsiz",
       "perMonth": "/ay",
@@ -281,7 +281,7 @@
           "include": [
             "3 kullanıcı",
             "200 GB video depolama",
-            "Başlangıç'taki her şey",
+            "Sınırsız proje & rol",
             "Ekip işbirliği",
             "5 yıldız puanlama",
             "Etiket & koleksiyonlar",
@@ -319,9 +319,9 @@
     },
     "cta": {
       "title": "Bugün başlayın.",
-      "titleGradient": "Ücretsiz.",
-      "subtitle": "Hemen kullanmaya başlayın. Kredi kartı gerekmez.",
-      "ctaPrimary": "Ücretsiz Hesap Oluştur",
+      "titleGradient": "14 gün ücretsiz.",
+      "subtitle": "Hemen kullanmaya başlayın. İlk 14 gün ücretsiz.",
+      "ctaPrimary": "14 Gün Ücretsiz Dene",
       "ctaLogin": "Giriş Yap →",
       "items": {
         "trial": "Anında başla",
