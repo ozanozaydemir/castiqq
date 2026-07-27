@@ -15,30 +15,50 @@ function num(v: FormDataEntryValue | null): number | null {
   return v && !isNaN(n) ? n : null
 }
 
+const DEFAULT_WITHHOLDING_RATE: Record<string, number> = {
+  serbest_meslek: 20,
+}
+
+function computeFinancials(grossAmount: number, withholdingRateInput: number | null, taxStatus: string | null, paymentStatus: string, amountPaidInput: number | null) {
+  const withholdingRate = withholdingRateInput ?? DEFAULT_WITHHOLDING_RATE[taxStatus ?? ''] ?? 0
+  const withholdingAmount = Math.round(grossAmount * (withholdingRate / 100) * 100) / 100
+  const netAmount = Math.round((grossAmount - withholdingAmount) * 100) / 100
+  const amountPaid = paymentStatus === 'paid'
+    ? (amountPaidInput ?? netAmount)
+    : (amountPaidInput ?? 0)
+  return { withholdingRate, withholdingAmount, netAmount, amountPaid }
+}
+
 export async function createBooking(talentId: string, _: ActionState, formData: FormData): Promise<ActionState> {
   const { supabase, orgId, userId } = await requireOrg()
 
   const clientName = (formData.get('client_name') as string)?.trim()
   const workDate = str(formData.get('work_date'))
   const grossAmount = num(formData.get('gross_amount'))
+  const jobType = (formData.get('job_type') as string) || 'diger'
+  const paymentStatus = (formData.get('payment_status') as string) || 'pending'
   if (!clientName) return { error: 'Müşteri/yapım adı zorunludur.' }
   if (!workDate) return { error: 'Çalışma tarihi zorunludur.' }
   if (grossAmount === null) return { error: 'Ücret zorunludur.' }
 
   const { data: talent } = await supabase
     .from('talent')
-    .select('commission_rate')
+    .select('commission_rate, tax_status')
     .eq('id', talentId)
     .single()
 
   const commissionRate = talent?.commission_rate ?? null
   const commissionAmount = commissionRate !== null ? Math.round(grossAmount * (commissionRate / 100) * 100) / 100 : null
 
+  const { withholdingRate, withholdingAmount, netAmount, amountPaid } = computeFinancials(
+    grossAmount, num(formData.get('withholding_rate')), talent?.tax_status ?? null, paymentStatus, num(formData.get('amount_paid')),
+  )
+
   const { error } = await supabase.from('bookings').insert({
     organization_id: orgId,
     talent_id: talentId,
     client_name: clientName,
-    job_type: (formData.get('job_type') as string) || 'diger',
+    job_type: jobType,
     title: str(formData.get('title')),
     work_date: workDate,
     work_date_end: str(formData.get('work_date_end')),
@@ -46,8 +66,14 @@ export async function createBooking(talentId: string, _: ActionState, formData: 
     currency: str(formData.get('currency')) ?? 'TRY',
     commission_rate: commissionRate,
     commission_amount: commissionAmount,
+    withholding_rate: withholdingRate,
+    withholding_amount: withholdingAmount,
+    net_amount: netAmount,
+    amount_paid: amountPaid,
     payment_due_date: str(formData.get('payment_due_date')),
-    payment_status: (formData.get('payment_status') as string) || 'pending',
+    payment_status: paymentStatus,
+    exclusivity_end_date: jobType === 'reklam' ? str(formData.get('exclusivity_end_date')) : null,
+    exclusivity_notes: jobType === 'reklam' ? str(formData.get('exclusivity_notes')) : null,
     notes: str(formData.get('notes')),
     created_by: userId,
   })
@@ -63,30 +89,43 @@ export async function updateBooking(bookingId: string, talentId: string, _: Acti
   const clientName = (formData.get('client_name') as string)?.trim()
   const workDate = str(formData.get('work_date'))
   const grossAmount = num(formData.get('gross_amount'))
+  const jobType = (formData.get('job_type') as string) || 'diger'
+  const paymentStatus = (formData.get('payment_status') as string) || 'pending'
   if (!clientName) return { error: 'Müşteri/yapım adı zorunludur.' }
   if (!workDate) return { error: 'Çalışma tarihi zorunludur.' }
   if (grossAmount === null) return { error: 'Ücret zorunludur.' }
 
   const { data: existing } = await supabase
     .from('bookings')
-    .select('commission_rate')
+    .select('commission_rate, talent:talent_id(tax_status)')
     .eq('id', bookingId)
     .single()
 
   const commissionRate = existing?.commission_rate ?? null
   const commissionAmount = commissionRate !== null ? Math.round(grossAmount * (commissionRate / 100) * 100) / 100 : null
+  const taxStatus = (existing?.talent as unknown as { tax_status: string } | null)?.tax_status ?? null
+
+  const { withholdingRate, withholdingAmount, netAmount, amountPaid } = computeFinancials(
+    grossAmount, num(formData.get('withholding_rate')), taxStatus, paymentStatus, num(formData.get('amount_paid')),
+  )
 
   const { error } = await supabase.from('bookings').update({
     client_name: clientName,
-    job_type: (formData.get('job_type') as string) || 'diger',
+    job_type: jobType,
     title: str(formData.get('title')),
     work_date: workDate,
     work_date_end: str(formData.get('work_date_end')),
     gross_amount: grossAmount,
     currency: str(formData.get('currency')) ?? 'TRY',
     commission_amount: commissionAmount,
+    withholding_rate: withholdingRate,
+    withholding_amount: withholdingAmount,
+    net_amount: netAmount,
+    amount_paid: amountPaid,
     payment_due_date: str(formData.get('payment_due_date')),
-    payment_status: (formData.get('payment_status') as string) || 'pending',
+    payment_status: paymentStatus,
+    exclusivity_end_date: jobType === 'reklam' ? str(formData.get('exclusivity_end_date')) : null,
+    exclusivity_notes: jobType === 'reklam' ? str(formData.get('exclusivity_notes')) : null,
     notes: str(formData.get('notes')),
     updated_at: new Date().toISOString(),
   }).eq('id', bookingId)
@@ -104,7 +143,15 @@ export async function deleteBooking(bookingId: string, talentId: string) {
 
 export async function updateBookingPaymentStatus(bookingId: string, talentId: string, paymentStatus: string) {
   const { supabase } = await requireOrg()
-  await supabase.from('bookings').update({ payment_status: paymentStatus, updated_at: new Date().toISOString() }).eq('id', bookingId)
+
+  const update: Record<string, unknown> = { payment_status: paymentStatus, updated_at: new Date().toISOString() }
+  if (paymentStatus === 'paid') {
+    const { data: booking } = await supabase.from('bookings').select('net_amount').eq('id', bookingId).single()
+    if (booking) update.amount_paid = booking.net_amount
+  }
+
+  await supabase.from('bookings').update(update).eq('id', bookingId)
   revalidatePath(`/oyuncular/${talentId}`)
   revalidatePath('/oyuncular')
+  revalidatePath('/isler')
 }

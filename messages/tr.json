@@ -880,7 +880,15 @@
       "pendingSummary": "{count} iş için ödeme bekleniyor",
       "overdueSummary": "{count} işin vadesi geçti",
       "colTalent": "Oyuncu",
-      "conflictWarning": "Bu tarihte aynı oyuncu için başka iş(ler) var:"
+      "conflictWarning": "Bu tarihte aynı oyuncu için başka iş(ler) var:",
+      "withholdingRate": "Stopaj Oranı (%)",
+      "netAmount": "Net Tutar",
+      "amountPaid": "Ödenen Tutar",
+      "exclusivityEndDate": "Reklam Yasağı Bitiş Tarihi",
+      "exclusivityNotes": "Yasak Detayı",
+      "exclusivityNotesPlaceholder": "Örn. Rakip otomotiv markalarıyla çalışamaz",
+      "exclusivityConflictWarning": "Bu tarihte oyuncunun aktif reklam yasağı var:",
+      "exclusivityUntil": "{date} tarihine kadar reklam yasaklı"
     },
     "documents": {
       "sectionTitle": "Belgeler",
@@ -1138,7 +1146,8 @@
     "quickAccess": "Hızlı Erişim",
     "addTalent": "Oyuncu Ekle",
     "viewLists": "Listeleri Görüntüle",
-    "documentsExpiringTitle": "{count} belgenin süresi 30 gün içinde doluyor/doldu"
+    "documentsExpiringTitle": "{count} belgenin süresi 30 gün içinde doluyor/doldu",
+    "exclusivityActiveTitle": "{count} oyuncunun aktif reklam yasağı var"
   },
   "jobs": {
     "title": "İşler",
@@ -1146,6 +1155,7 @@
     "searchPlaceholder": "Oyuncu, müşteri veya iş ara...",
     "allStatuses": "Tüm Durumlar",
     "clearFilters": "Filtreleri Temizle",
-    "overdueBadge": "Gecikti"
+    "overdueBadge": "Gecikti",
+    "paidShort": "ödendi"
   }
 }

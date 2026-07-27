@@ -8,7 +8,10 @@ import { useTranslations } from 'next-intl'
 import type { ActionState } from '@/app/actions/bookings'
 import type { Booking } from '@/types/database'
 
-type ConflictRow = { client_name: string; work_date: string; work_date_end: string | null }
+type ExistingBookingRow = {
+  id: string; client_name: string; work_date: string; work_date_end: string | null
+  job_type: string; exclusivity_end_date: string | null; exclusivity_notes: string | null
+}
 
 function rangesOverlap(aStart: string, aEnd: string, bStart: string, bEnd: string) {
   return aStart <= bEnd && aEnd >= bStart
@@ -38,16 +41,23 @@ export function BookingModal({
   const t = useTranslations('talent.bookings')
   const tc = useTranslations('common')
 
+  const [jobType, setJobType] = useState<string>(editingBooking?.job_type ?? 'dizi')
   const [workDate, setWorkDate] = useState(editingBooking?.work_date ?? '')
   const [workDateEnd, setWorkDateEnd] = useState(editingBooking?.work_date_end ?? '')
-  const [conflicts, setConflicts] = useState<ConflictRow[]>([])
+  const [grossAmount, setGrossAmount] = useState(editingBooking?.gross_amount?.toString() ?? '')
+  const [withholdingRate, setWithholdingRate] = useState(editingBooking?.withholding_rate?.toString() ?? '')
+  const [paymentStatus, setPaymentStatus] = useState<string>(editingBooking?.payment_status ?? 'pending')
+  const [amountPaid, setAmountPaid] = useState(editingBooking?.amount_paid?.toString() ?? '')
+
+  const [dateConflicts, setDateConflicts] = useState<ExistingBookingRow[]>([])
+  const [exclusivityConflicts, setExclusivityConflicts] = useState<ExistingBookingRow[]>([])
 
   useEffect(() => {
     if (state?.success) onClose()
   }, [state?.success, onClose])
 
   useEffect(() => {
-    if (!workDate) { setConflicts([]); return }
+    if (!workDate) { setDateConflicts([]); setExclusivityConflicts([]); return }
     const end = workDateEnd || workDate
     let cancelled = false
 
@@ -58,18 +68,24 @@ export function BookingModal({
 
     supabase
       .from('bookings')
-      .select('id, client_name, work_date, work_date_end')
+      .select('id, client_name, work_date, work_date_end, job_type, exclusivity_end_date, exclusivity_notes')
       .eq('talent_id', talentId)
       .then(({ data }) => {
         if (cancelled || !data) return
-        const found = (data as (ConflictRow & { id: string })[])
-          .filter(b => b.id !== editingBooking?.id)
-          .filter(b => rangesOverlap(workDate, end, b.work_date, b.work_date_end || b.work_date))
-        setConflicts(found)
+        const rows = (data as ExistingBookingRow[]).filter(b => b.id !== editingBooking?.id)
+
+        setDateConflicts(rows.filter(b => rangesOverlap(workDate, end, b.work_date, b.work_date_end || b.work_date)))
+        setExclusivityConflicts(rows.filter(b =>
+          b.exclusivity_end_date && b.work_date <= workDate && workDate <= b.exclusivity_end_date
+        ))
       })
 
     return () => { cancelled = true }
   }, [workDate, workDateEnd, talentId, editingBooking?.id])
+
+  const gross = Number(grossAmount) || 0
+  const rate = Number(withholdingRate) || 0
+  const netAmount = Math.round((gross - gross * (rate / 100)) * 100) / 100
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
@@ -92,7 +108,7 @@ export function BookingModal({
 
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-gray-700">{t('jobType')}</label>
-              <select name="job_type" defaultValue={editingBooking?.job_type ?? 'dizi'} className="sb-input">
+              <select name="job_type" value={jobType} onChange={e => setJobType(e.target.value)} className="sb-input">
                 <option value="dizi">{t('jobTypes.dizi')}</option>
                 <option value="reklam">{t('jobTypes.reklam')}</option>
                 <option value="film">{t('jobTypes.film')}</option>
@@ -117,13 +133,25 @@ export function BookingModal({
               <input type="date" name="work_date_end" value={workDateEnd} onChange={e => setWorkDateEnd(e.target.value)} className="sb-input" />
             </div>
 
-            {conflicts.length > 0 && (
+            {dateConflicts.length > 0 && (
               <div className="sm:col-span-2 flex items-start gap-2 bg-amber-50 border border-amber-100 text-amber-700 px-3 py-2.5 rounded-xl text-xs">
                 <TriangleAlert className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium">{t('conflictWarning')}</p>
-                  {conflicts.map((c, i) => (
+                  {dateConflicts.map((c, i) => (
                     <p key={i}>{c.client_name} — {new Date(c.work_date).toLocaleDateString('tr-TR')}{c.work_date_end ? `–${new Date(c.work_date_end).toLocaleDateString('tr-TR')}` : ''}</p>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {exclusivityConflicts.length > 0 && (
+              <div className="sm:col-span-2 flex items-start gap-2 bg-red-50 border border-red-100 text-red-700 px-3 py-2.5 rounded-xl text-xs">
+                <TriangleAlert className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-medium">{t('exclusivityConflictWarning')}</p>
+                  {exclusivityConflicts.map((c, i) => (
+                    <p key={i}>{c.client_name} — {t('exclusivityUntil', { date: new Date(c.exclusivity_end_date!).toLocaleDateString('tr-TR') })}{c.exclusivity_notes ? ` (${c.exclusivity_notes})` : ''}</p>
                   ))}
                 </div>
               </div>
@@ -131,7 +159,7 @@ export function BookingModal({
 
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-gray-700">{t('grossAmount')} <span className="text-red-400">*</span></label>
-              <input type="number" name="gross_amount" required min={0} step="0.01" defaultValue={editingBooking?.gross_amount ?? ''} placeholder="0" className="sb-input" />
+              <input type="number" name="gross_amount" required min={0} step="0.01" value={grossAmount} onChange={e => setGrossAmount(e.target.value)} placeholder="0" className="sb-input" />
             </div>
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-gray-700">{t('currency')}</label>
@@ -143,17 +171,47 @@ export function BookingModal({
             </div>
 
             <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-gray-700">{t('withholdingRate')}</label>
+              <input type="number" name="withholding_rate" min={0} max={100} step="0.1" value={withholdingRate} onChange={e => setWithholdingRate(e.target.value)} placeholder="0" className="sb-input" />
+            </div>
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-gray-700">{t('netAmount')}</label>
+              <div className="sb-input bg-gray-50 text-gray-600 flex items-center">{netAmount.toLocaleString('tr-TR')}</div>
+            </div>
+
+            {jobType === 'reklam' && (
+              <>
+                <div className="space-y-1.5">
+                  <label className="block text-sm font-medium text-gray-700">{t('exclusivityEndDate')}</label>
+                  <input type="date" name="exclusivity_end_date" defaultValue={editingBooking?.exclusivity_end_date ?? ''} className="sb-input" />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="block text-sm font-medium text-gray-700">{t('exclusivityNotes')}</label>
+                  <input name="exclusivity_notes" defaultValue={editingBooking?.exclusivity_notes ?? ''} placeholder={t('exclusivityNotesPlaceholder')} className="sb-input" />
+                </div>
+              </>
+            )}
+
+            <div className="space-y-1.5">
               <label className="block text-sm font-medium text-gray-700">{t('paymentDueDate')}</label>
               <input type="date" name="payment_due_date" defaultValue={editingBooking?.payment_due_date ?? ''} className="sb-input" />
             </div>
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-gray-700">{t('paymentStatus')}</label>
-              <select name="payment_status" defaultValue={editingBooking?.payment_status ?? 'pending'} className="sb-input">
+              <select name="payment_status" value={paymentStatus} onChange={e => setPaymentStatus(e.target.value)} className="sb-input">
                 <option value="pending">{t('paymentStatuses.pending')}</option>
                 <option value="partial">{t('paymentStatuses.partial')}</option>
                 <option value="paid">{t('paymentStatuses.paid')}</option>
               </select>
             </div>
+
+            {paymentStatus !== 'pending' && (
+              <div className="sm:col-span-2 space-y-1.5">
+                <label className="block text-sm font-medium text-gray-700">{t('amountPaid')}</label>
+                <input type="number" name="amount_paid" min={0} step="0.01" value={amountPaid} onChange={e => setAmountPaid(e.target.value)}
+                  placeholder={paymentStatus === 'paid' ? netAmount.toString() : '0'} className="sb-input" />
+              </div>
+            )}
           </div>
 
           <div className="space-y-1.5">

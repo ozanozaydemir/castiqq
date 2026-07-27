@@ -68,6 +68,7 @@ async function IslerTable({ searchParams }: { searchParams: SearchParams }) {
             <th>{t('jobType')}</th>
             <th>{t('workDate')}</th>
             <th>{t('grossAmount')}</th>
+            <th>{t('netAmount')}</th>
             <th>{t('commission')}</th>
             <th className="text-right">{t('paymentStatus')}</th>
           </tr>
@@ -90,6 +91,12 @@ async function IslerTable({ searchParams }: { searchParams: SearchParams }) {
                   {overdue && <span className="ml-2 text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-red-50 text-red-600">{jt('overdueBadge')}</span>}
                 </td>
                 <td className="text-gray-700 font-medium">{b.gross_amount.toLocaleString('tr-TR')} {b.currency}</td>
+                <td className="text-gray-500">
+                  {b.net_amount.toLocaleString('tr-TR')} {b.currency}
+                  {b.payment_status !== 'pending' && (
+                    <span className="text-gray-400"> ({b.amount_paid.toLocaleString('tr-TR')} {jt('paidShort')})</span>
+                  )}
+                </td>
                 <td className="text-gray-500">{b.commission_amount !== null ? `${b.commission_amount.toLocaleString('tr-TR')} ${b.currency}` : '—'}</td>
                 <td>
                   <IslerRowActions bookingId={b.id} talentId={b.talent_id} paymentStatus={b.payment_status} />

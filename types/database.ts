@@ -132,6 +132,12 @@ export type Database = {
           currency: string
           commission_rate: number | null
           commission_amount: number | null
+          withholding_rate: number
+          withholding_amount: number
+          net_amount: number
+          amount_paid: number
+          exclusivity_end_date: string | null
+          exclusivity_notes: string | null
           payment_due_date: string | null
           payment_status: 'pending' | 'partial' | 'paid'
           notes: string | null

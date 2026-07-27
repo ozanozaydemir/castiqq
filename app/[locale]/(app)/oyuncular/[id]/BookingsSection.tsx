@@ -91,8 +91,14 @@ export function BookingsSection({ talentId, bookings }: { talentId: string; book
                   <div className="flex items-center justify-between mt-2.5">
                     <div className="text-xs text-gray-600">
                       <span className="font-semibold text-gray-800">{b.gross_amount.toLocaleString('tr-TR')} {b.currency}</span>
+                      {b.withholding_amount > 0 && (
+                        <span className="text-gray-400"> · {t('netAmount')}: {b.net_amount.toLocaleString('tr-TR')} {b.currency}</span>
+                      )}
                       {b.commission_amount !== null && (
                         <span className="text-gray-400"> · {t('commission')}: {b.commission_amount.toLocaleString('tr-TR')} {b.currency}</span>
+                      )}
+                      {b.payment_status !== 'pending' && (
+                        <span className="text-gray-400"> · {t('amountPaid')}: {b.amount_paid.toLocaleString('tr-TR')} {b.currency}</span>
                       )}
                     </div>
                     <select
@@ -111,6 +117,9 @@ export function BookingsSection({ talentId, bookings }: { talentId: string; book
                   )}
                   {!overdue && b.payment_due_date && b.payment_status !== 'paid' && (
                     <p className="text-xs text-gray-400 mt-1.5">{t('dueOn', { date: formatDate(b.payment_due_date) ?? '' })}</p>
+                  )}
+                  {b.exclusivity_end_date && b.exclusivity_end_date >= today && (
+                    <p className="text-xs text-red-500 font-medium mt-1.5">{t('exclusivityUntil', { date: formatDate(b.exclusivity_end_date) ?? '' })}</p>
                   )}
                 </div>
               )

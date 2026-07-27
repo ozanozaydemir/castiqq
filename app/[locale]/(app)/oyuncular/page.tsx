@@ -113,7 +113,7 @@ async function PendingPaymentsBanner() {
   const today = new Date().toISOString().split('T')[0]
   const { data: unpaid } = await supabase
     .from('bookings')
-    .select('gross_amount, currency, payment_due_date')
+    .select('net_amount, amount_paid, currency, payment_due_date')
     .neq('payment_status', 'paid')
 
   const rows = unpaid ?? []
@@ -122,7 +122,7 @@ async function PendingPaymentsBanner() {
   const totals: Record<string, number> = {}
   let overdueCount = 0
   for (const r of rows) {
-    totals[r.currency] = (totals[r.currency] ?? 0) + Number(r.gross_amount)
+    totals[r.currency] = (totals[r.currency] ?? 0) + (Number(r.net_amount) - Number(r.amount_paid))
     if (r.payment_due_date && r.payment_due_date < today) overdueCount++
   }
 

@@ -880,7 +880,15 @@
       "pendingSummary": "{count} job(s) awaiting payment",
       "overdueSummary": "{count} job(s) overdue",
       "colTalent": "Talent",
-      "conflictWarning": "This talent already has other job(s) on this date:"
+      "conflictWarning": "This talent already has other job(s) on this date:",
+      "withholdingRate": "Withholding Rate (%)",
+      "netAmount": "Net Amount",
+      "amountPaid": "Amount Paid",
+      "exclusivityEndDate": "Exclusivity End Date",
+      "exclusivityNotes": "Exclusivity Details",
+      "exclusivityNotesPlaceholder": "e.g. Cannot work with competing automotive brands",
+      "exclusivityConflictWarning": "This talent has an active exclusivity on this date:",
+      "exclusivityUntil": "Exclusive until {date}"
     },
     "documents": {
       "sectionTitle": "Documents",
@@ -1138,7 +1146,8 @@
     "quickAccess": "Quick Access",
     "addTalent": "Add Talent",
     "viewLists": "View Lists",
-    "documentsExpiringTitle": "{count} document(s) expiring or expired within 30 days"
+    "documentsExpiringTitle": "{count} document(s) expiring or expired within 30 days",
+    "exclusivityActiveTitle": "{count} talent(s) have an active exclusivity restriction"
   },
   "jobs": {
     "title": "Jobs",
@@ -1146,6 +1155,7 @@
     "searchPlaceholder": "Search talent, client, or job...",
     "allStatuses": "All Statuses",
     "clearFilters": "Clear Filters",
-    "overdueBadge": "Overdue"
+    "overdueBadge": "Overdue",
+    "paidShort": "paid"
   }
 }

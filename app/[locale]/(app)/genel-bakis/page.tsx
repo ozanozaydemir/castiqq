@@ -29,6 +29,7 @@ export default async function GenelBakisPage() {
     { data: expiringContracts },
     { data: unpaidBookings },
     { data: expiringDocuments },
+    { data: activeExclusivities },
   ] = await Promise.all([
     supabase.from('talent').select('*', { count: 'exact', head: true }).eq('organization_id', orgId!),
     supabase.from('talent').select('*', { count: 'exact', head: true }).eq('organization_id', orgId!).eq('availability', 'available'),
@@ -37,6 +38,7 @@ export default async function GenelBakisPage() {
     supabase.from('talent').select('id, full_name, representation_end_date').eq('organization_id', orgId!).not('representation_end_date', 'is', null).gte('representation_end_date', today).lte('representation_end_date', thirtyDaysLater).order('representation_end_date') as Promise<{ data: { id: string; full_name: string; representation_end_date: string }[] | null }>,
     supabase.from('bookings').select('*, talent(full_name)').neq('payment_status', 'paid').order('payment_due_date') as Promise<{ data: (Booking & { talent: { full_name: string } | null })[] | null }>,
     supabase.from('talent_documents').select('id, talent_id, document_type, expiry_date, talent(full_name)').eq('organization_id', orgId!).not('expiry_date', 'is', null).lte('expiry_date', thirtyDaysLater).order('expiry_date') as Promise<{ data: { id: string; talent_id: string; document_type: string; expiry_date: string; talent: { full_name: string } | null }[] | null }>,
+    supabase.from('bookings').select('id, talent_id, client_name, exclusivity_end_date, exclusivity_notes, talent(full_name)').gte('exclusivity_end_date', today).order('exclusivity_end_date') as Promise<{ data: { id: string; talent_id: string; client_name: string; exclusivity_end_date: string; exclusivity_notes: string | null; talent: { full_name: string } | null }[] | null }>,
   ])
 
   const AVAIL: Record<string, string> = { available: 'bg-green-400', busy: 'bg-amber-400', unavailable: 'bg-gray-300' }
@@ -45,10 +47,12 @@ export default async function GenelBakisPage() {
   const totalsByCurrency: Record<string, number> = {}
   let overdueCount = 0
   for (const b of unpaid) {
-    totalsByCurrency[b.currency] = (totalsByCurrency[b.currency] ?? 0) + Number(b.gross_amount)
+    const remaining = Number(b.net_amount) - Number(b.amount_paid)
+    totalsByCurrency[b.currency] = (totalsByCurrency[b.currency] ?? 0) + remaining
     if (b.payment_due_date && b.payment_due_date < today) overdueCount++
   }
   const overdueBookings = unpaid.filter(b => b.payment_due_date && b.payment_due_date < today).slice(0, 5)
+  const exclusivities = activeExclusivities ?? []
 
   const contracts = expiringContracts ?? []
   const documents = expiringDocuments ?? []
@@ -75,7 +79,7 @@ export default async function GenelBakisPage() {
               <div className="flex flex-wrap gap-x-4 gap-y-0.5">
                 {overdueBookings.map(b => (
                   <Link key={b.id} href={`/oyuncular/${b.talent_id}`} className="text-xs text-red-700 hover:text-red-900 hover:underline">
-                    {b.talent?.full_name ?? '—'} — {b.gross_amount.toLocaleString('tr-TR')} {b.currency}
+                    {b.talent?.full_name ?? '—'} — {(Number(b.net_amount) - Number(b.amount_paid)).toLocaleString('tr-TR')} {b.currency}
                   </Link>
                 ))}
               </div>
@@ -110,6 +114,23 @@ export default async function GenelBakisPage() {
                 {documents.map(d => (
                   <Link key={d.id} href={`/oyuncular/${d.talent_id}`} className="text-xs text-amber-700 hover:text-amber-900 hover:underline">
                     {d.talent?.full_name ?? '—'} — {DOC_TYPE_LABELS[d.document_type] ?? d.document_type} ({new Date(d.expiry_date).toLocaleDateString('tr-TR')})
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Aktif reklam yasağı uyarısı */}
+        {exclusivities.length > 0 && (
+          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 flex items-start gap-3">
+            <TriangleAlert className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-red-800 mb-1">{t('exclusivityActiveTitle', { count: exclusivities.length })}</p>
+              <div className="flex flex-wrap gap-x-4 gap-y-0.5">
+                {exclusivities.map(e => (
+                  <Link key={e.id} href={`/oyuncular/${e.talent_id}`} className="text-xs text-red-700 hover:text-red-900 hover:underline">
+                    {e.talent?.full_name ?? '—'} — {e.client_name} ({new Date(e.exclusivity_end_date).toLocaleDateString('tr-TR')})
                   </Link>
                 ))}
               </div>
