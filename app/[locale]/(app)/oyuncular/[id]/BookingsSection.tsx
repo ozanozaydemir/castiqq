@@ -123,6 +123,7 @@ export function BookingsSection({ talentId, bookings }: { talentId: string; book
         <BookingModal
           action={editing && boundUpdate ? boundUpdate : boundCreate}
           editingBooking={editing}
+          talentId={talentId}
           onClose={closeModal}
         />
       )}

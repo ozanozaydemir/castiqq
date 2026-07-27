@@ -12,6 +12,10 @@ export default async function YeniOyuncuPage() {
   const { data: { user } } = await supabase.auth.getUser()
   const { data: profile } = await supabase.from('profiles').select('organization_id').eq('id', user?.id ?? '').single()
   const { data: org } = await supabase.from('organizations').select('org_type').eq('id', profile?.organization_id ?? '').single()
+  const isAgency = org?.org_type === 'agency'
+  const { data: teamMembers } = isAgency
+    ? await supabase.from('profiles').select('id, full_name').eq('organization_id', profile?.organization_id ?? '')
+    : { data: [] }
 
   return (
     <div>
@@ -23,7 +27,7 @@ export default async function YeniOyuncuPage() {
         </Link>
 
         <div className="sb-card p-6">
-          <OyuncuForm action={createOyuncu} cancelHref="/oyuncular" orgType={org?.org_type === 'agency' ? 'agency' : 'production'} />
+          <OyuncuForm action={createOyuncu} cancelHref="/oyuncular" orgType={isAgency ? 'agency' : 'production'} teamMembers={teamMembers ?? []} />
         </div>
       </div>
     </div>

@@ -66,6 +66,7 @@ function buildTalentPayload(orgId: string, formData: FormData) {
     contract_file_path: str(formData.get('contract_file_path')),
     tax_status: (formData.get('tax_status') as string) || 'belirtilmedi',
     tax_id: str(formData.get('tax_id')),
+    assigned_to: str(formData.get('assigned_to')),
   }
 }
 

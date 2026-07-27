@@ -111,6 +111,7 @@ export type Database = {
           contract_file_path: string | null
           tax_status: 'belirtilmedi' | 'serbest_meslek' | 'sahis_sirketi' | 'sirket' | 'ucret_bordrosu'
           tax_id: string | null
+          assigned_to: string | null
           created_at: string
           updated_at: string
         }

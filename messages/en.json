@@ -25,7 +25,8 @@
     "logout": "Log Out",
     "management": "Management",
     "openMenu": "Open menu",
-    "overview": "Overview"
+    "overview": "Overview",
+    "jobs": "Jobs"
   },
   "auth": {
     "login": "Log In",
@@ -790,7 +791,9 @@
       "taxStatusCompany": "Company (LLC/Inc.)",
       "taxStatusPayroll": "Payroll",
       "taxId": "Tax ID / National ID",
-      "taxIdPlaceholder": "Tax number or national ID"
+      "taxIdPlaceholder": "Tax number or national ID",
+      "assignedTo": "Assigned Manager",
+      "assignedToUnassigned": "Unassigned"
     },
     "filters": {
       "searchPlaceholder": "Search by name…",
@@ -807,7 +810,9 @@
       "skill": "Skill",
       "agency": "Agency",
       "withAgency": "With Agency",
-      "withoutAgency": "Without Agency"
+      "withoutAgency": "Without Agency",
+      "assignedTo": "Assigned Manager",
+      "unassigned": "Unassigned"
     },
     "auditionStatus": {
       "candidate": "Candidate",
@@ -873,7 +878,9 @@
       "update": "Update",
       "saving": "Saving...",
       "pendingSummary": "{count} job(s) awaiting payment",
-      "overdueSummary": "{count} job(s) overdue"
+      "overdueSummary": "{count} job(s) overdue",
+      "colTalent": "Talent",
+      "conflictWarning": "This talent already has other job(s) on this date:"
     },
     "documents": {
       "sectionTitle": "Documents",
@@ -911,7 +918,8 @@
     "taxStatusSoleProprietor": "Sole Proprietorship",
     "taxStatusCompany": "Company (LLC/Inc.)",
     "taxStatusPayroll": "Payroll",
-    "taxId": "Tax ID / National ID"
+    "taxId": "Tax ID / National ID",
+    "assignedTo": "Assigned Manager"
   },
   "collections": {
     "title": "Lists",
@@ -1131,5 +1139,13 @@
     "addTalent": "Add Talent",
     "viewLists": "View Lists",
     "documentsExpiringTitle": "{count} document(s) expiring or expired within 30 days"
+  },
+  "jobs": {
+    "title": "Jobs",
+    "description": "All bookings across your roster and their payment status",
+    "searchPlaceholder": "Search talent, client, or job...",
+    "allStatuses": "All Statuses",
+    "clearFilters": "Clear Filters",
+    "overdueBadge": "Overdue"
   }
 }

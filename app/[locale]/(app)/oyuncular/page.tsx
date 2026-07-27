@@ -17,6 +17,7 @@ type SearchParams = {
   age_min?: string; age_max?: string
   height_min?: string; height_max?: string
   skill?: string; availability?: string; agency?: string
+  assigned?: string
   sort?: string; page?: string
 }
 
@@ -63,6 +64,8 @@ async function OyuncuGrid({ searchParams }: { searchParams: SearchParams }) {
   if (searchParams.agency === 'yes') query = query.not('agency_name', 'is', null)
   if (searchParams.agency === 'no')  query = query.is('agency_name', null)
   if (searchParams.skill)        query = query.contains('skills', [searchParams.skill])
+  if (searchParams.assigned === 'unassigned') query = query.is('assigned_to', null)
+  else if (searchParams.assigned)             query = query.eq('assigned_to', searchParams.assigned)
 
   const [{ data }, { data: projectsRaw }, { data: collectionsRaw }] = await Promise.all([
     query as Promise<{ data: TalentRow[] | null }>,
@@ -146,6 +149,15 @@ export default async function OyuncularPage({
   const params = await searchParams
   const t = await getTranslations('talent')
 
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const { data: profile } = await supabase.from('profiles').select('organization_id').eq('id', user?.id ?? '').single()
+  const { data: org } = await supabase.from('organizations').select('org_type').eq('id', profile?.organization_id ?? '').single()
+  const isAgency = org?.org_type === 'agency'
+  const { data: teamMembers } = isAgency
+    ? await supabase.from('profiles').select('id, full_name').eq('organization_id', profile?.organization_id ?? '')
+    : { data: [] }
+
   return (
     <div>
       <PageHeader
@@ -168,7 +180,7 @@ export default async function OyuncularPage({
 
       <div className="p-6 flex gap-6 items-start">
         <Suspense>
-          <OyuncuFilters />
+          <OyuncuFilters teamMembers={isAgency ? (teamMembers ?? []) : []} />
         </Suspense>
 
         <Suspense fallback={

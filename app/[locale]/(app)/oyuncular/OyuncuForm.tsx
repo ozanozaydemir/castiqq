@@ -265,11 +265,12 @@ interface OyuncuFormProps {
   initialData?: TalentWithRelations
   cancelHref?: string
   orgType?: 'production' | 'agency'
+  teamMembers?: { id: string; full_name: string | null }[]
 }
 
 // ── Main Component ───────────────────────────────────────────────
 
-export function OyuncuForm({ action, initialData, cancelHref = '/oyuncular', orgType = 'production' }: OyuncuFormProps) {
+export function OyuncuForm({ action, initialData, cancelHref = '/oyuncular', orgType = 'production', teamMembers = [] }: OyuncuFormProps) {
   const [state, formAction] = useActionState(action, null)
   const orgId = useOrgId()
   const tf = useTranslations('talent.form')
@@ -671,6 +672,16 @@ export function OyuncuForm({ action, initialData, cancelHref = '/oyuncular', org
         <section>
           <SectionTitle>{tf('representation')}</SectionTitle>
           <div className="space-y-4">
+            {teamMembers.length > 0 && (
+              <Field label={tf('assignedTo')}>
+                <select name="assigned_to" defaultValue={initialData?.assigned_to ?? ''} className="sb-input">
+                  <option value="">{tf('assignedToUnassigned')}</option>
+                  {teamMembers.map(m => (
+                    <option key={m.id} value={m.id}>{m.full_name ?? m.id}</option>
+                  ))}
+                </select>
+              </Field>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <Field label={tf('commissionRate')}>
                 <input

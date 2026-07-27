@@ -1,11 +1,18 @@
 'use client'
 
-import { useActionState, useEffect } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
-import { X, Loader2 } from 'lucide-react'
+import { X, Loader2, TriangleAlert } from 'lucide-react'
+import { createBrowserClient } from '@supabase/ssr'
 import { useTranslations } from 'next-intl'
 import type { ActionState } from '@/app/actions/bookings'
 import type { Booking } from '@/types/database'
+
+type ConflictRow = { client_name: string; work_date: string; work_date_end: string | null }
+
+function rangesOverlap(aStart: string, aEnd: string, bStart: string, bEnd: string) {
+  return aStart <= bEnd && aEnd >= bStart
+}
 
 function SubmitButton({ label, savingLabel }: { label: string; savingLabel: string }) {
   const { pending } = useFormStatus()
@@ -19,19 +26,50 @@ function SubmitButton({ label, savingLabel }: { label: string; savingLabel: stri
 export function BookingModal({
   action,
   editingBooking,
+  talentId,
   onClose,
 }: {
   action: (state: ActionState, formData: FormData) => Promise<ActionState>
   editingBooking?: Booking | null
+  talentId: string
   onClose: () => void
 }) {
   const [state, formAction] = useActionState(action, null)
   const t = useTranslations('talent.bookings')
   const tc = useTranslations('common')
 
+  const [workDate, setWorkDate] = useState(editingBooking?.work_date ?? '')
+  const [workDateEnd, setWorkDateEnd] = useState(editingBooking?.work_date_end ?? '')
+  const [conflicts, setConflicts] = useState<ConflictRow[]>([])
+
   useEffect(() => {
     if (state?.success) onClose()
   }, [state?.success, onClose])
+
+  useEffect(() => {
+    if (!workDate) { setConflicts([]); return }
+    const end = workDateEnd || workDate
+    let cancelled = false
+
+    const supabase = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    )
+
+    supabase
+      .from('bookings')
+      .select('id, client_name, work_date, work_date_end')
+      .eq('talent_id', talentId)
+      .then(({ data }) => {
+        if (cancelled || !data) return
+        const found = (data as (ConflictRow & { id: string })[])
+          .filter(b => b.id !== editingBooking?.id)
+          .filter(b => rangesOverlap(workDate, end, b.work_date, b.work_date_end || b.work_date))
+        setConflicts(found)
+      })
+
+    return () => { cancelled = true }
+  }, [workDate, workDateEnd, talentId, editingBooking?.id])
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
@@ -72,12 +110,24 @@ export function BookingModal({
 
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-gray-700">{t('workDate')} <span className="text-red-400">*</span></label>
-              <input type="date" name="work_date" required defaultValue={editingBooking?.work_date ?? ''} className="sb-input" />
+              <input type="date" name="work_date" required value={workDate} onChange={e => setWorkDate(e.target.value)} className="sb-input" />
             </div>
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-gray-700">{t('workDateEnd')}</label>
-              <input type="date" name="work_date_end" defaultValue={editingBooking?.work_date_end ?? ''} className="sb-input" />
+              <input type="date" name="work_date_end" value={workDateEnd} onChange={e => setWorkDateEnd(e.target.value)} className="sb-input" />
             </div>
+
+            {conflicts.length > 0 && (
+              <div className="sm:col-span-2 flex items-start gap-2 bg-amber-50 border border-amber-100 text-amber-700 px-3 py-2.5 rounded-xl text-xs">
+                <TriangleAlert className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-medium">{t('conflictWarning')}</p>
+                  {conflicts.map((c, i) => (
+                    <p key={i}>{c.client_name} — {new Date(c.work_date).toLocaleDateString('tr-TR')}{c.work_date_end ? `–${new Date(c.work_date_end).toLocaleDateString('tr-TR')}` : ''}</p>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-gray-700">{t('grossAmount')} <span className="text-red-400">*</span></label>

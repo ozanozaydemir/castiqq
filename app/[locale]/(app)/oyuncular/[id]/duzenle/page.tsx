@@ -19,6 +19,10 @@ export default async function DuzenleOyuncuPage({ params }: { params: Promise<{ 
   const { data: { user } } = await supabase.auth.getUser()
   const { data: profile } = await supabase.from('profiles').select('organization_id').eq('id', user?.id ?? '').single()
   const { data: org } = await supabase.from('organizations').select('org_type').eq('id', profile?.organization_id ?? '').single()
+  const isAgency = org?.org_type === 'agency'
+  const { data: teamMembers } = isAgency
+    ? await supabase.from('profiles').select('id, full_name').eq('organization_id', profile?.organization_id ?? '')
+    : { data: [] }
 
   const [{ data: languages }, { data: experiences }, { data: education }] = await Promise.all([
     supabase.from('talent_languages').select('*').eq('talent_id', id).order('sort_order'),
@@ -45,7 +49,7 @@ export default async function DuzenleOyuncuPage({ params }: { params: Promise<{ 
         </Link>
 
         <div className="sb-card p-6">
-          <OyuncuForm action={boundAction} initialData={talentWithRelations} cancelHref={`/oyuncular/${id}`} orgType={org?.org_type === 'agency' ? 'agency' : 'production'} />
+          <OyuncuForm action={boundAction} initialData={talentWithRelations} cancelHref={`/oyuncular/${id}`} orgType={isAgency ? 'agency' : 'production'} teamMembers={teamMembers ?? []} />
         </div>
       </div>
     </div>

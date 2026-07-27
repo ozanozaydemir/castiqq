@@ -91,6 +91,10 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
   const { data: org } = await supabase.from('organizations').select('org_type').eq('id', profile?.organization_id ?? '').single()
   const isAgency = org?.org_type === 'agency'
 
+  const { data: assignedProfile } = talent.assigned_to
+    ? await supabase.from('profiles').select('full_name').eq('id', talent.assigned_to).single()
+    : { data: null }
+
   const [langRes, expRes, eduRes, audRes, colRes, bookingsRes, documentsRes] = await Promise.all([
     supabase.from('talent_languages').select('*').eq('talent_id', id).order('sort_order'),
     supabase.from('talent_experiences').select('*').eq('talent_id', id).order('sort_order'),
@@ -293,9 +297,10 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
           )}
 
           {/* Temsil & Sözleşme (yalnızca menajerlik hesapları) */}
-          {isAgency && (talent.commission_rate || talent.representation_start_date || talent.representation_end_date || talent.contract_file_path || talent.tax_status !== 'belirtilmedi') && (
+          {isAgency && (talent.commission_rate || talent.representation_start_date || talent.representation_end_date || talent.contract_file_path || talent.tax_status !== 'belirtilmedi' || talent.assigned_to) && (
             <Section title={t('representation')} icon={<FileSignature className="w-4 h-4" />}>
               <div>
+                <MetaRow label={t('assignedTo')} value={assignedProfile?.full_name ?? null} />
                 <MetaRow label={t('commissionRate')} value={talent.commission_rate ? `%${talent.commission_rate}` : null} />
                 <MetaRow label={t('repStartDate')} value={talent.representation_start_date ? new Date(talent.representation_start_date).toLocaleDateString('tr-TR') : null} />
                 <MetaRow label={t('repEndDate')} value={talent.representation_end_date ? new Date(talent.representation_end_date).toLocaleDateString('tr-TR') : null} />

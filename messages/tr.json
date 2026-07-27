@@ -25,7 +25,8 @@
     "logout": "Çıkış Yap",
     "management": "Yönetim",
     "openMenu": "Menüyü aç",
-    "overview": "Genel Bakış"
+    "overview": "Genel Bakış",
+    "jobs": "İşler"
   },
   "auth": {
     "login": "Giriş Yap",
@@ -790,7 +791,9 @@
       "taxStatusCompany": "Şirket (Ltd/A.Ş.)",
       "taxStatusPayroll": "Ücret Bordrosu",
       "taxId": "Vergi No / TCKN",
-      "taxIdPlaceholder": "Vergi numarası veya TC kimlik no"
+      "taxIdPlaceholder": "Vergi numarası veya TC kimlik no",
+      "assignedTo": "Sorumlu Menajer",
+      "assignedToUnassigned": "Atanmamış"
     },
     "filters": {
       "searchPlaceholder": "İsim ara…",
@@ -807,7 +810,9 @@
       "skill": "Yetenek",
       "agency": "Ajans",
       "withAgency": "Ajanslı",
-      "withoutAgency": "Ajansız"
+      "withoutAgency": "Ajansız",
+      "assignedTo": "Sorumlu Menajer",
+      "unassigned": "Atanmamış"
     },
     "auditionStatus": {
       "candidate": "Aday",
@@ -873,7 +878,9 @@
       "update": "Güncelle",
       "saving": "Kaydediliyor...",
       "pendingSummary": "{count} iş için ödeme bekleniyor",
-      "overdueSummary": "{count} işin vadesi geçti"
+      "overdueSummary": "{count} işin vadesi geçti",
+      "colTalent": "Oyuncu",
+      "conflictWarning": "Bu tarihte aynı oyuncu için başka iş(ler) var:"
     },
     "documents": {
       "sectionTitle": "Belgeler",
@@ -911,7 +918,8 @@
     "taxStatusSoleProprietor": "Şahıs Şirketi",
     "taxStatusCompany": "Şirket (Ltd/A.Ş.)",
     "taxStatusPayroll": "Ücret Bordrosu",
-    "taxId": "Vergi No / TCKN"
+    "taxId": "Vergi No / TCKN",
+    "assignedTo": "Sorumlu Menajer"
   },
   "collections": {
     "title": "Listeler",
@@ -1131,5 +1139,13 @@
     "addTalent": "Oyuncu Ekle",
     "viewLists": "Listeleri Görüntüle",
     "documentsExpiringTitle": "{count} belgenin süresi 30 gün içinde doluyor/doldu"
+  },
+  "jobs": {
+    "title": "İşler",
+    "description": "Roster'ındaki tüm işler ve ödeme durumları",
+    "searchPlaceholder": "Oyuncu, müşteri veya iş ara...",
+    "allStatuses": "Tüm Durumlar",
+    "clearFilters": "Filtreleri Temizle",
+    "overdueBadge": "Gecikti"
   }
 }

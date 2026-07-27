@@ -11,7 +11,7 @@ const SKILL_OPTIONS = [
   'Silah Kullanımı', 'Dövüş Koreografisi', 'Enstrüman', 'Spor',
 ]
 
-export function OyuncuFilters() {
+export function OyuncuFilters({ teamMembers = [] }: { teamMembers?: { id: string; full_name: string | null }[] }) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -36,7 +36,7 @@ export function OyuncuFilters() {
     startTransition(() => router.push(pathname))
   }, [pathname, router])
 
-  const hasFilters = ['q', 'gender', 'city', 'age_min', 'age_max', 'height_min', 'height_max', 'skill', 'availability', 'agency'].some(k => searchParams.has(k))
+  const hasFilters = ['q', 'gender', 'city', 'age_min', 'age_max', 'height_min', 'height_max', 'skill', 'availability', 'agency', 'assigned'].some(k => searchParams.has(k))
 
   const genderOptions = [
     { v: '', l: t('all') },
@@ -143,6 +143,20 @@ export function OyuncuFilters() {
         <input value={get('city')} onChange={e => update('city', e.target.value)}
           placeholder={t('cityPlaceholder')} className="sb-input text-sm" />
       </div>
+
+      {/* Sorumlu Menajer (yalnızca menajerlik hesapları) */}
+      {teamMembers.length > 0 && (
+        <div>
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">{t('assignedTo')}</p>
+          <select value={get('assigned')} onChange={e => update('assigned', e.target.value)} className="sb-input text-sm">
+            <option value="">{t('all')}</option>
+            <option value="unassigned">{t('unassigned')}</option>
+            {teamMembers.map(m => (
+              <option key={m.id} value={m.id}>{m.full_name ?? m.id}</option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* Skills */}
       <div>
