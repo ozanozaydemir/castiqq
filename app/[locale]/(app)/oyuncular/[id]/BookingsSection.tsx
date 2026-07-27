@@ -19,7 +19,7 @@ function formatDate(d: string | null) {
   return new Date(d).toLocaleDateString('tr-TR')
 }
 
-export function BookingsSection({ talentId, bookings, clients = [] }: { talentId: string; bookings: Booking[]; clients?: { id: string; name: string }[] }) {
+export function BookingsSection({ talentId, bookings, clients = [], birthYear }: { talentId: string; bookings: Booking[]; clients?: { id: string; name: string }[]; birthYear?: number | null }) {
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState<Booking | null>(null)
   const [isPending, startTransition] = useTransition()
@@ -137,6 +137,7 @@ export function BookingsSection({ talentId, bookings, clients = [] }: { talentId
           editingBooking={editing}
           talentId={talentId}
           clients={clients}
+          birthYear={birthYear}
           onClose={closeModal}
         />
       )}

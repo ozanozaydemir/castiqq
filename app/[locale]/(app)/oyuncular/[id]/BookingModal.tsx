@@ -31,17 +31,22 @@ export function BookingModal({
   editingBooking,
   talentId,
   clients = [],
+  birthYear,
   onClose,
 }: {
   action: (state: ActionState, formData: FormData) => Promise<ActionState>
   editingBooking?: Booking | null
   talentId: string
   clients?: { id: string; name: string }[]
+  birthYear?: number | null
   onClose: () => void
 }) {
   const [state, formAction] = useActionState(action, null)
   const t = useTranslations('talent.bookings')
   const tc = useTranslations('common')
+
+  const isMinor = !!birthYear && (new Date().getFullYear() - birthYear) < 18
+  const [hasValidWorkPermit, setHasValidWorkPermit] = useState<boolean | null>(null)
 
   const [jobType, setJobType] = useState<string>(editingBooking?.job_type ?? 'dizi')
   const [workDate, setWorkDate] = useState(editingBooking?.work_date ?? '')
@@ -90,6 +95,29 @@ export function BookingModal({
     return () => { cancelled = true }
   }, [workDate, workDateEnd, talentId, editingBooking?.id])
 
+  useEffect(() => {
+    if (!isMinor) return
+    let cancelled = false
+    const today = new Date().toISOString().split('T')[0]
+
+    const supabase = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    )
+
+    supabase
+      .from('talent_documents')
+      .select('expiry_date')
+      .eq('talent_id', talentId)
+      .eq('document_type', 'calisma_izni')
+      .then(({ data }) => {
+        if (cancelled || !data) return
+        setHasValidWorkPermit(data.some(d => !d.expiry_date || d.expiry_date >= today))
+      })
+
+    return () => { cancelled = true }
+  }, [isMinor, talentId])
+
   const gross = Number(grossAmount) || 0
   const rate = Number(withholdingRate) || 0
   const netAmount = Math.round((gross - gross * (rate / 100)) * 100) / 100
@@ -107,6 +135,15 @@ export function BookingModal({
         </div>
 
         <form action={formAction} className="p-5 space-y-4">
+          {isMinor && (
+            <div className={`flex items-start gap-2 px-3 py-2.5 rounded-xl text-xs ${
+              hasValidWorkPermit === false ? 'bg-red-50 border border-red-100 text-red-700' : 'bg-blue-50 border border-blue-100 text-blue-700'
+            }`}>
+              <TriangleAlert className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+              <p>{hasValidWorkPermit === false ? t('minorNoPermitWarning') : t('minorReminder')}</p>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2 space-y-1.5">
               <label className="block text-sm font-medium text-gray-700">{t('clientName')} <span className="text-red-400">*</span></label>

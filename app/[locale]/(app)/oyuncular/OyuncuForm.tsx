@@ -732,6 +732,24 @@ export function OyuncuForm({ action, initialData, cancelHref = '/oyuncular', org
               hint={tf('contractHint')}
             />
 
+            <label className="flex items-center gap-2.5 text-sm text-gray-700 cursor-pointer w-fit">
+              <input
+                type="checkbox"
+                name="union_member"
+                defaultChecked={initialData?.union_member ?? false}
+                className="w-4 h-4 rounded border-gray-300 text-indigo-500 focus:ring-indigo-400"
+              />
+              {tf('unionMember')}
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Field label={tf('unionName')}>
+                <input name="union_name" defaultValue={initialData?.union_name ?? ''} placeholder={tf('unionNamePlaceholder')} className="sb-input" />
+              </Field>
+              <Field label={tf('unionIdNumber')}>
+                <input name="union_id_number" defaultValue={initialData?.union_id_number ?? ''} placeholder={tf('unionIdNumberPlaceholder')} className="sb-input" />
+              </Field>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-gray-100">
               <Field label={tf('taxStatus')}>
                 <select name="tax_status" defaultValue={initialData?.tax_status ?? 'belirtilmedi'} className="sb-input">

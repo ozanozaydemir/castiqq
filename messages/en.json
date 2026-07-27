@@ -795,7 +795,12 @@
       "taxId": "Tax ID / National ID",
       "taxIdPlaceholder": "Tax number or national ID",
       "assignedTo": "Assigned Manager",
-      "assignedToUnassigned": "Unassigned"
+      "assignedToUnassigned": "Unassigned",
+      "unionMember": "Union Member",
+      "unionName": "Union Name",
+      "unionNamePlaceholder": "e.g. Screen Actors Union",
+      "unionIdNumber": "Union Membership No.",
+      "unionIdNumberPlaceholder": "Membership number"
     },
     "filters": {
       "searchPlaceholder": "Search by name…",
@@ -895,7 +900,9 @@
       "ongoingNoEndDate": "No end date will be set",
       "ongoingBadge": "Ongoing",
       "ongoingEngagementsTitle": "This talent has an ongoing engagement:",
-      "ongoingSince": "Ongoing since {date}"
+      "ongoingSince": "Ongoing since {date}",
+      "minorReminder": "This talent is under 18. Make sure working hours and break requirements comply with applicable regulations.",
+      "minorNoPermitWarning": "This talent is under 18 and no valid work permit document was found. Check the Documents section before saving this booking."
     },
     "documents": {
       "sectionTitle": "Documents",
@@ -934,7 +941,26 @@
     "taxStatusCompany": "Company (LLC/Inc.)",
     "taxStatusPayroll": "Payroll",
     "taxId": "Tax ID / National ID",
-    "assignedTo": "Assigned Manager"
+    "assignedTo": "Assigned Manager",
+    "unionMember": "Union",
+    "unionMemberYes": "Member",
+    "unionIdNumber": "Membership No.",
+    "repHistory": {
+      "sectionTitle": "Representation History",
+      "addPeriod": "Add Period",
+      "empty": "No representation periods recorded yet.",
+      "newTitle": "New Representation Period",
+      "editTitle": "Edit Period",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "present": "present",
+      "commissionRate": "Commission Rate (%)",
+      "notes": "Notes",
+      "notesPlaceholder": "e.g. reason for departure, return conditions...",
+      "create": "Save",
+      "update": "Update",
+      "saving": "Saving..."
+    }
   },
   "collections": {
     "title": "Lists",

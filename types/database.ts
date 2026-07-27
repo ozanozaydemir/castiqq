@@ -112,6 +112,9 @@ export type Database = {
           tax_status: 'belirtilmedi' | 'serbest_meslek' | 'sahis_sirketi' | 'sirket' | 'ucret_bordrosu'
           tax_id: string | null
           assigned_to: string | null
+          union_member: boolean
+          union_name: string | null
+          union_id_number: string | null
           created_at: string
           updated_at: string
         }
@@ -181,6 +184,21 @@ export type Database = {
         }
         Insert: Omit<Database['public']['Tables']['talent_documents']['Row'], 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['talent_documents']['Insert']>
+      }
+      talent_representation_history: {
+        Row: {
+          id: string
+          organization_id: string
+          talent_id: string
+          start_date: string
+          end_date: string | null
+          commission_rate: number | null
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['talent_representation_history']['Row'], 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Database['public']['Tables']['talent_representation_history']['Insert']>
       }
       talent_languages: {
         Row: {
@@ -279,6 +297,7 @@ export type TalentEducation = Database['public']['Tables']['talent_education']['
 export type Client = Database['public']['Tables']['clients']['Row']
 export type Booking = Database['public']['Tables']['bookings']['Row']
 export type TalentDocument = Database['public']['Tables']['talent_documents']['Row']
+export type RepresentationPeriod = Database['public']['Tables']['talent_representation_history']['Row']
 export type Audition = Database['public']['Tables']['auditions']['Row']
 export type Profile = Database['public']['Tables']['profiles']['Row']
 export type Organization = Database['public']['Tables']['organizations']['Row']

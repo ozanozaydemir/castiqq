@@ -795,7 +795,12 @@
       "taxId": "Vergi No / TCKN",
       "taxIdPlaceholder": "Vergi numarası veya TC kimlik no",
       "assignedTo": "Sorumlu Menajer",
-      "assignedToUnassigned": "Atanmamış"
+      "assignedToUnassigned": "Atanmamış",
+      "unionMember": "Sendika Üyesi",
+      "unionName": "Sendika Adı",
+      "unionNamePlaceholder": "Örn. Oyuncular Sendikası",
+      "unionIdNumber": "Sendika Sicil No",
+      "unionIdNumberPlaceholder": "Sicil numarası"
     },
     "filters": {
       "searchPlaceholder": "İsim ara…",
@@ -895,7 +900,9 @@
       "ongoingNoEndDate": "Bitiş tarihi girilmeyecek",
       "ongoingBadge": "Devam ediyor",
       "ongoingEngagementsTitle": "Bu oyuncunun devam eden anlaşması var:",
-      "ongoingSince": "{date} tarihinden beri devam ediyor"
+      "ongoingSince": "{date} tarihinden beri devam ediyor",
+      "minorReminder": "Bu oyuncu 18 yaşından küçük. Çalışma saatleri ve mola sürelerinde ilgili mevzuata uyduğunuzdan emin olun.",
+      "minorNoPermitWarning": "Bu oyuncu 18 yaşından küçük ve geçerli bir çalışma izni belgesi bulunamadı. Booking'i kaydetmeden önce Belgeler bölümünden kontrol edin."
     },
     "documents": {
       "sectionTitle": "Belgeler",
@@ -934,7 +941,26 @@
     "taxStatusCompany": "Şirket (Ltd/A.Ş.)",
     "taxStatusPayroll": "Ücret Bordrosu",
     "taxId": "Vergi No / TCKN",
-    "assignedTo": "Sorumlu Menajer"
+    "assignedTo": "Sorumlu Menajer",
+    "unionMember": "Sendika",
+    "unionMemberYes": "Üye",
+    "unionIdNumber": "Sicil No",
+    "repHistory": {
+      "sectionTitle": "Temsil Geçmişi",
+      "addPeriod": "Dönem Ekle",
+      "empty": "Henüz kayıtlı temsil dönemi yok.",
+      "newTitle": "Yeni Temsil Dönemi",
+      "editTitle": "Dönemi Düzenle",
+      "startDate": "Başlangıç Tarihi",
+      "endDate": "Bitiş Tarihi",
+      "present": "günümüz",
+      "commissionRate": "Komisyon Oranı (%)",
+      "notes": "Notlar",
+      "notesPlaceholder": "Örn. Ayrılma nedeni, geri dönüş koşulları...",
+      "create": "Kaydet",
+      "update": "Güncelle",
+      "saving": "Kaydediliyor..."
+    }
   },
   "collections": {
     "title": "Listeler",

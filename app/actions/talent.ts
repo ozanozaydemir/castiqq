@@ -67,6 +67,9 @@ function buildTalentPayload(orgId: string, formData: FormData) {
     tax_status: (formData.get('tax_status') as string) || 'belirtilmedi',
     tax_id: str(formData.get('tax_id')),
     assigned_to: str(formData.get('assigned_to')),
+    union_member: formData.get('union_member') === 'on',
+    union_name: str(formData.get('union_name')),
+    union_id_number: str(formData.get('union_id_number')),
   }
 }
 

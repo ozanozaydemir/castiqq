@@ -16,7 +16,8 @@ import { MediaEmbed } from './MediaEmbed'
 import { ContractDownloadButton } from './ContractDownloadButton'
 import { BookingsSection } from './BookingsSection'
 import { DocumentsSection } from './DocumentsSection'
-import type { Booking, TalentDocument } from '@/types/database'
+import { RepresentationHistorySection } from './RepresentationHistorySection'
+import type { Booking, TalentDocument, RepresentationPeriod } from '@/types/database'
 
 const LANG_LEVEL_LABELS: Record<string, string> = {
   native: 'Ana dil', C2: 'C2', C1: 'C1', B2: 'B2', B1: 'B1', A2: 'A2', A1: 'A1',
@@ -95,7 +96,7 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
     ? await supabase.from('profiles').select('full_name').eq('id', talent.assigned_to).single()
     : { data: null }
 
-  const [langRes, expRes, eduRes, audRes, colRes, bookingsRes, documentsRes, clientsRes] = await Promise.all([
+  const [langRes, expRes, eduRes, audRes, colRes, bookingsRes, documentsRes, clientsRes, repHistoryRes] = await Promise.all([
     supabase.from('talent_languages').select('*').eq('talent_id', id).order('sort_order'),
     supabase.from('talent_experiences').select('*').eq('talent_id', id).order('sort_order'),
     supabase.from('talent_education').select('*').eq('talent_id', id).order('sort_order'),
@@ -113,6 +114,9 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
     isAgency
       ? supabase.from('clients').select('id, name').order('name')
       : Promise.resolve({ data: [] as { id: string; name: string }[] }),
+    isAgency
+      ? supabase.from('talent_representation_history').select('*').eq('talent_id', id).order('start_date', { ascending: false })
+      : Promise.resolve({ data: [] as RepresentationPeriod[] }),
   ])
   const languages = (langRes.data ?? []) as TalentLanguage[]
   const experiences = (expRes.data ?? []) as TalentExperience[]
@@ -131,6 +135,7 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
   const bookings = (bookingsRes.data ?? []) as Booking[]
   const documents = (documentsRes.data ?? []) as TalentDocument[]
   const clients = (clientsRes.data ?? []) as { id: string; name: string }[]
+  const repHistory = (repHistoryRes.data ?? []) as RepresentationPeriod[]
   const totalAuditions = audList.length
   const callbackCount = audList.filter(a => a.status === 'shortlisted' || a.status === 'selected').length
   const callbackRate = totalAuditions > 0 ? Math.round((callbackCount / totalAuditions) * 100) : null
@@ -301,7 +306,7 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
           )}
 
           {/* Temsil & Sözleşme (yalnızca menajerlik hesapları) */}
-          {isAgency && (talent.commission_rate || talent.representation_start_date || talent.representation_end_date || talent.contract_file_path || talent.tax_status !== 'belirtilmedi' || talent.assigned_to) && (
+          {isAgency && (talent.commission_rate || talent.representation_start_date || talent.representation_end_date || talent.contract_file_path || talent.tax_status !== 'belirtilmedi' || talent.assigned_to || talent.union_member) && (
             <Section title={t('representation')} icon={<FileSignature className="w-4 h-4" />}>
               <div>
                 <MetaRow label={t('assignedTo')} value={assignedProfile?.full_name ?? null} />
@@ -315,6 +320,8 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
                     : null
                 } />
                 <MetaRow label={t('taxId')} value={talent.tax_id} />
+                <MetaRow label={t('unionMember')} value={talent.union_member ? (talent.union_name ?? t('unionMemberYes')) : null} />
+                <MetaRow label={t('unionIdNumber')} value={talent.union_id_number} />
               </div>
               {talent.contract_file_path && (
                 <div className="mt-3 pt-3 border-t border-gray-50">
@@ -326,6 +333,9 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
 
           {/* Belgeler (yalnızca menajerlik hesapları) */}
           {isAgency && <DocumentsSection talentId={talent.id} documents={documents} />}
+
+          {/* Temsil Geçmişi (yalnızca menajerlik hesapları) */}
+          {isAgency && <RepresentationHistorySection talentId={talent.id} periods={repHistory} />}
 
           {/* Skills & Licenses */}
           {((talent.skills?.length ?? 0) > 0 || (talent.licenses?.length ?? 0) > 0) && (
@@ -351,7 +361,7 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
         {/* Right column */}
         <div className="lg:col-span-2 space-y-4">
           {/* İş Geçmişi / Booking Log (yalnızca menajerlik hesapları) */}
-          {isAgency && <BookingsSection talentId={talent.id} bookings={bookings} clients={clients} />}
+          {isAgency && <BookingsSection talentId={talent.id} bookings={bookings} clients={clients} birthYear={talent.birth_year} />}
 
           {/* Experience */}
           {experiences.length > 0 && (
