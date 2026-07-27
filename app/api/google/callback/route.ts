@@ -25,8 +25,18 @@ export async function GET(req: NextRequest) {
     }
 
     oauth2Client.setCredentials(tokens)
-    const oauth2 = google.oauth2({ version: 'v2', auth: oauth2Client })
-    const { data: googleUser } = await oauth2.userinfo.get()
+
+    // Bağlı hesabın email'i yalnızca "Bağlı hesap: x@gmail.com" gösterimi için —
+    // bu isteğin başarısız olması (ör. scope eksikliği, geçici hata) asıl
+    // bağlantının kaydedilmesini engellememeli.
+    let googleEmail: string | null = null
+    try {
+      const oauth2 = google.oauth2({ version: 'v2', auth: oauth2Client })
+      const { data: googleUser } = await oauth2.userinfo.get()
+      googleEmail = googleUser.email ?? null
+    } catch (err) {
+      console.error('[google callback] userinfo fetch failed (non-fatal)', err)
+    }
 
     const adminClient = createAdminClient()
     const { error } = await adminClient.from('google_connections').upsert(
@@ -36,7 +46,7 @@ export async function GET(req: NextRequest) {
         refresh_token: tokens.refresh_token,
         expires_at: new Date(tokens.expiry_date ?? Date.now() + 3600_000).toISOString(),
         connected_by: userId,
-        google_email: googleUser.email ?? null,
+        google_email: googleEmail,
       },
       { onConflict: 'organization_id' },
     )

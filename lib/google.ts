@@ -4,6 +4,10 @@ import { createAdminClient } from '@/lib/supabase/admin'
 export const GOOGLE_SHEETS_SCOPES = [
   'https://www.googleapis.com/auth/spreadsheets',
   'https://www.googleapis.com/auth/drive.file',
+  // Bağlı hesabın email'ini "Bağlı hesap: x@gmail.com" olarak göstermek için —
+  // bu olmadan userinfo endpoint'i 401 döner ve tüm bağlantı iptal olurdu.
+  'openid',
+  'https://www.googleapis.com/auth/userinfo.email',
 ].join(' ')
 
 export function getGoogleRedirectUri() {
