@@ -823,7 +823,49 @@
     "exclusivity": "Exclusivity",
     "exclusive": "Exclusive",
     "nonExclusive": "Non-exclusive",
-    "viewContract": "View contract"
+    "viewContract": "View contract",
+    "bookings": {
+      "sectionTitle": "Booking History",
+      "addBooking": "Add Job",
+      "empty": "No bookings recorded yet.",
+      "newTitle": "New Booking",
+      "editTitle": "Edit Booking",
+      "clientName": "Client / Production",
+      "clientNamePlaceholder": "e.g. ABC Productions",
+      "jobType": "Job Type",
+      "jobTypes": {
+        "dizi": "TV Episode",
+        "reklam": "Commercial",
+        "film": "Film",
+        "sunuculuk": "Hosting",
+        "seslendirme": "Voiceover",
+        "etkinlik": "Event",
+        "diger": "Other"
+      },
+      "title": "Description",
+      "titlePlaceholder": "e.g. Red Room Ep. 8",
+      "workDate": "Work Date",
+      "workDateEnd": "End Date (optional)",
+      "grossAmount": "Gross Fee",
+      "currency": "Currency",
+      "paymentDueDate": "Payment Due",
+      "paymentStatus": "Payment Status",
+      "paymentStatuses": {
+        "pending": "Pending",
+        "partial": "Partially Paid",
+        "paid": "Paid"
+      },
+      "notes": "Notes",
+      "notesPlaceholder": "Free-form note...",
+      "commission": "Commission",
+      "overdue": "Overdue ({date})",
+      "dueOn": "Due: {date}",
+      "create": "Save",
+      "update": "Update",
+      "saving": "Saving...",
+      "pendingSummary": "{count} job(s) awaiting payment",
+      "overdueSummary": "{count} job(s) overdue"
+    }
   },
   "collections": {
     "title": "Lists",

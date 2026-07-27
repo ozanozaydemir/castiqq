@@ -823,7 +823,49 @@
     "exclusivity": "Münhasırlık",
     "exclusive": "Münhasır",
     "nonExclusive": "Münhasır değil",
-    "viewContract": "Sözleşmeyi görüntüle"
+    "viewContract": "Sözleşmeyi görüntüle",
+    "bookings": {
+      "sectionTitle": "İş Geçmişi",
+      "addBooking": "Yeni İş Ekle",
+      "empty": "Henüz kayıtlı iş yok.",
+      "newTitle": "Yeni İş",
+      "editTitle": "İşi Düzenle",
+      "clientName": "Müşteri / Yapım",
+      "clientNamePlaceholder": "Örn. ABC Yapım",
+      "jobType": "İş Türü",
+      "jobTypes": {
+        "dizi": "Dizi Bölümü",
+        "reklam": "Reklam",
+        "film": "Film",
+        "sunuculuk": "Sunuculuk",
+        "seslendirme": "Seslendirme",
+        "etkinlik": "Etkinlik",
+        "diger": "Diğer"
+      },
+      "title": "Açıklama",
+      "titlePlaceholder": "Örn. Kırmızı Oda 8. Bölüm",
+      "workDate": "Çalışma Tarihi",
+      "workDateEnd": "Bitiş Tarihi (opsiyonel)",
+      "grossAmount": "Brüt Ücret",
+      "currency": "Para Birimi",
+      "paymentDueDate": "Ödeme Vadesi",
+      "paymentStatus": "Ödeme Durumu",
+      "paymentStatuses": {
+        "pending": "Bekliyor",
+        "partial": "Kısmi Ödendi",
+        "paid": "Ödendi"
+      },
+      "notes": "Notlar",
+      "notesPlaceholder": "Serbest not...",
+      "commission": "Komisyon",
+      "overdue": "Vadesi geçti ({date})",
+      "dueOn": "Vade: {date}",
+      "create": "Kaydet",
+      "update": "Güncelle",
+      "saving": "Kaydediliyor...",
+      "pendingSummary": "{count} iş için ödeme bekleniyor",
+      "overdueSummary": "{count} işin vadesi geçti"
+    }
   },
   "collections": {
     "title": "Listeler",

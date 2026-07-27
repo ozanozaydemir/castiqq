@@ -6,7 +6,7 @@ import { TalentGridClient } from './TalentGridClient'
 import { ExportToSheetsButton } from './ExportToSheetsButton'
 import { ImportFromSheetsButton } from './ImportFromSheetsButton'
 import { Link } from '@/i18n/navigation'
-import { Plus } from 'lucide-react'
+import { Plus, TriangleAlert } from 'lucide-react'
 import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
 
@@ -98,6 +98,46 @@ async function OyuncuGrid({ searchParams }: { searchParams: SearchParams }) {
   )
 }
 
+async function PendingPaymentsBanner() {
+  const supabase = await createClient()
+  const t = await getTranslations('talent.bookings')
+
+  const { data: { user } } = await supabase.auth.getUser()
+  const { data: profile } = await supabase.from('profiles').select('organization_id').eq('id', user?.id ?? '').single()
+  const { data: org } = await supabase.from('organizations').select('org_type').eq('id', profile?.organization_id ?? '').single()
+  if (org?.org_type !== 'agency') return null
+
+  const today = new Date().toISOString().split('T')[0]
+  const { data: unpaid } = await supabase
+    .from('bookings')
+    .select('gross_amount, currency, payment_due_date')
+    .neq('payment_status', 'paid')
+
+  const rows = unpaid ?? []
+  if (rows.length === 0) return null
+
+  const totals: Record<string, number> = {}
+  let overdueCount = 0
+  for (const r of rows) {
+    totals[r.currency] = (totals[r.currency] ?? 0) + Number(r.gross_amount)
+    if (r.payment_due_date && r.payment_due_date < today) overdueCount++
+  }
+
+  return (
+    <div className="mx-6 mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 flex items-start gap-3">
+      <TriangleAlert className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold text-amber-800">
+          {t('pendingSummary', { count: rows.length })} — {Object.entries(totals).map(([cur, amt]) => `${amt.toLocaleString('tr-TR')} ${cur}`).join(' · ')}
+        </p>
+        {overdueCount > 0 && (
+          <p className="text-xs text-red-600 font-medium mt-0.5">{t('overdueSummary', { count: overdueCount })}</p>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export default async function OyuncularPage({
   searchParams,
 }: {
@@ -121,6 +161,10 @@ export default async function OyuncularPage({
           </>
         }
       />
+
+      <Suspense>
+        <PendingPaymentsBanner />
+      </Suspense>
 
       <div className="p-6 flex gap-6 items-start">
         <Suspense>

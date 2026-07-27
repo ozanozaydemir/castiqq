@@ -115,6 +115,30 @@ export type Database = {
         Insert: Omit<Database['public']['Tables']['talent']['Row'], 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['talent']['Insert']>
       }
+      bookings: {
+        Row: {
+          id: string
+          organization_id: string
+          talent_id: string
+          client_name: string
+          job_type: 'dizi' | 'reklam' | 'film' | 'sunuculuk' | 'seslendirme' | 'etkinlik' | 'diger'
+          title: string | null
+          work_date: string
+          work_date_end: string | null
+          gross_amount: number
+          currency: string
+          commission_rate: number | null
+          commission_amount: number | null
+          payment_due_date: string | null
+          payment_status: 'pending' | 'partial' | 'paid'
+          notes: string | null
+          created_by: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['bookings']['Row'], 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Database['public']['Tables']['bookings']['Insert']>
+      }
       talent_languages: {
         Row: {
           id: string
@@ -209,6 +233,7 @@ export type Talent = Database['public']['Tables']['talent']['Row']
 export type TalentLanguage = Database['public']['Tables']['talent_languages']['Row']
 export type TalentExperience = Database['public']['Tables']['talent_experiences']['Row']
 export type TalentEducation = Database['public']['Tables']['talent_education']['Row']
+export type Booking = Database['public']['Tables']['bookings']['Row']
 export type Audition = Database['public']['Tables']['auditions']['Row']
 export type Profile = Database['public']['Tables']['profiles']['Row']
 export type Organization = Database['public']['Tables']['organizations']['Row']

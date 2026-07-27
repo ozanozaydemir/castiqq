@@ -14,6 +14,8 @@ import {
 import { getTranslations } from 'next-intl/server'
 import { MediaEmbed } from './MediaEmbed'
 import { ContractDownloadButton } from './ContractDownloadButton'
+import { BookingsSection } from './BookingsSection'
+import type { Booking } from '@/types/database'
 
 const LANG_LEVEL_LABELS: Record<string, string> = {
   native: 'Ana dil', C2: 'C2', C1: 'C1', B2: 'B2', B1: 'B1', A2: 'A2', A1: 'A1',
@@ -83,7 +85,7 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
   const { data: org } = await supabase.from('organizations').select('org_type').eq('id', profile?.organization_id ?? '').single()
   const isAgency = org?.org_type === 'agency'
 
-  const [langRes, expRes, eduRes, audRes, colRes] = await Promise.all([
+  const [langRes, expRes, eduRes, audRes, colRes, bookingsRes] = await Promise.all([
     supabase.from('talent_languages').select('*').eq('talent_id', id).order('sort_order'),
     supabase.from('talent_experiences').select('*').eq('talent_id', id).order('sort_order'),
     supabase.from('talent_education').select('*').eq('talent_id', id).order('sort_order'),
@@ -92,6 +94,9 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
       .eq('talent_id', id)
       .order('created_at', { ascending: false }),
     supabase.from('collections').select('id, name').order('name'),
+    isAgency
+      ? supabase.from('bookings').select('*').eq('talent_id', id).order('work_date', { ascending: false })
+      : Promise.resolve({ data: [] as Booking[] }),
   ])
   const languages = (langRes.data ?? []) as TalentLanguage[]
   const experiences = (expRes.data ?? []) as TalentExperience[]
@@ -107,6 +112,7 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
   }
   const audList: AudRow[] = (audRes.data ?? []) as AudRow[]
   const collections = (colRes.data ?? []) as { id: string; name: string }[]
+  const bookings = (bookingsRes.data ?? []) as Booking[]
   const totalAuditions = audList.length
   const callbackCount = audList.filter(a => a.status === 'shortlisted' || a.status === 'selected').length
   const callbackRate = totalAuditions > 0 ? Math.round((callbackCount / totalAuditions) * 100) : null
@@ -316,6 +322,9 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
 
         {/* Right column */}
         <div className="lg:col-span-2 space-y-4">
+          {/* İş Geçmişi / Booking Log (yalnızca menajerlik hesapları) */}
+          {isAgency && <BookingsSection talentId={talent.id} bookings={bookings} />}
+
           {/* Experience */}
           {experiences.length > 0 && (
             <Section title={t('experience')} icon={<Film className="w-4 h-4" />}>
