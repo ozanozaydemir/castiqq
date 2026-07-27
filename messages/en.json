@@ -94,7 +94,17 @@
     "strengthWeak": "Weak",
     "strengthMedium": "Medium",
     "strengthStrong": "Strong",
-    "copyright": "Castiqq"
+    "copyright": "Castiqq",
+    "continueWithGoogle": "Continue with Google",
+    "orDivider": "or",
+    "setup": {
+      "title": "One last step",
+      "subtitle": "Enter your company or agency name.",
+      "orgNameLabel": "Company / Agency Name",
+      "orgNamePlaceholder": "Atlas Productions Inc.",
+      "cta": "Continue",
+      "saving": "Saving…"
+    }
   },
   "landing": {
     "hero": {

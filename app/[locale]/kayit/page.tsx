@@ -6,6 +6,7 @@ import { Clapperboard, Loader2, Eye, EyeOff, Mail, ArrowLeft } from 'lucide-reac
 import { Link } from '@/i18n/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { register } from '@/app/actions/auth'
+import { GoogleButton } from '@/components/auth/GoogleButton'
 
 function SubmitBtn({ label, loadingLabel }: { label: string; loadingLabel: string }) {
   const { pending } = useFormStatus()
@@ -197,6 +198,14 @@ export default function RegisterPage() {
           {/* Submit */}
           <SubmitBtn label={t('registerCta')} loadingLabel={t('creatingAccount')} />
         </form>
+
+        <div className="flex items-center gap-3 my-5">
+          <div className="flex-1 h-px bg-gray-200" />
+          <span className="text-xs text-gray-400 uppercase tracking-wide">{t('orDivider')}</span>
+          <div className="flex-1 h-px bg-gray-200" />
+        </div>
+
+        <GoogleButton />
 
         <p className="text-center text-xs text-gray-400 mt-5 leading-relaxed">
           {t('termsText')}{' '}

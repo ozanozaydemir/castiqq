@@ -8,7 +8,7 @@ function getResend(): Resend {
 }
 export const resend = { emails: { send: (...args: Parameters<Resend['emails']['send']>) => getResend().emails.send(...args) } }
 
-const FROM = 'Castiqq <noreply@castiqq.app>'
+const FROM = 'Castiqq <support@castiqq.app>'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castiqq.app'
 
 // ── Hoş Geldin ──────────────────────────────────────────────────────

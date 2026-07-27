@@ -7,6 +7,7 @@ import { Link } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { login } from '@/app/actions/auth'
+import { GoogleButton } from '@/components/auth/GoogleButton'
 
 function SubmitBtn({ label, loadingLabel }: { label: string; loadingLabel: string }) {
   const { pending } = useFormStatus()
@@ -98,6 +99,14 @@ export default function LoginPage() {
           {/* Submit */}
           <SubmitBtn label={t('loginCta')} loadingLabel={t('loggingIn')} />
         </form>
+
+        <div className="flex items-center gap-3 my-5">
+          <div className="flex-1 h-px bg-gray-200" />
+          <span className="text-xs text-gray-400 uppercase tracking-wide">{t('orDivider')}</span>
+          <div className="flex-1 h-px bg-gray-200" />
+        </div>
+
+        <GoogleButton />
 
         <p className="text-center text-sm text-gray-500 mt-6">
           {t('noAccount')}{' '}

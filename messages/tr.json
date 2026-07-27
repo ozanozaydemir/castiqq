@@ -94,7 +94,17 @@
     "strengthWeak": "Zayıf",
     "strengthMedium": "Orta",
     "strengthStrong": "Güçlü",
-    "copyright": "Castiqq"
+    "copyright": "Castiqq",
+    "continueWithGoogle": "Google ile Devam Et",
+    "orDivider": "veya",
+    "setup": {
+      "title": "Son bir adım",
+      "subtitle": "Firmanızın veya ajansınızın adını girin.",
+      "orgNameLabel": "Firma / Ajans Adı",
+      "orgNamePlaceholder": "Atlas Yapım A.Ş.",
+      "cta": "Devam Et",
+      "saving": "Kaydediliyor…"
+    }
   },
   "landing": {
     "hero": {
