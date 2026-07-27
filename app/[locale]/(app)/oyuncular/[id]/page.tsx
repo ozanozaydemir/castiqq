@@ -95,7 +95,7 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
     ? await supabase.from('profiles').select('full_name').eq('id', talent.assigned_to).single()
     : { data: null }
 
-  const [langRes, expRes, eduRes, audRes, colRes, bookingsRes, documentsRes] = await Promise.all([
+  const [langRes, expRes, eduRes, audRes, colRes, bookingsRes, documentsRes, clientsRes] = await Promise.all([
     supabase.from('talent_languages').select('*').eq('talent_id', id).order('sort_order'),
     supabase.from('talent_experiences').select('*').eq('talent_id', id).order('sort_order'),
     supabase.from('talent_education').select('*').eq('talent_id', id).order('sort_order'),
@@ -110,6 +110,9 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
     isAgency
       ? supabase.from('talent_documents').select('*').eq('talent_id', id).order('expiry_date', { ascending: true, nullsFirst: false })
       : Promise.resolve({ data: [] as TalentDocument[] }),
+    isAgency
+      ? supabase.from('clients').select('id, name').order('name')
+      : Promise.resolve({ data: [] as { id: string; name: string }[] }),
   ])
   const languages = (langRes.data ?? []) as TalentLanguage[]
   const experiences = (expRes.data ?? []) as TalentExperience[]
@@ -127,6 +130,7 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
   const collections = (colRes.data ?? []) as { id: string; name: string }[]
   const bookings = (bookingsRes.data ?? []) as Booking[]
   const documents = (documentsRes.data ?? []) as TalentDocument[]
+  const clients = (clientsRes.data ?? []) as { id: string; name: string }[]
   const totalAuditions = audList.length
   const callbackCount = audList.filter(a => a.status === 'shortlisted' || a.status === 'selected').length
   const callbackRate = totalAuditions > 0 ? Math.round((callbackCount / totalAuditions) * 100) : null
@@ -347,7 +351,7 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
         {/* Right column */}
         <div className="lg:col-span-2 space-y-4">
           {/* İş Geçmişi / Booking Log (yalnızca menajerlik hesapları) */}
-          {isAgency && <BookingsSection talentId={talent.id} bookings={bookings} />}
+          {isAgency && <BookingsSection talentId={talent.id} bookings={bookings} clients={clients} />}
 
           {/* Experience */}
           {experiences.length > 0 && (

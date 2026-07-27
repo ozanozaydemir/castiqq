@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { requireOrg } from '@/lib/require-org'
+import { findOrCreateClient } from '@/app/actions/clients'
 
 export type ActionState = { error?: string; success?: boolean } | null
 
@@ -54,9 +55,12 @@ export async function createBooking(talentId: string, _: ActionState, formData: 
     grossAmount, num(formData.get('withholding_rate')), talent?.tax_status ?? null, paymentStatus, num(formData.get('amount_paid')),
   )
 
+  const clientId = await findOrCreateClient(supabase, orgId, clientName)
+
   const { error } = await supabase.from('bookings').insert({
     organization_id: orgId,
     talent_id: talentId,
+    client_id: clientId,
     client_name: clientName,
     job_type: jobType,
     title: str(formData.get('title')),
@@ -84,7 +88,7 @@ export async function createBooking(talentId: string, _: ActionState, formData: 
 }
 
 export async function updateBooking(bookingId: string, talentId: string, _: ActionState, formData: FormData): Promise<ActionState> {
-  const { supabase } = await requireOrg()
+  const { supabase, orgId } = await requireOrg()
 
   const clientName = (formData.get('client_name') as string)?.trim()
   const workDate = str(formData.get('work_date'))
@@ -109,7 +113,10 @@ export async function updateBooking(bookingId: string, talentId: string, _: Acti
     grossAmount, num(formData.get('withholding_rate')), taxStatus, paymentStatus, num(formData.get('amount_paid')),
   )
 
+  const clientId = await findOrCreateClient(supabase, orgId, clientName)
+
   const { error } = await supabase.from('bookings').update({
+    client_id: clientId,
     client_name: clientName,
     job_type: jobType,
     title: str(formData.get('title')),

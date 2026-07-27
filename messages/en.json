@@ -26,7 +26,8 @@
     "management": "Management",
     "openMenu": "Open menu",
     "overview": "Overview",
-    "jobs": "Jobs"
+    "jobs": "Jobs",
+    "clients": "Clients"
   },
   "auth": {
     "login": "Log In",
@@ -1157,5 +1158,37 @@
     "clearFilters": "Clear Filters",
     "overdueBadge": "Overdue",
     "paidShort": "paid"
+  },
+  "clients": {
+    "title": "Clients",
+    "description": "Your history with production companies, ad agencies, and brands",
+    "addClient": "New Client",
+    "empty": "No clients yet.",
+    "emptyHint": "A client is created automatically when you add a booking.",
+    "newTitle": "New Client",
+    "editTitle": "Edit Client",
+    "name": "Client Name",
+    "namePlaceholder": "e.g. ABC Productions",
+    "type": "Client Type",
+    "types": {
+      "yapim_sirketi": "Production Company",
+      "reklam_ajansi": "Ad Agency",
+      "marka": "Brand",
+      "diger": "Other"
+    },
+    "contactName": "Contact Person",
+    "contactNamePlaceholder": "Contact's name",
+    "phone": "Phone",
+    "email": "Email",
+    "notes": "Notes",
+    "notesPlaceholder": "Free-form note...",
+    "bookingCount": "Job Count",
+    "totalRevenue": "Total Revenue",
+    "lastWork": "Last Job",
+    "actions": "Actions",
+    "deleteConfirm": "Are you sure you want to delete this client?",
+    "create": "Save",
+    "update": "Update",
+    "saving": "Saving..."
   }
 }

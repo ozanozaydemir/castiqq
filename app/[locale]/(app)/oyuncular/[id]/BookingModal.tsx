@@ -30,11 +30,13 @@ export function BookingModal({
   action,
   editingBooking,
   talentId,
+  clients = [],
   onClose,
 }: {
   action: (state: ActionState, formData: FormData) => Promise<ActionState>
   editingBooking?: Booking | null
   talentId: string
+  clients?: { id: string; name: string }[]
   onClose: () => void
 }) {
   const [state, formAction] = useActionState(action, null)
@@ -103,7 +105,10 @@ export function BookingModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2 space-y-1.5">
               <label className="block text-sm font-medium text-gray-700">{t('clientName')} <span className="text-red-400">*</span></label>
-              <input name="client_name" required defaultValue={editingBooking?.client_name ?? ''} placeholder={t('clientNamePlaceholder')} className="sb-input" autoFocus />
+              <input name="client_name" required defaultValue={editingBooking?.client_name ?? ''} placeholder={t('clientNamePlaceholder')} className="sb-input" autoFocus list="client-name-options" />
+              <datalist id="client-name-options">
+                {clients.map(c => <option key={c.id} value={c.name} />)}
+              </datalist>
             </div>
 
             <div className="space-y-1.5">
