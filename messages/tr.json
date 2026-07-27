@@ -782,7 +782,15 @@
       "contractUpload": "Sözleşme yükle",
       "contractUploading": "Yükleniyor...",
       "contractCurrent": "Sözleşme yüklü",
-      "contractHint": "Sadece PDF, org içinde gizli tutulur."
+      "contractHint": "Sadece PDF, org içinde gizli tutulur.",
+      "taxStatus": "Vergi Durumu",
+      "taxStatusUnspecified": "Belirtilmedi",
+      "taxStatusFreelance": "Serbest Meslek Makbuzu",
+      "taxStatusSoleProprietor": "Şahıs Şirketi",
+      "taxStatusCompany": "Şirket (Ltd/A.Ş.)",
+      "taxStatusPayroll": "Ücret Bordrosu",
+      "taxId": "Vergi No / TCKN",
+      "taxIdPlaceholder": "Vergi numarası veya TC kimlik no"
     },
     "filters": {
       "searchPlaceholder": "İsim ara…",
@@ -866,7 +874,44 @@
       "saving": "Kaydediliyor...",
       "pendingSummary": "{count} iş için ödeme bekleniyor",
       "overdueSummary": "{count} işin vadesi geçti"
-    }
+    },
+    "documents": {
+      "sectionTitle": "Belgeler",
+      "addDocument": "Belge Ekle",
+      "empty": "Henüz belge eklenmedi.",
+      "newTitle": "Yeni Belge",
+      "editTitle": "Belgeyi Düzenle",
+      "documentType": "Belge Türü",
+      "types": {
+        "kimlik": "Kimlik",
+        "saglik_raporu": "Sağlık Raporu",
+        "calisma_izni": "Çalışma İzni",
+        "pasaport": "Pasaport",
+        "vize": "Vize",
+        "veli_izni": "Veli İzni",
+        "diger": "Diğer"
+      },
+      "expiryDate": "Son Geçerlilik Tarihi",
+      "file": "Dosya",
+      "uploadFile": "Dosya Yükle",
+      "uploading": "Yükleniyor...",
+      "fileCurrent": "Dosya yüklü",
+      "fileHint": "PDF, JPG veya PNG.",
+      "viewFile": "Dosyayı görüntüle",
+      "notes": "Notlar",
+      "notesPlaceholder": "Serbest not...",
+      "expired": "Süresi Doldu",
+      "expiringSoon": "Yakında Doluyor",
+      "create": "Kaydet",
+      "update": "Güncelle",
+      "saving": "Kaydediliyor..."
+    },
+    "taxStatus": "Vergi Durumu",
+    "taxStatusFreelance": "Serbest Meslek Makbuzu",
+    "taxStatusSoleProprietor": "Şahıs Şirketi",
+    "taxStatusCompany": "Şirket (Ltd/A.Ş.)",
+    "taxStatusPayroll": "Ücret Bordrosu",
+    "taxId": "Vergi No / TCKN"
   },
   "collections": {
     "title": "Listeler",
@@ -1084,6 +1129,7 @@
     "noTalentYet": "Henüz oyuncu eklenmedi",
     "quickAccess": "Hızlı Erişim",
     "addTalent": "Oyuncu Ekle",
-    "viewLists": "Listeleri Görüntüle"
+    "viewLists": "Listeleri Görüntüle",
+    "documentsExpiringTitle": "{count} belgenin süresi 30 gün içinde doluyor/doldu"
   }
 }

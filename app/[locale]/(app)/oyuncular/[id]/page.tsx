@@ -15,7 +15,8 @@ import { getTranslations } from 'next-intl/server'
 import { MediaEmbed } from './MediaEmbed'
 import { ContractDownloadButton } from './ContractDownloadButton'
 import { BookingsSection } from './BookingsSection'
-import type { Booking } from '@/types/database'
+import { DocumentsSection } from './DocumentsSection'
+import type { Booking, TalentDocument } from '@/types/database'
 
 const LANG_LEVEL_LABELS: Record<string, string> = {
   native: 'Ana dil', C2: 'C2', C1: 'C1', B2: 'B2', B1: 'B1', A2: 'A2', A1: 'A1',
@@ -80,12 +81,17 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
   if (!rawTalent) notFound()
   const talent = rawTalent as typeof rawTalent & { skills: string[]; licenses: string[] }
 
+  const TAX_STATUS_LABELS: Record<string, string> = {
+    serbest_meslek: t('taxStatusFreelance'), sahis_sirketi: t('taxStatusSoleProprietor'),
+    sirket: t('taxStatusCompany'), ucret_bordrosu: t('taxStatusPayroll'),
+  }
+
   const { data: { user } } = await supabase.auth.getUser()
   const { data: profile } = await supabase.from('profiles').select('organization_id').eq('id', user?.id ?? '').single()
   const { data: org } = await supabase.from('organizations').select('org_type').eq('id', profile?.organization_id ?? '').single()
   const isAgency = org?.org_type === 'agency'
 
-  const [langRes, expRes, eduRes, audRes, colRes, bookingsRes] = await Promise.all([
+  const [langRes, expRes, eduRes, audRes, colRes, bookingsRes, documentsRes] = await Promise.all([
     supabase.from('talent_languages').select('*').eq('talent_id', id).order('sort_order'),
     supabase.from('talent_experiences').select('*').eq('talent_id', id).order('sort_order'),
     supabase.from('talent_education').select('*').eq('talent_id', id).order('sort_order'),
@@ -97,6 +103,9 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
     isAgency
       ? supabase.from('bookings').select('*').eq('talent_id', id).order('work_date', { ascending: false })
       : Promise.resolve({ data: [] as Booking[] }),
+    isAgency
+      ? supabase.from('talent_documents').select('*').eq('talent_id', id).order('expiry_date', { ascending: true, nullsFirst: false })
+      : Promise.resolve({ data: [] as TalentDocument[] }),
   ])
   const languages = (langRes.data ?? []) as TalentLanguage[]
   const experiences = (expRes.data ?? []) as TalentExperience[]
@@ -113,6 +122,7 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
   const audList: AudRow[] = (audRes.data ?? []) as AudRow[]
   const collections = (colRes.data ?? []) as { id: string; name: string }[]
   const bookings = (bookingsRes.data ?? []) as Booking[]
+  const documents = (documentsRes.data ?? []) as TalentDocument[]
   const totalAuditions = audList.length
   const callbackCount = audList.filter(a => a.status === 'shortlisted' || a.status === 'selected').length
   const callbackRate = totalAuditions > 0 ? Math.round((callbackCount / totalAuditions) * 100) : null
@@ -283,13 +293,19 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
           )}
 
           {/* Temsil & Sözleşme (yalnızca menajerlik hesapları) */}
-          {isAgency && (talent.commission_rate || talent.representation_start_date || talent.representation_end_date || talent.contract_file_path) && (
+          {isAgency && (talent.commission_rate || talent.representation_start_date || talent.representation_end_date || talent.contract_file_path || talent.tax_status !== 'belirtilmedi') && (
             <Section title={t('representation')} icon={<FileSignature className="w-4 h-4" />}>
               <div>
                 <MetaRow label={t('commissionRate')} value={talent.commission_rate ? `%${talent.commission_rate}` : null} />
                 <MetaRow label={t('repStartDate')} value={talent.representation_start_date ? new Date(talent.representation_start_date).toLocaleDateString('tr-TR') : null} />
                 <MetaRow label={t('repEndDate')} value={talent.representation_end_date ? new Date(talent.representation_end_date).toLocaleDateString('tr-TR') : null} />
                 <MetaRow label={t('exclusivity')} value={talent.exclusive_representation ? t('exclusive') : t('nonExclusive')} />
+                <MetaRow label={t('taxStatus')} value={
+                  talent.tax_status !== 'belirtilmedi'
+                    ? (TAX_STATUS_LABELS[talent.tax_status as string] ?? talent.tax_status)
+                    : null
+                } />
+                <MetaRow label={t('taxId')} value={talent.tax_id} />
               </div>
               {talent.contract_file_path && (
                 <div className="mt-3 pt-3 border-t border-gray-50">
@@ -298,6 +314,9 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
               )}
             </Section>
           )}
+
+          {/* Belgeler (yalnızca menajerlik hesapları) */}
+          {isAgency && <DocumentsSection talentId={talent.id} documents={documents} />}
 
           {/* Skills & Licenses */}
           {((talent.skills?.length ?? 0) > 0 || (talent.licenses?.length ?? 0) > 0) && (

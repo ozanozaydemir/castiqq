@@ -28,6 +28,7 @@ export default async function GenelBakisPage() {
     { data: recentTalents },
     { data: expiringContracts },
     { data: unpaidBookings },
+    { data: expiringDocuments },
   ] = await Promise.all([
     supabase.from('talent').select('*', { count: 'exact', head: true }).eq('organization_id', orgId!),
     supabase.from('talent').select('*', { count: 'exact', head: true }).eq('organization_id', orgId!).eq('availability', 'available'),
@@ -35,6 +36,7 @@ export default async function GenelBakisPage() {
     supabase.from('talent').select('id, full_name, city, availability, created_at').eq('organization_id', orgId!).order('created_at', { ascending: false }).limit(6) as Promise<{ data: { id: string; full_name: string; city: string | null; availability: string; created_at: string }[] | null }>,
     supabase.from('talent').select('id, full_name, representation_end_date').eq('organization_id', orgId!).not('representation_end_date', 'is', null).gte('representation_end_date', today).lte('representation_end_date', thirtyDaysLater).order('representation_end_date') as Promise<{ data: { id: string; full_name: string; representation_end_date: string }[] | null }>,
     supabase.from('bookings').select('*, talent(full_name)').neq('payment_status', 'paid').order('payment_due_date') as Promise<{ data: (Booking & { talent: { full_name: string } | null })[] | null }>,
+    supabase.from('talent_documents').select('id, talent_id, document_type, expiry_date, talent(full_name)').eq('organization_id', orgId!).not('expiry_date', 'is', null).lte('expiry_date', thirtyDaysLater).order('expiry_date') as Promise<{ data: { id: string; talent_id: string; document_type: string; expiry_date: string; talent: { full_name: string } | null }[] | null }>,
   ])
 
   const AVAIL: Record<string, string> = { available: 'bg-green-400', busy: 'bg-amber-400', unavailable: 'bg-gray-300' }
@@ -49,6 +51,12 @@ export default async function GenelBakisPage() {
   const overdueBookings = unpaid.filter(b => b.payment_due_date && b.payment_due_date < today).slice(0, 5)
 
   const contracts = expiringContracts ?? []
+  const documents = expiringDocuments ?? []
+  const td = await getTranslations('talent.documents')
+  const DOC_TYPE_LABELS: Record<string, string> = {
+    kimlik: td('types.kimlik'), saglik_raporu: td('types.saglik_raporu'), calisma_izni: td('types.calisma_izni'),
+    pasaport: td('types.pasaport'), vize: td('types.vize'), veli_izni: td('types.veli_izni'), diger: td('types.diger'),
+  }
 
   return (
     <div>
@@ -85,6 +93,23 @@ export default async function GenelBakisPage() {
                 {contracts.map(c => (
                   <Link key={c.id} href={`/oyuncular/${c.id}`} className="text-xs text-amber-700 hover:text-amber-900 hover:underline">
                     {c.full_name} — {new Date(c.representation_end_date).toLocaleDateString('tr-TR')}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Belge süresi uyarısı */}
+        {documents.length > 0 && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 flex items-start gap-3">
+            <FileSignature className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-amber-800 mb-1">{t('documentsExpiringTitle', { count: documents.length })}</p>
+              <div className="flex flex-wrap gap-x-4 gap-y-0.5">
+                {documents.map(d => (
+                  <Link key={d.id} href={`/oyuncular/${d.talent_id}`} className="text-xs text-amber-700 hover:text-amber-900 hover:underline">
+                    {d.talent?.full_name ?? '—'} — {DOC_TYPE_LABELS[d.document_type] ?? d.document_type} ({new Date(d.expiry_date).toLocaleDateString('tr-TR')})
                   </Link>
                 ))}
               </div>

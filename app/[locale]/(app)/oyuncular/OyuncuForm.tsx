@@ -720,6 +720,21 @@ export function OyuncuForm({ action, initialData, cancelHref = '/oyuncular', org
               currentLabel={tf('contractCurrent')}
               hint={tf('contractHint')}
             />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-gray-100">
+              <Field label={tf('taxStatus')}>
+                <select name="tax_status" defaultValue={initialData?.tax_status ?? 'belirtilmedi'} className="sb-input">
+                  <option value="belirtilmedi">{tf('taxStatusUnspecified')}</option>
+                  <option value="serbest_meslek">{tf('taxStatusFreelance')}</option>
+                  <option value="sahis_sirketi">{tf('taxStatusSoleProprietor')}</option>
+                  <option value="sirket">{tf('taxStatusCompany')}</option>
+                  <option value="ucret_bordrosu">{tf('taxStatusPayroll')}</option>
+                </select>
+              </Field>
+              <Field label={tf('taxId')}>
+                <input name="tax_id" defaultValue={initialData?.tax_id ?? ''} placeholder={tf('taxIdPlaceholder')} className="sb-input" />
+              </Field>
+            </div>
           </div>
         </section>
       )}

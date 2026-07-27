@@ -782,7 +782,15 @@
       "contractUpload": "Upload contract",
       "contractUploading": "Uploading...",
       "contractCurrent": "Contract uploaded",
-      "contractHint": "PDF only, kept private within your org."
+      "contractHint": "PDF only, kept private within your org.",
+      "taxStatus": "Tax Status",
+      "taxStatusUnspecified": "Unspecified",
+      "taxStatusFreelance": "Freelance Receipt",
+      "taxStatusSoleProprietor": "Sole Proprietorship",
+      "taxStatusCompany": "Company (LLC/Inc.)",
+      "taxStatusPayroll": "Payroll",
+      "taxId": "Tax ID / National ID",
+      "taxIdPlaceholder": "Tax number or national ID"
     },
     "filters": {
       "searchPlaceholder": "Search by name…",
@@ -866,7 +874,44 @@
       "saving": "Saving...",
       "pendingSummary": "{count} job(s) awaiting payment",
       "overdueSummary": "{count} job(s) overdue"
-    }
+    },
+    "documents": {
+      "sectionTitle": "Documents",
+      "addDocument": "Add Document",
+      "empty": "No documents added yet.",
+      "newTitle": "New Document",
+      "editTitle": "Edit Document",
+      "documentType": "Document Type",
+      "types": {
+        "kimlik": "ID",
+        "saglik_raporu": "Health Report",
+        "calisma_izni": "Work Permit",
+        "pasaport": "Passport",
+        "vize": "Visa",
+        "veli_izni": "Parental Consent",
+        "diger": "Other"
+      },
+      "expiryDate": "Expiry Date",
+      "file": "File",
+      "uploadFile": "Upload File",
+      "uploading": "Uploading...",
+      "fileCurrent": "File uploaded",
+      "fileHint": "PDF, JPG or PNG.",
+      "viewFile": "View file",
+      "notes": "Notes",
+      "notesPlaceholder": "Free-form note...",
+      "expired": "Expired",
+      "expiringSoon": "Expiring Soon",
+      "create": "Save",
+      "update": "Update",
+      "saving": "Saving..."
+    },
+    "taxStatus": "Tax Status",
+    "taxStatusFreelance": "Freelance Receipt",
+    "taxStatusSoleProprietor": "Sole Proprietorship",
+    "taxStatusCompany": "Company (LLC/Inc.)",
+    "taxStatusPayroll": "Payroll",
+    "taxId": "Tax ID / National ID"
   },
   "collections": {
     "title": "Lists",
@@ -1084,6 +1129,7 @@
     "noTalentYet": "No talent added yet",
     "quickAccess": "Quick Access",
     "addTalent": "Add Talent",
-    "viewLists": "View Lists"
+    "viewLists": "View Lists",
+    "documentsExpiringTitle": "{count} document(s) expiring or expired within 30 days"
   }
 }

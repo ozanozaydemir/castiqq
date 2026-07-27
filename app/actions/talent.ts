@@ -64,6 +64,8 @@ function buildTalentPayload(orgId: string, formData: FormData) {
     representation_end_date: str(formData.get('representation_end_date')),
     exclusive_representation: formData.get('exclusive_representation') === 'on',
     contract_file_path: str(formData.get('contract_file_path')),
+    tax_status: (formData.get('tax_status') as string) || 'belirtilmedi',
+    tax_id: str(formData.get('tax_id')),
   }
 }
 
