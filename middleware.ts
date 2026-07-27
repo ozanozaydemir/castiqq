@@ -8,9 +8,11 @@ const handleI18nRouting = createMiddleware(routing)
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
-  // API routes: skip i18n routing, only refresh Supabase session
-  const isApiRoute = pathname.startsWith('/api/')
-  const response = isApiRoute ? NextResponse.next() : handleI18nRouting(request)
+  // /api ve /auth: [locale] segmentinin dışında yaşıyorlar — next-intl'in
+  // i18n routing'i bu path'leri locale'li bir sayfa sanıp yanlış rewrite
+  // ediyor (404'e yol açıyor). Bu route'larda i18n routing'i tamamen atla.
+  const isNonLocaleRoute = pathname.startsWith('/api/') || pathname.startsWith('/auth/')
+  const response = isNonLocaleRoute ? NextResponse.next() : handleI18nRouting(request)
 
   // Step 2: Supabase session refresh — piggyback cookies onto the i18n response
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
