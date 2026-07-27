@@ -25,6 +25,9 @@ export const metadata: Metadata = {
   authors: [{ name: 'Castiqq', url: SITE_URL }],
   creator: 'Castiqq',
   robots: { index: true, follow: true },
+  verification: {
+    google: '-C7injvyVWAYHEbTLO4p7vImefpaE8cHVvIRwXrdVFE',
+  },
 }
 
 export const viewport: Viewport = {
