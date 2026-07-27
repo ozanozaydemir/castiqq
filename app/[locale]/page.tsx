@@ -11,11 +11,12 @@ import { AnimationInit } from '@/components/AnimationInit'
 import { JsonLd } from '@/components/JsonLd'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { getTranslations } from 'next-intl/server'
+import { resolveHomePath } from '@/lib/home-path'
 
 export default async function HomePage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (user) redirect('/dashboard')
+  if (user) redirect(await resolveHomePath(supabase, user.id))
 
   const t = await getTranslations('landing')
   const ta = await getTranslations('auth')

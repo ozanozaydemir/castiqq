@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import { SetupForm } from './SetupForm'
+import { resolveHomePath } from '@/lib/home-path'
 
 const DEFAULT_ORG_NAME = 'Organizasyon'
 
@@ -48,7 +49,7 @@ export default async function KurulumPage() {
   // Firma adı zaten belirlenmiş (şifreli kayıttan ya da önceki bir kurulumdan) — atla.
   // Abonelik kontrolü dashboard/layout guard'ında zaten yapılıyor.
   if (org?.name && org.name !== DEFAULT_ORG_NAME) {
-    redirect('/dashboard')
+    redirect(await resolveHomePath(supabase, user.id))
   }
 
   return <SetupForm />

@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Clapperboard, Loader2, Eye, EyeOff, CheckCircle } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
+import { resolveHomePath } from '@/lib/home-path'
 
 export default function ResetPasswordPage() {
   const router = useRouter()
@@ -40,7 +41,9 @@ export default function ResetPasswordPage() {
       return
     }
 
-    router.push('/dashboard')
+    const { data: { user } } = await supabase.auth.getUser()
+    const homePath = user ? await resolveHomePath(supabase, user.id) : '/dashboard'
+    router.push(homePath)
   }
 
   return (

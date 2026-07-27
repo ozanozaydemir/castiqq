@@ -24,7 +24,8 @@
     "settings": "Settings",
     "logout": "Log Out",
     "management": "Management",
-    "openMenu": "Open menu"
+    "openMenu": "Open menu",
+    "overview": "Overview"
   },
   "auth": {
     "login": "Log In",
@@ -1065,5 +1066,24 @@
     "step3Desc": "Send a video upload link to a talent.",
     "dismiss": "Dismiss Guide",
     "allDone": "Great! You've completed all the setup steps."
+  },
+  "agencyOverview": {
+    "welcomeGreeting": "Hi, {name}",
+    "welcome": "Welcome",
+    "subtitle": "Overview of your roster and bookings",
+    "overdueTitle": "{count} job(s) have overdue payments",
+    "contractsExpiringTitle": "{count} representation contract(s) expiring within 30 days",
+    "stats": {
+      "totalRoster": "Total Roster",
+      "available": "Available",
+      "busy": "Busy",
+      "pendingPayments": "Pending Payments"
+    },
+    "recentTalent": "Recently Added Talent",
+    "seeAll": "See All",
+    "noTalentYet": "No talent added yet",
+    "quickAccess": "Quick Access",
+    "addTalent": "Add Talent",
+    "viewLists": "View Lists"
   }
 }

@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { headers } from 'next/headers'
 import { rateLimit } from '@/lib/rate-limit'
+import { resolveHomePath } from '@/lib/home-path'
 
 export async function logout() {
   const supabase = await createClient()
@@ -33,11 +34,12 @@ export async function login(_: AuthActionState, formData: FormData): Promise<Aut
   if (!email || !password) return { error: t('allFieldsRequired') }
 
   const supabase = await createClient()
-  const { error } = await supabase.auth.signInWithPassword({ email, password })
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
   if (error) return { error: t('wrongCredentials') }
 
   const locale = await getLocale()
-  redirect(locale === 'en' ? '/en/dashboard' : '/dashboard')
+  const homePath = await resolveHomePath(supabase, data.user.id)
+  redirect(locale === 'en' ? `/en${homePath}` : homePath)
 }
 
 export async function register(_: AuthActionState, formData: FormData): Promise<AuthActionState> {

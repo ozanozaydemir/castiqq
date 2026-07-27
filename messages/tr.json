@@ -24,7 +24,8 @@
     "settings": "Ayarlar",
     "logout": "Çıkış Yap",
     "management": "Yönetim",
-    "openMenu": "Menüyü aç"
+    "openMenu": "Menüyü aç",
+    "overview": "Genel Bakış"
   },
   "auth": {
     "login": "Giriş Yap",
@@ -1065,5 +1066,24 @@
     "step3Desc": "Bir oyuncuya audition davet linki gönderin.",
     "dismiss": "Rehberi Kapat",
     "allDone": "Harika! Tüm başlangıç adımlarını tamamladınız."
+  },
+  "agencyOverview": {
+    "welcomeGreeting": "Merhaba, {name}",
+    "welcome": "Hoş geldin",
+    "subtitle": "Roster'ının ve işlerinin genel durumu",
+    "overdueTitle": "{count} işin ödemesi gecikti",
+    "contractsExpiringTitle": "{count} temsil sözleşmesinin süresi 30 gün içinde doluyor",
+    "stats": {
+      "totalRoster": "Toplam Roster",
+      "available": "Müsait",
+      "busy": "Meşgul",
+      "pendingPayments": "Bekleyen Ödeme"
+    },
+    "recentTalent": "Son Eklenen Oyuncular",
+    "seeAll": "Tümünü Gör",
+    "noTalentYet": "Henüz oyuncu eklenmedi",
+    "quickAccess": "Hızlı Erişim",
+    "addTalent": "Oyuncu Ekle",
+    "viewLists": "Listeleri Görüntüle"
   }
 }

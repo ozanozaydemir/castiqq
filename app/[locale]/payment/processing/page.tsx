@@ -5,6 +5,7 @@ import { useRouter } from '@/i18n/navigation'
 import { useLocale } from 'next-intl'
 import { Clapperboard, CheckCircle, Loader2, AlertTriangle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { resolveHomePath } from '@/lib/home-path'
 
 const POLL_INTERVAL_MS = 2000
 const MAX_WAIT_MS = 45_000
@@ -30,6 +31,13 @@ async function subscriptionIsActive(): Promise<boolean> {
     .single()
 
   return !!org?.polar_subscription_id
+}
+
+async function getHomePath(): Promise<string> {
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return '/dashboard'
+  return resolveHomePath(supabase, user.id)
 }
 
 export default function PaymentProcessingPage() {
@@ -67,7 +75,9 @@ export default function PaymentProcessingPage() {
 
   useEffect(() => {
     if (status !== 'ready') return
-    const t = setTimeout(() => router.replace('/dashboard'), 600)
+    const t = setTimeout(() => {
+      getHomePath().then(path => router.replace(path))
+    }, 600)
     return () => clearTimeout(t)
   }, [status, router])
 

@@ -4,7 +4,7 @@ import { Link, usePathname } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import {
-  LayoutDashboard, Film, Users, UserSearch, Settings, LogOut, Clapperboard, BookMarked,
+  LayoutDashboard, Film, Users, UserSearch, Settings, LogOut, Clapperboard, BookMarked, Compass,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { logout } from '@/app/actions/auth'
@@ -23,9 +23,10 @@ export function AppSidebar({ orgName = 'Castiqq', orgType = 'production', isOpen
 
   const navItems = orgType === 'agency'
     ? [
-        { href: '/oyuncular', label: t('roster'), icon: Users },
-        { href: '/listeler',  label: t('lists'),   icon: BookMarked },
-        { href: '/ayarlar',   label: t('settings'), icon: Settings },
+        { href: '/genel-bakis', label: t('overview'), icon: Compass },
+        { href: '/oyuncular',   label: t('roster'),    icon: Users },
+        { href: '/listeler',    label: t('lists'),     icon: BookMarked },
+        { href: '/ayarlar',     label: t('settings'),  icon: Settings },
       ]
     : [
         { href: '/dashboard',  label: t('dashboard'),  icon: LayoutDashboard },
