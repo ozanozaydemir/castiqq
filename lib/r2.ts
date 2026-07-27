@@ -3,6 +3,10 @@ import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3'
 export const r2 = new S3Client({
   region: 'auto',
   endpoint: `https://${process.env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  // R2 virtual-hosted-style adreslemeyi (bucket.accountid.r2.cloudflarestorage.com)
+  // desteklemiyor — TLS sertifikası yalnızca hesap seviyesindeki wildcard'ı
+  // karşılıyor, bu olmadan SSL handshake hatası alınıyor.
+  forcePathStyle: true,
   credentials: {
     accessKeyId: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID!,
     secretAccessKey: process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY!,
