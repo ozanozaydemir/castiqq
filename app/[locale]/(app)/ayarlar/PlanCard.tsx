@@ -15,7 +15,7 @@ interface Props {
 export function PlanCard({ plan, status, endsAt, hasPortal, orgId }: Props) {
   const t = useTranslations('settings.plan')
   const info = PLAN_LIMITS[plan as Plan] ?? PLAN_LIMITS.starter
-  const isCancelled = status === 'cancelled'
+  const isCancelled = status === 'canceled'
 
   const UPGRADE_PLANS = [
     { plan: 'pro' as const,    label: 'Pro',          price: `₺1.999${t('perMonth')}`, desc: `200 GB · 3 ${t('users')}` },

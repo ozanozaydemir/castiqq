@@ -23,7 +23,7 @@ export const POST = Webhooks({
     await admin
       .from('organizations')
       .update({
-        subscription_status: 'cancelled',
+        subscription_status: 'canceled',
         subscription_ends_at: sub.currentPeriodEnd?.toISOString() ?? null,
       })
       .eq('id', orgId)
