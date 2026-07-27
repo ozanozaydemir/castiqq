@@ -1,6 +1,7 @@
 import { getTranslations, getLocale } from 'next-intl/server'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { PageHeader } from '@/components/layout/PageHeader'
 import { OrgForm } from './OrgForm'
 import { ProfilForm } from './ProfilForm'
 import { SifreForm } from './SifreForm'
@@ -67,8 +68,11 @@ export default async function AyarlarPage({
       : undefined
 
   return (
-    <div className="space-y-5 max-w-2xl pb-8">
-      <PlanCard
+    <div>
+      <PageHeader title={t('title')} description={t('description')} />
+
+      <div className="p-6 space-y-5">
+        <PlanCard
         plan={org?.subscription_plan ?? 'starter'}
         status={org?.subscription_status ?? 'active'}
         endsAt={org?.subscription_ends_at ?? null}
@@ -95,9 +99,10 @@ export default async function AyarlarPage({
         <SifreForm />
       </SettingsCard>
 
-      <SettingsCard title={t('language.title')} icon={<Globe className="w-4 h-4" />}>
-        <LanguageForm currentLocale={locale} />
-      </SettingsCard>
+        <SettingsCard title={t('language.title')} icon={<Globe className="w-4 h-4" />}>
+          <LanguageForm currentLocale={locale} />
+        </SettingsCard>
+      </div>
     </div>
   )
 }
