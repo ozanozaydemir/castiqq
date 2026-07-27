@@ -27,7 +27,8 @@
     "openMenu": "Menüyü aç",
     "overview": "Genel Bakış",
     "jobs": "İşler",
-    "clients": "Müşteriler"
+    "clients": "Müşteriler",
+    "calendar": "Takvim"
   },
   "auth": {
     "login": "Giriş Yap",
@@ -1190,5 +1191,14 @@
     "create": "Kaydet",
     "update": "Güncelle",
     "saving": "Kaydediliyor..."
+  },
+  "calendar": {
+    "title": "Takvim",
+    "description": "Roster'ınızın aylık iş takvimi",
+    "today": "Bugün",
+    "more": "+{count} daha",
+    "legendPending": "Ödeme bekliyor",
+    "legendPartial": "Kısmi ödendi",
+    "legendPaid": "Ödendi"
   }
 }

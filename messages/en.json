@@ -27,7 +27,8 @@
     "openMenu": "Open menu",
     "overview": "Overview",
     "jobs": "Jobs",
-    "clients": "Clients"
+    "clients": "Clients",
+    "calendar": "Calendar"
   },
   "auth": {
     "login": "Log In",
@@ -1190,5 +1191,14 @@
     "create": "Save",
     "update": "Update",
     "saving": "Saving..."
+  },
+  "calendar": {
+    "title": "Calendar",
+    "description": "Monthly booking calendar for your roster",
+    "today": "Today",
+    "more": "+{count} more",
+    "legendPending": "Payment pending",
+    "legendPartial": "Partially paid",
+    "legendPaid": "Paid"
   }
 }

@@ -4,7 +4,7 @@ import { Link, usePathname } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import {
-  LayoutDashboard, Film, Users, UserSearch, Settings, LogOut, Clapperboard, BookMarked, Compass, Briefcase, Building2,
+  LayoutDashboard, Film, Users, UserSearch, Settings, LogOut, Clapperboard, BookMarked, Compass, Briefcase, Building2, CalendarDays,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { logout } from '@/app/actions/auth'
@@ -26,6 +26,7 @@ export function AppSidebar({ orgName = 'Castiqq', orgType = 'production', isOpen
         { href: '/genel-bakis', label: t('overview'), icon: Compass },
         { href: '/oyuncular',   label: t('roster'),    icon: Users },
         { href: '/isler',       label: t('jobs'),      icon: Briefcase },
+        { href: '/takvim',      label: t('calendar'),  icon: CalendarDays },
         { href: '/musteriler',  label: t('clients'),   icon: Building2 },
         { href: '/listeler',    label: t('lists'),     icon: BookMarked },
         { href: '/ayarlar',     label: t('settings'),  icon: Settings },
