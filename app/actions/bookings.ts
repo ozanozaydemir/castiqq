@@ -56,6 +56,7 @@ export async function createBooking(talentId: string, _: ActionState, formData: 
   )
 
   const clientId = await findOrCreateClient(supabase, orgId, clientName)
+  const isOngoing = formData.get('is_ongoing') === 'on'
 
   const { error } = await supabase.from('bookings').insert({
     organization_id: orgId,
@@ -65,7 +66,8 @@ export async function createBooking(talentId: string, _: ActionState, formData: 
     job_type: jobType,
     title: str(formData.get('title')),
     work_date: workDate,
-    work_date_end: str(formData.get('work_date_end')),
+    work_date_end: isOngoing ? null : str(formData.get('work_date_end')),
+    is_ongoing: isOngoing,
     gross_amount: grossAmount,
     currency: str(formData.get('currency')) ?? 'TRY',
     commission_rate: commissionRate,
@@ -114,6 +116,7 @@ export async function updateBooking(bookingId: string, talentId: string, _: Acti
   )
 
   const clientId = await findOrCreateClient(supabase, orgId, clientName)
+  const isOngoing = formData.get('is_ongoing') === 'on'
 
   const { error } = await supabase.from('bookings').update({
     client_id: clientId,
@@ -121,7 +124,8 @@ export async function updateBooking(bookingId: string, talentId: string, _: Acti
     job_type: jobType,
     title: str(formData.get('title')),
     work_date: workDate,
-    work_date_end: str(formData.get('work_date_end')),
+    work_date_end: isOngoing ? null : str(formData.get('work_date_end')),
+    is_ongoing: isOngoing,
     gross_amount: grossAmount,
     currency: str(formData.get('currency')) ?? 'TRY',
     commission_amount: commissionAmount,

@@ -55,13 +55,16 @@ export default async function TakvimPage({
     .lte('work_date', gridEndStr)
     .order('work_date') as { data: BookingRow[] | null }
 
-  // work_date_end null ise tek günlük iş sayılır; aralık gridEnd'den önce başlamış olmalı
-  const bookings = (bookingsRaw ?? []).filter(b => (b.work_date_end ?? b.work_date) >= gridStartStr)
+  // work_date_end null ise tek günlük iş sayılır (is_ongoing hariç — o süresiz devam eder);
+  // aralık gridEnd'den önce başlamış olmalı
+  const bookings = (bookingsRaw ?? []).filter(b => b.is_ongoing || (b.work_date_end ?? b.work_date) >= gridStartStr)
 
   const bookingsByDay = new Map<string, BookingRow[]>()
   for (const day of days) {
     const dayStr = format(day, 'yyyy-MM-dd')
-    const dayBookings = bookings.filter(b => b.work_date <= dayStr && (b.work_date_end ?? b.work_date) >= dayStr)
+    const dayBookings = bookings.filter(b =>
+      b.is_ongoing ? b.work_date <= dayStr : (b.work_date <= dayStr && (b.work_date_end ?? b.work_date) >= dayStr)
+    )
     bookingsByDay.set(dayStr, dayBookings)
   }
 
@@ -117,9 +120,9 @@ export default async function TakvimPage({
                         key={b.id}
                         href={`/oyuncular/${b.talent_id}`}
                         className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-gray-50 hover:bg-indigo-50 text-[10px] text-gray-600 hover:text-indigo-700 truncate transition-colors"
-                        title={`${b.talent?.full_name ?? ''} — ${b.client_name}`}
+                        title={`${b.talent?.full_name ?? ''} — ${b.client_name}${b.is_ongoing ? ` (${t('legendOngoing')})` : ''}`}
                       >
-                        <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${PAYMENT_DOT[b.payment_status]}`} />
+                        <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${b.is_ongoing ? 'bg-purple-400' : PAYMENT_DOT[b.payment_status]}`} />
                         <span className="truncate">{b.talent?.full_name ?? '—'}</span>
                       </Link>
                     ))}
@@ -138,6 +141,7 @@ export default async function TakvimPage({
           <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400" />{t('legendPending')}</span>
           <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-400" />{t('legendPartial')}</span>
           <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-green-400" />{t('legendPaid')}</span>
+          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-purple-400" />{t('legendOngoing')}</span>
         </div>
       </div>
     </div>

@@ -890,7 +890,12 @@
       "exclusivityNotes": "Exclusivity Details",
       "exclusivityNotesPlaceholder": "e.g. Cannot work with competing automotive brands",
       "exclusivityConflictWarning": "This talent has an active exclusivity on this date:",
-      "exclusivityUntil": "Exclusive until {date}"
+      "exclusivityUntil": "Exclusive until {date}",
+      "isOngoing": "Ongoing / season still running (no fixed end date)",
+      "ongoingNoEndDate": "No end date will be set",
+      "ongoingBadge": "Ongoing",
+      "ongoingEngagementsTitle": "This talent has an ongoing engagement:",
+      "ongoingSince": "Ongoing since {date}"
     },
     "documents": {
       "sectionTitle": "Documents",
@@ -1199,6 +1204,7 @@
     "more": "+{count} more",
     "legendPending": "Payment pending",
     "legendPartial": "Partially paid",
-    "legendPaid": "Paid"
+    "legendPaid": "Paid",
+    "legendOngoing": "Ongoing series"
   }
 }

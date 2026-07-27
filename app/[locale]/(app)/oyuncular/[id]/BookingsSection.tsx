@@ -76,6 +76,9 @@ export function BookingsSection({ talentId, bookings, clients = [] }: { talentId
                         {JOB_TYPE_LABELS[b.job_type] ?? b.job_type}
                         {b.title && ` · ${b.title}`}
                         {' · '}{formatDate(b.work_date)}
+                        {b.is_ongoing && (
+                          <span className="ml-1.5 text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-purple-50 text-purple-600">{t('ongoingBadge')}</span>
+                        )}
                       </p>
                     </div>
                     <div className="flex items-center gap-1 flex-shrink-0">

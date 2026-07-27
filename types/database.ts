@@ -145,6 +145,7 @@ export type Database = {
           title: string | null
           work_date: string
           work_date_end: string | null
+          is_ongoing: boolean
           gross_amount: number
           currency: string
           commission_rate: number | null

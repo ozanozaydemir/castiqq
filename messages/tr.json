@@ -890,7 +890,12 @@
       "exclusivityNotes": "Yasak Detayı",
       "exclusivityNotesPlaceholder": "Örn. Rakip otomotiv markalarıyla çalışamaz",
       "exclusivityConflictWarning": "Bu tarihte oyuncunun aktif reklam yasağı var:",
-      "exclusivityUntil": "{date} tarihine kadar reklam yasaklı"
+      "exclusivityUntil": "{date} tarihine kadar reklam yasaklı",
+      "isOngoing": "Devam ediyor / sezon sürüyor (bitiş tarihi belirsiz)",
+      "ongoingNoEndDate": "Bitiş tarihi girilmeyecek",
+      "ongoingBadge": "Devam ediyor",
+      "ongoingEngagementsTitle": "Bu oyuncunun devam eden anlaşması var:",
+      "ongoingSince": "{date} tarihinden beri devam ediyor"
     },
     "documents": {
       "sectionTitle": "Belgeler",
@@ -1199,6 +1204,7 @@
     "more": "+{count} daha",
     "legendPending": "Ödeme bekliyor",
     "legendPartial": "Kısmi ödendi",
-    "legendPaid": "Ödendi"
+    "legendPaid": "Ödendi",
+    "legendOngoing": "Devam eden dizi"
   }
 }

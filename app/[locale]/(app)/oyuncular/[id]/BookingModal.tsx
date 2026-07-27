@@ -10,7 +10,7 @@ import type { Booking } from '@/types/database'
 
 type ExistingBookingRow = {
   id: string; client_name: string; work_date: string; work_date_end: string | null
-  job_type: string; exclusivity_end_date: string | null; exclusivity_notes: string | null
+  job_type: string; is_ongoing: boolean; exclusivity_end_date: string | null; exclusivity_notes: string | null
 }
 
 function rangesOverlap(aStart: string, aEnd: string, bStart: string, bEnd: string) {
@@ -46,6 +46,7 @@ export function BookingModal({
   const [jobType, setJobType] = useState<string>(editingBooking?.job_type ?? 'dizi')
   const [workDate, setWorkDate] = useState(editingBooking?.work_date ?? '')
   const [workDateEnd, setWorkDateEnd] = useState(editingBooking?.work_date_end ?? '')
+  const [isOngoing, setIsOngoing] = useState(editingBooking?.is_ongoing ?? false)
   const [grossAmount, setGrossAmount] = useState(editingBooking?.gross_amount?.toString() ?? '')
   const [withholdingRate, setWithholdingRate] = useState(editingBooking?.withholding_rate?.toString() ?? '')
   const [paymentStatus, setPaymentStatus] = useState<string>(editingBooking?.payment_status ?? 'pending')
@@ -53,14 +54,13 @@ export function BookingModal({
 
   const [dateConflicts, setDateConflicts] = useState<ExistingBookingRow[]>([])
   const [exclusivityConflicts, setExclusivityConflicts] = useState<ExistingBookingRow[]>([])
+  const [ongoingEngagements, setOngoingEngagements] = useState<ExistingBookingRow[]>([])
 
   useEffect(() => {
     if (state?.success) onClose()
   }, [state?.success, onClose])
 
   useEffect(() => {
-    if (!workDate) { setDateConflicts([]); setExclusivityConflicts([]); return }
-    const end = workDateEnd || workDate
     let cancelled = false
 
     const supabase = createBrowserClient(
@@ -70,13 +70,18 @@ export function BookingModal({
 
     supabase
       .from('bookings')
-      .select('id, client_name, work_date, work_date_end, job_type, exclusivity_end_date, exclusivity_notes')
+      .select('id, client_name, work_date, work_date_end, job_type, is_ongoing, exclusivity_end_date, exclusivity_notes')
       .eq('talent_id', talentId)
       .then(({ data }) => {
         if (cancelled || !data) return
         const rows = (data as ExistingBookingRow[]).filter(b => b.id !== editingBooking?.id)
 
-        setDateConflicts(rows.filter(b => rangesOverlap(workDate, end, b.work_date, b.work_date_end || b.work_date)))
+        setOngoingEngagements(rows.filter(b => b.is_ongoing))
+
+        if (!workDate) { setDateConflicts([]); setExclusivityConflicts([]); return }
+        const end = workDateEnd || workDate
+
+        setDateConflicts(rows.filter(b => !b.is_ongoing && rangesOverlap(workDate, end, b.work_date, b.work_date_end || b.work_date)))
         setExclusivityConflicts(rows.filter(b =>
           b.exclusivity_end_date && b.work_date <= workDate && workDate <= b.exclusivity_end_date
         ))
@@ -133,10 +138,42 @@ export function BookingModal({
               <label className="block text-sm font-medium text-gray-700">{t('workDate')} <span className="text-red-400">*</span></label>
               <input type="date" name="work_date" required value={workDate} onChange={e => setWorkDate(e.target.value)} className="sb-input" />
             </div>
-            <div className="space-y-1.5">
-              <label className="block text-sm font-medium text-gray-700">{t('workDateEnd')}</label>
-              <input type="date" name="work_date_end" value={workDateEnd} onChange={e => setWorkDateEnd(e.target.value)} className="sb-input" />
-            </div>
+            {isOngoing ? (
+              <div className="space-y-1.5">
+                <label className="block text-sm font-medium text-gray-700">{t('workDateEnd')}</label>
+                <div className="sb-input bg-gray-50 text-gray-400 flex items-center">{t('ongoingNoEndDate')}</div>
+              </div>
+            ) : (
+              <div className="space-y-1.5">
+                <label className="block text-sm font-medium text-gray-700">{t('workDateEnd')}</label>
+                <input type="date" name="work_date_end" value={workDateEnd} onChange={e => setWorkDateEnd(e.target.value)} className="sb-input" />
+              </div>
+            )}
+
+            {jobType === 'dizi' && (
+              <label className="sm:col-span-2 flex items-center gap-2.5 text-sm text-gray-700 cursor-pointer w-fit">
+                <input
+                  type="checkbox"
+                  name="is_ongoing"
+                  checked={isOngoing}
+                  onChange={e => setIsOngoing(e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-300 text-indigo-500 focus:ring-indigo-400"
+                />
+                {t('isOngoing')}
+              </label>
+            )}
+
+            {ongoingEngagements.length > 0 && (
+              <div className="sm:col-span-2 flex items-start gap-2 bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-2.5 rounded-xl text-xs">
+                <TriangleAlert className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-medium">{t('ongoingEngagementsTitle')}</p>
+                  {ongoingEngagements.map((c, i) => (
+                    <p key={i}>{c.client_name} — {t('ongoingSince', { date: new Date(c.work_date).toLocaleDateString('tr-TR') })}</p>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {dateConflicts.length > 0 && (
               <div className="sm:col-span-2 flex items-start gap-2 bg-amber-50 border border-amber-100 text-amber-700 px-3 py-2.5 rounded-xl text-xs">
