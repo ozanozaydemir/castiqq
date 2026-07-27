@@ -3,6 +3,8 @@ import { PageHeader } from '@/components/layout/PageHeader'
 import { Pagination } from '@/components/ui/Pagination'
 import { OyuncuFilters } from './OyuncuFilters'
 import { TalentGridClient } from './TalentGridClient'
+import { ExportToSheetsButton } from './ExportToSheetsButton'
+import { ImportFromSheetsButton } from './ImportFromSheetsButton'
 import { Link } from '@/i18n/navigation'
 import { Plus } from 'lucide-react'
 import { Suspense } from 'react'
@@ -110,9 +112,13 @@ export default async function OyuncularPage({
         title={t('pool')}
         description={t('poolDesc')}
         actions={
-          <Link href="/oyuncular/yeni" className="sb-btn-primary">
-            <Plus className="w-4 h-4" /> {t('add')}
-          </Link>
+          <>
+            <ImportFromSheetsButton />
+            <ExportToSheetsButton />
+            <Link href="/oyuncular/yeni" className="sb-btn-primary">
+              <Plus className="w-4 h-4" /> {t('add')}
+            </Link>
+          </>
         }
       />
 

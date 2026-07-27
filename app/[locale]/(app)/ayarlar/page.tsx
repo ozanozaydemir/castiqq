@@ -1,11 +1,20 @@
 import { getTranslations, getLocale } from 'next-intl/server'
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { OrgForm } from './OrgForm'
 import { ProfilForm } from './ProfilForm'
 import { SifreForm } from './SifreForm'
 import { PlanCard } from './PlanCard'
-import { Building2, User, Lock, Globe } from 'lucide-react'
+import { GoogleSheetsCard } from './GoogleSheetsCard'
+import { Building2, User, Lock, Globe, FileSpreadsheet } from 'lucide-react'
 import { LanguageForm } from './LanguageForm'
+
+const GOOGLE_MESSAGE_KEYS: Record<string, string> = {
+  invalid_state: 'errorInvalidState',
+  no_refresh_token: 'errorNoRefreshToken',
+  save_failed: 'errorSaveFailed',
+  exchange_failed: 'errorExchangeFailed',
+}
 
 function SettingsCard({ title, icon, children }: {
   title: string; icon: React.ReactNode; children: React.ReactNode
@@ -21,16 +30,22 @@ function SettingsCard({ title, icon, children }: {
   )
 }
 
-export default async function AyarlarPage() {
+export default async function AyarlarPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ google_connected?: string; google_error?: string }>
+}) {
   const t = await getTranslations('settings')
   const locale = await getLocale()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/giris')
+  const params = await searchParams
 
   const { data: profile } = await supabase
     .from('profiles')
     .select('full_name, role, organization_id')
-    .eq('id', user!.id)
+    .eq('id', user.id)
     .single()
 
   const { data: org } = await supabase
@@ -38,6 +53,18 @@ export default async function AyarlarPage() {
     .select('name, subscription_plan, subscription_status, subscription_ends_at, polar_customer_id')
     .eq('id', profile?.organization_id ?? '')
     .single()
+
+  const { data: googleConnection } = await supabase
+    .from('google_connections')
+    .select('google_email')
+    .eq('organization_id', profile?.organization_id ?? '')
+    .maybeSingle()
+
+  const googleMessage = params.google_connected
+    ? 'connectedSuccess'
+    : params.google_error
+      ? GOOGLE_MESSAGE_KEYS[params.google_error] ?? 'errorExchangeFailed'
+      : undefined
 
   return (
     <div className="space-y-5 max-w-2xl pb-8">
@@ -58,6 +85,10 @@ export default async function AyarlarPage() {
           initialName={profile?.full_name ?? ''}
           email={user?.email ?? ''}
         />
+      </SettingsCard>
+
+      <SettingsCard title={t('sectionGoogle')} icon={<FileSpreadsheet className="w-4 h-4" />}>
+        <GoogleSheetsCard connectedEmail={googleConnection?.google_email ?? null} message={googleMessage} />
       </SettingsCard>
 
       <SettingsCard title={t('sectionPassword')} icon={<Lock className="w-4 h-4" />}>
