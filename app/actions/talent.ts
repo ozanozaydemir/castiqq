@@ -59,6 +59,11 @@ function buildTalentPayload(orgId: string, formData: FormData) {
     selftape_comedy_url: str(formData.get('selftape_comedy_url')),
     selftape_ad_url: str(formData.get('selftape_ad_url')),
     voice_sample_url: str(formData.get('voice_sample_url')),
+    commission_rate: num(formData.get('commission_rate')),
+    representation_start_date: str(formData.get('representation_start_date')),
+    representation_end_date: str(formData.get('representation_end_date')),
+    exclusive_representation: formData.get('exclusive_representation') === 'on',
+    contract_file_path: str(formData.get('contract_file_path')),
   }
 }
 

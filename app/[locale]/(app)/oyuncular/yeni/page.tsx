@@ -1,3 +1,4 @@
+import { createClient } from '@/lib/supabase/server'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { OyuncuForm } from '../OyuncuForm'
 import { createOyuncu } from '@/app/actions/talent'
@@ -7,6 +8,10 @@ import { getTranslations } from 'next-intl/server'
 
 export default async function YeniOyuncuPage() {
   const t = await getTranslations('talent')
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const { data: profile } = await supabase.from('profiles').select('organization_id').eq('id', user?.id ?? '').single()
+  const { data: org } = await supabase.from('organizations').select('org_type').eq('id', profile?.organization_id ?? '').single()
 
   return (
     <div>
@@ -18,7 +23,7 @@ export default async function YeniOyuncuPage() {
         </Link>
 
         <div className="sb-card p-6">
-          <OyuncuForm action={createOyuncu} cancelHref="/oyuncular" />
+          <OyuncuForm action={createOyuncu} cancelHref="/oyuncular" orgType={org?.org_type === 'agency' ? 'agency' : 'production'} />
         </div>
       </div>
     </div>

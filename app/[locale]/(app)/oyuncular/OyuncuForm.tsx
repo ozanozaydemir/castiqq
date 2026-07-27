@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef } from 'react'
 import { useActionState } from 'react'
 import { useFormStatus } from 'react-dom'
-import { Loader2, ArrowRight, Plus, X, GripVertical, ImagePlus } from 'lucide-react'
+import { Loader2, ArrowRight, Plus, X, GripVertical, ImagePlus, Upload, Trash2, CheckCircle2 } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import { createBrowserClient } from '@supabase/ssr'
 import { useOrgId } from '@/lib/org-context'
@@ -172,21 +172,109 @@ function PhotosUpload({ orgId, initial = [], coverLabel, photoHint }: { orgId: s
   )
 }
 
+function ContractUpload({
+  orgId,
+  currentPath,
+  onChange,
+  label,
+  uploadLabel,
+  uploadingLabel,
+  currentLabel,
+  hint,
+}: {
+  orgId: string
+  currentPath: string | null
+  onChange: (path: string | null) => void
+  label: string
+  uploadLabel: string
+  uploadingLabel: string
+  currentLabel: string
+  hint: string
+}) {
+  const [uploading, setUploading] = useState(false)
+  const [fileName, setFileName] = useState<string | null>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  )
+
+  async function handleFile(file: File) {
+    if (!file || file.type !== 'application/pdf') return
+    setUploading(true)
+    const path = `${orgId}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`
+    const { error } = await supabase.storage.from('contracts').upload(path, file, { upsert: true })
+    setUploading(false)
+    if (!error) {
+      setFileName(file.name)
+      onChange(path)
+    }
+  }
+
+  const hasContract = currentPath || fileName
+
+  return (
+    <div className="space-y-1.5">
+      <label className="block text-sm font-medium text-gray-700">{label}</label>
+
+      {hasContract ? (
+        <div className="flex items-center gap-2 bg-indigo-50 border border-indigo-100 rounded-xl px-3 py-2.5">
+          <CheckCircle2 className="w-4 h-4 text-indigo-500 flex-shrink-0" />
+          <span className="text-sm text-indigo-700 flex-1 truncate">
+            {fileName ?? currentLabel}
+          </span>
+          <button
+            type="button"
+            onClick={() => { onChange(null); setFileName(null) }}
+            className="text-indigo-400 hover:text-red-500 transition-colors"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          disabled={uploading}
+          onClick={() => inputRef.current?.click()}
+          className="w-full border-2 border-dashed border-gray-200 hover:border-indigo-300 rounded-xl px-4 py-3 flex items-center gap-3 text-sm text-gray-500 hover:text-indigo-600 transition-colors disabled:opacity-50"
+        >
+          {uploading
+            ? <Loader2 className="w-4 h-4 animate-spin flex-shrink-0" />
+            : <Upload className="w-4 h-4 flex-shrink-0" />}
+          {uploading ? uploadingLabel : uploadLabel}
+        </button>
+      )}
+
+      <input
+        ref={inputRef}
+        type="file"
+        accept="application/pdf"
+        className="hidden"
+        onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f) }}
+      />
+      <p className="text-xs text-gray-400">{hint}</p>
+    </div>
+  )
+}
+
 // ── Props ────────────────────────────────────────────────────────
 
 interface OyuncuFormProps {
   action: (state: ActionState, formData: FormData) => Promise<ActionState>
   initialData?: TalentWithRelations
   cancelHref?: string
+  orgType?: 'production' | 'agency'
 }
 
 // ── Main Component ───────────────────────────────────────────────
 
-export function OyuncuForm({ action, initialData, cancelHref = '/oyuncular' }: OyuncuFormProps) {
+export function OyuncuForm({ action, initialData, cancelHref = '/oyuncular', orgType = 'production' }: OyuncuFormProps) {
   const [state, formAction] = useActionState(action, null)
   const orgId = useOrgId()
   const tf = useTranslations('talent.form')
   const ta = useTranslations('talent.availability')
+  const [contractPath, setContractPath] = useState<string | null>(initialData?.contract_file_path ?? null)
 
   // Checkbox state
   const [skills, setSkills] = useState<string[]>(initialData?.skills ?? [])
@@ -245,6 +333,7 @@ export function OyuncuForm({ action, initialData, cancelHref = '/oyuncular' }: O
       <input type="hidden" name="languages_json" value={JSON.stringify(languages)} />
       <input type="hidden" name="experiences_json" value={JSON.stringify(experiences)} />
       <input type="hidden" name="education_json" value={JSON.stringify(education)} />
+      <input type="hidden" name="contract_file_path" value={contractPath ?? ''} />
 
       {/* ── 0. Fotoğraflar ── */}
       <section>
@@ -576,6 +665,64 @@ export function OyuncuForm({ action, initialData, cancelHref = '/oyuncular' }: O
           </Field>
         </div>
       </section>
+
+      {/* ── 9. Temsil & Sözleşme (yalnızca menajerlik hesapları) ── */}
+      {orgType === 'agency' && (
+        <section>
+          <SectionTitle>{tf('representation')}</SectionTitle>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <Field label={tf('commissionRate')}>
+                <input
+                  type="number"
+                  name="commission_rate"
+                  defaultValue={initialData?.commission_rate ?? ''}
+                  min={0}
+                  max={100}
+                  step="0.1"
+                  placeholder="15"
+                  className="sb-input"
+                />
+              </Field>
+              <Field label={tf('repStartDate')}>
+                <input
+                  type="date"
+                  name="representation_start_date"
+                  defaultValue={initialData?.representation_start_date ?? ''}
+                  className="sb-input"
+                />
+              </Field>
+              <Field label={tf('repEndDate')}>
+                <input
+                  type="date"
+                  name="representation_end_date"
+                  defaultValue={initialData?.representation_end_date ?? ''}
+                  className="sb-input"
+                />
+              </Field>
+            </div>
+            <label className="flex items-center gap-2.5 text-sm text-gray-700 cursor-pointer w-fit">
+              <input
+                type="checkbox"
+                name="exclusive_representation"
+                defaultChecked={initialData?.exclusive_representation ?? true}
+                className="w-4 h-4 rounded border-gray-300 text-indigo-500 focus:ring-indigo-400"
+              />
+              {tf('exclusiveRepresentation')}
+            </label>
+            <ContractUpload
+              orgId={orgId}
+              currentPath={initialData?.contract_file_path ?? null}
+              onChange={setContractPath}
+              label={tf('contractFile')}
+              uploadLabel={tf('contractUpload')}
+              uploadingLabel={tf('contractUploading')}
+              currentLabel={tf('contractCurrent')}
+              hint={tf('contractHint')}
+            />
+          </div>
+        </section>
+      )}
 
       {/* ── Notlar ── */}
       <section>

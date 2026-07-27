@@ -9,10 +9,11 @@ import { Link } from '@/i18n/navigation'
 import {
   ArrowLeft, Pencil, MapPin, Phone, Mail, Building2, User,
   Ruler, Globe, Star, GraduationCap,
-  Clapperboard, Play, Mic, Film, Banknote, Users,
+  Clapperboard, Play, Mic, Film, Banknote, Users, FileSignature,
 } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { MediaEmbed } from './MediaEmbed'
+import { ContractDownloadButton } from './ContractDownloadButton'
 
 const LANG_LEVEL_LABELS: Record<string, string> = {
   native: 'Ana dil', C2: 'C2', C1: 'C1', B2: 'B2', B1: 'B1', A2: 'A2', A1: 'A1',
@@ -76,6 +77,11 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
   const { data: rawTalent } = await supabase.from('talent').select('*').eq('id', id).single()
   if (!rawTalent) notFound()
   const talent = rawTalent as typeof rawTalent & { skills: string[]; licenses: string[] }
+
+  const { data: { user } } = await supabase.auth.getUser()
+  const { data: profile } = await supabase.from('profiles').select('organization_id').eq('id', user?.id ?? '').single()
+  const { data: org } = await supabase.from('organizations').select('org_type').eq('id', profile?.organization_id ?? '').single()
+  const isAgency = org?.org_type === 'agency'
 
   const [langRes, expRes, eduRes, audRes, colRes] = await Promise.all([
     supabase.from('talent_languages').select('*').eq('talent_id', id).order('sort_order'),
@@ -267,6 +273,23 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
                 } />
                 <MetaRow label={t('feeNotes')} value={talent.fee_notes} />
               </div>
+            </Section>
+          )}
+
+          {/* Temsil & Sözleşme (yalnızca menajerlik hesapları) */}
+          {isAgency && (talent.commission_rate || talent.representation_start_date || talent.representation_end_date || talent.contract_file_path) && (
+            <Section title={t('representation')} icon={<FileSignature className="w-4 h-4" />}>
+              <div>
+                <MetaRow label={t('commissionRate')} value={talent.commission_rate ? `%${talent.commission_rate}` : null} />
+                <MetaRow label={t('repStartDate')} value={talent.representation_start_date ? new Date(talent.representation_start_date).toLocaleDateString('tr-TR') : null} />
+                <MetaRow label={t('repEndDate')} value={talent.representation_end_date ? new Date(talent.representation_end_date).toLocaleDateString('tr-TR') : null} />
+                <MetaRow label={t('exclusivity')} value={talent.exclusive_representation ? t('exclusive') : t('nonExclusive')} />
+              </div>
+              {talent.contract_file_path && (
+                <div className="mt-3 pt-3 border-t border-gray-50">
+                  <ContractDownloadButton path={talent.contract_file_path} label={t('viewContract')} />
+                </div>
+              )}
             </Section>
           )}
 

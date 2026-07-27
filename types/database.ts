@@ -104,6 +104,11 @@ export type Database = {
           selftape_comedy_url: string | null
           selftape_ad_url: string | null
           voice_sample_url: string | null
+          commission_rate: number | null
+          representation_start_date: string | null
+          representation_end_date: string | null
+          exclusive_representation: boolean
+          contract_file_path: string | null
           created_at: string
           updated_at: string
         }

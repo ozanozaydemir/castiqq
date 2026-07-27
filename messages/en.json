@@ -771,7 +771,17 @@
       "saving": "Saving…",
       "create": "Create Talent",
       "update": "Update",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "representation": "Representation & Contract",
+      "commissionRate": "Commission Rate (%)",
+      "repStartDate": "Representation Start",
+      "repEndDate": "Representation End",
+      "exclusiveRepresentation": "Exclusive representation",
+      "contractFile": "Contract (PDF)",
+      "contractUpload": "Upload contract",
+      "contractUploading": "Uploading...",
+      "contractCurrent": "Contract uploaded",
+      "contractHint": "PDF only, kept private within your org."
     },
     "filters": {
       "searchPlaceholder": "Search by name…",
@@ -805,7 +815,15 @@
     "sortRecent": "Recently Added",
     "selected": "{count} selected",
     "bulkAddToList": "Add to List",
-    "clearSelection": "Clear"
+    "clearSelection": "Clear",
+    "representation": "Representation & Contract",
+    "commissionRate": "Commission Rate",
+    "repStartDate": "Representation Start",
+    "repEndDate": "Representation End",
+    "exclusivity": "Exclusivity",
+    "exclusive": "Exclusive",
+    "nonExclusive": "Non-exclusive",
+    "viewContract": "View contract"
   },
   "collections": {
     "title": "Lists",

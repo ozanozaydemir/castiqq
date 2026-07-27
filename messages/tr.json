@@ -771,7 +771,17 @@
       "saving": "Kaydediliyor…",
       "create": "Oyuncu Oluştur",
       "update": "Güncelle",
-      "cancel": "İptal"
+      "cancel": "İptal",
+      "representation": "Temsil & Sözleşme",
+      "commissionRate": "Komisyon Oranı (%)",
+      "repStartDate": "Temsil Başlangıcı",
+      "repEndDate": "Temsil Bitişi",
+      "exclusiveRepresentation": "Münhasır temsil",
+      "contractFile": "Sözleşme (PDF)",
+      "contractUpload": "Sözleşme yükle",
+      "contractUploading": "Yükleniyor...",
+      "contractCurrent": "Sözleşme yüklü",
+      "contractHint": "Sadece PDF, org içinde gizli tutulur."
     },
     "filters": {
       "searchPlaceholder": "İsim ara…",
@@ -805,7 +815,15 @@
     "sortRecent": "Son Eklenen",
     "selected": "{count} seçildi",
     "bulkAddToList": "Listeye Ekle",
-    "clearSelection": "Temizle"
+    "clearSelection": "Temizle",
+    "representation": "Temsil & Sözleşme",
+    "commissionRate": "Komisyon Oranı",
+    "repStartDate": "Temsil Başlangıcı",
+    "repEndDate": "Temsil Bitişi",
+    "exclusivity": "Münhasırlık",
+    "exclusive": "Münhasır",
+    "nonExclusive": "Münhasır değil",
+    "viewContract": "Sözleşmeyi görüntüle"
   },
   "collections": {
     "title": "Listeler",
