@@ -41,7 +41,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   const { data: org } = await supabase
     .from('organizations')
-    .select('name, logo_url, polar_subscription_id, subscription_status')
+    .select('name, logo_url, polar_subscription_id, subscription_status, org_type')
     .eq('id', profile?.organization_id ?? '')
     .single()
 
@@ -56,7 +56,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <OrgProvider value={profile?.organization_id ?? ''}>
-      <AppShell orgName={org?.name ?? 'Castiqq'} logoUrl={org?.logo_url ?? null} showBillingWarning={showBillingWarning}>
+      <AppShell
+        orgName={org?.name ?? 'Castiqq'}
+        logoUrl={org?.logo_url ?? null}
+        showBillingWarning={showBillingWarning}
+        orgType={org?.org_type === 'agency' ? 'agency' : 'production'}
+      >
         {children}
       </AppShell>
     </OrgProvider>

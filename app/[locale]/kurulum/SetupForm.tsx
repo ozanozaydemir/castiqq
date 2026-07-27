@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import { Clapperboard, Loader2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
@@ -22,7 +22,9 @@ function SubmitBtn() {
 
 export function SetupForm() {
   const t = useTranslations('auth.setup')
+  const ta = useTranslations('auth')
   const [state, action] = useActionState(completeOrgSetup, null)
+  const [orgType, setOrgType] = useState<'production' | 'agency'>('production')
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-12">
@@ -40,6 +42,36 @@ export function SetupForm() {
         </div>
 
         <form action={action} className="space-y-4">
+          <input type="hidden" name="org_type" value={orgType} />
+
+          <div className="space-y-1.5">
+            <label className="block text-sm font-medium text-gray-700">{ta('orgTypeLabel')}</label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setOrgType('production')}
+                className={`py-2.5 px-3 rounded-xl border text-sm font-medium transition-colors ${
+                  orgType === 'production'
+                    ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                    : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                }`}
+              >
+                {ta('orgTypeProduction')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setOrgType('agency')}
+                className={`py-2.5 px-3 rounded-xl border text-sm font-medium transition-colors ${
+                  orgType === 'agency'
+                    ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                    : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                }`}
+              >
+                {ta('orgTypeAgency')}
+              </button>
+            </div>
+          </div>
+
           <div className="space-y-1.5">
             <label className="block text-sm font-medium text-gray-700">{t('orgNameLabel')}</label>
             <input

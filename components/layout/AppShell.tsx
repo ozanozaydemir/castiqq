@@ -9,16 +9,18 @@ interface AppShellProps {
   orgName?: string
   logoUrl?: string | null
   showBillingWarning?: boolean
+  orgType?: 'production' | 'agency'
   children: React.ReactNode
 }
 
-export function AppShell({ orgName, showBillingWarning, children }: AppShellProps) {
+export function AppShell({ orgName, showBillingWarning, orgType = 'production', children }: AppShellProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
     <div className="flex h-screen bg-[#f8f8f8] overflow-hidden">
       <AppSidebar
         orgName={orgName}
+        orgType={orgType}
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
       />

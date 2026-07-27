@@ -51,7 +51,7 @@ export default async function AyarlarPage({
 
   const { data: org } = await supabase
     .from('organizations')
-    .select('name, subscription_plan, subscription_status, subscription_ends_at, polar_customer_id')
+    .select('name, subscription_plan, subscription_status, subscription_ends_at, polar_customer_id, org_type')
     .eq('id', profile?.organization_id ?? '')
     .single()
 
@@ -73,12 +73,13 @@ export default async function AyarlarPage({
 
       <div className="p-6 space-y-5">
         <PlanCard
-        plan={org?.subscription_plan ?? 'starter'}
-        status={org?.subscription_status ?? 'active'}
-        endsAt={org?.subscription_ends_at ?? null}
-        hasPortal={!!org?.polar_customer_id}
-        orgId={profile?.organization_id ?? ''}
-      />
+          plan={org?.subscription_plan ?? 'starter'}
+          status={org?.subscription_status ?? 'active'}
+          endsAt={org?.subscription_ends_at ?? null}
+          hasPortal={!!org?.polar_customer_id}
+          orgId={profile?.organization_id ?? ''}
+          orgType={org?.org_type === 'agency' ? 'agency' : 'production'}
+        />
 
       <SettingsCard title={t('sectionOrg')} icon={<Building2 className="w-4 h-4" />}>
         <OrgForm initialName={org?.name ?? ''} />

@@ -1,13 +1,17 @@
+// 'pro' = tek Production Planı (yapım şirketleri/cast direktörleri)
+// 'agency' = tek Menajerlik Planı (org_type='agency') — eski çok katmanlı
+// pro/ajans ayrımı kaldırıldı, her taraf artık tek bir plan kullanıyor.
 export type Plan = 'starter' | 'pro' | 'agency'
 
 export const PLAN_LIMITS: Record<Plan, {
   maxUsers: number
   storageGB: number
+  maxTalent?: number
   label: string
 }> = {
-  starter: { maxUsers: 1,         storageGB: 10,   label: 'Başlangıç' },
-  pro:     { maxUsers: 3,         storageGB: 200,  label: 'Pro'        },
-  agency:  { maxUsers: Infinity,  storageGB: 1000, label: 'Ajans'      },
+  starter: { maxUsers: 1, storageGB: 10,  label: 'Başlangıç' },
+  pro:     { maxUsers: 3, storageGB: 200, label: 'Production Planı' },
+  agency:  { maxUsers: 5, storageGB: 50, maxTalent: 250, label: 'Menajerlik Planı' },
 }
 
 export function getPlanLabel(plan: string): string {

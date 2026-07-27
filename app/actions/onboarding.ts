@@ -24,10 +24,11 @@ export async function completeOrgSetup(_: SetupActionState, formData: FormData):
 
   const orgName = (formData.get('org_name') as string)?.trim()
   if (!orgName) return { error: 'Firma adı zorunludur.' }
+  const orgType = formData.get('org_type') === 'agency' ? 'agency' : 'production'
 
   const { error } = await supabase
     .from('organizations')
-    .update({ name: orgName })
+    .update({ name: orgName, org_type: orgType })
     .eq('id', profile.organization_id)
 
   if (error) return { error: error.message }

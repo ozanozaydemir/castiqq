@@ -28,6 +28,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('')
   const [showPass, setShowPass] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
+  const [orgType, setOrgType] = useState<'production' | 'agency'>('production')
 
   /* ── Email sent screen ──────────────────────────────── */
   if (state?.success) {
@@ -100,6 +101,36 @@ export default function RegisterPage() {
 
         <form action={action} className="space-y-4">
           <input type="hidden" name="locale" value={locale} />
+          <input type="hidden" name="org_type" value={orgType} />
+
+          {/* Account type */}
+          <div className="space-y-1.5">
+            <label className="block text-sm font-medium text-gray-700">{t('orgTypeLabel')}</label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setOrgType('production')}
+                className={`py-2.5 px-3 rounded-xl border text-sm font-medium transition-colors ${
+                  orgType === 'production'
+                    ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                    : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                }`}
+              >
+                {t('orgTypeProduction')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setOrgType('agency')}
+                className={`py-2.5 px-3 rounded-xl border text-sm font-medium transition-colors ${
+                  orgType === 'agency'
+                    ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                    : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                }`}
+              >
+                {t('orgTypeAgency')}
+              </button>
+            </div>
+          </div>
 
           {/* Org name */}
           <div className="space-y-1.5">

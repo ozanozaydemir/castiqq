@@ -12,22 +12,29 @@ import { logout } from '@/app/actions/auth'
 interface AppSidebarProps {
   orgName?: string
   logoUrl?: string | null
+  orgType?: 'production' | 'agency'
   isOpen?: boolean
   onClose?: () => void
 }
 
-export function AppSidebar({ orgName = 'Castiqq', isOpen = false, onClose }: AppSidebarProps) {
+export function AppSidebar({ orgName = 'Castiqq', orgType = 'production', isOpen = false, onClose }: AppSidebarProps) {
   const pathname = usePathname()
   const t = useTranslations('nav')
 
-  const navItems = [
-    { href: '/dashboard',  label: t('dashboard'),  icon: LayoutDashboard },
-    { href: '/projeler',   label: t('projects'),    icon: Film },
-    { href: '/roller',     label: t('roles'),       icon: UserSearch },
-    { href: '/oyuncular',  label: t('talent'),      icon: Users },
-    { href: '/listeler',   label: t('lists'),       icon: BookMarked },
-    { href: '/ayarlar',    label: t('settings'),    icon: Settings },
-  ]
+  const navItems = orgType === 'agency'
+    ? [
+        { href: '/oyuncular', label: t('roster'), icon: Users },
+        { href: '/listeler',  label: t('lists'),   icon: BookMarked },
+        { href: '/ayarlar',   label: t('settings'), icon: Settings },
+      ]
+    : [
+        { href: '/dashboard',  label: t('dashboard'),  icon: LayoutDashboard },
+        { href: '/projeler',   label: t('projects'),    icon: Film },
+        { href: '/roller',     label: t('roles'),       icon: UserSearch },
+        { href: '/oyuncular',  label: t('talent'),      icon: Users },
+        { href: '/listeler',   label: t('lists'),       icon: BookMarked },
+        { href: '/ayarlar',    label: t('settings'),    icon: Settings },
+      ]
 
   const sidebarContent = (
     <aside className="w-56 bg-white border-r border-gray-200 flex flex-col h-full">

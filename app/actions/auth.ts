@@ -54,6 +54,7 @@ export async function register(_: AuthActionState, formData: FormData): Promise<
   const password = formData.get('password') as string
   const confirm = formData.get('confirm') as string
   const locale = (formData.get('locale') as string) || 'tr'
+  const org_type = formData.get('org_type') === 'agency' ? 'agency' : 'production'
 
   if (!org_name || !full_name || !email || !password) return { error: t('allFieldsRequired') }
   if (password !== confirm) return { error: t('passwordMismatch') }
@@ -67,7 +68,7 @@ export async function register(_: AuthActionState, formData: FormData): Promise<
     password,
     options: {
       emailRedirectTo: `${siteUrl}/auth/callback?locale=${locale}`,
-      data: { full_name, org_name },
+      data: { full_name, org_name, org_type },
     },
   })
 
