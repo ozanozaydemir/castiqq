@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Plus_Jakarta_Sans } from 'next/font/google'
 import { getLocale } from 'next-intl/server'
 import './globals.css'
 
-const inter = Inter({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-sans',
 })
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castiqq.app'
@@ -38,8 +38,8 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale()
   return (
-    <html lang={locale} className={`h-full ${inter.variable}`}>
-      <body className={`h-full antialiased ${inter.className}`}>
+    <html lang={locale} className={`h-full ${plusJakartaSans.variable}`}>
+      <body className={`h-full antialiased ${plusJakartaSans.className}`}>
         {children}
       </body>
     </html>

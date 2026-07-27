@@ -138,7 +138,7 @@ export default async function HomePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 overflow-x-hidden" style={{ fontFamily: 'var(--font-inter, Inter, sans-serif)' }}>
+    <div className="min-h-screen bg-white text-gray-900 overflow-x-hidden" style={{ fontFamily: 'var(--font-sans, "Plus Jakarta Sans", sans-serif)' }}>
       <JsonLd data={jsonLd} />
       <AnimationInit />
 

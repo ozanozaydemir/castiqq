@@ -79,7 +79,7 @@ function baseHtml(content: string) {
 <body>
 <div class="wrap">
   <div class="card">
-    <div class="header"><a class="logo" href="${SITE_URL}">🎬 Castiqq</a></div>
+    <div class="header"><a class="logo" href="${SITE_URL}" style="color:#ffffff !important;">🎬 Castiqq</a></div>
     <div class="body">${content}</div>
     <div class="footer">
       Castiqq · <a href="${SITE_URL}/gizlilik">Gizlilik Politikası</a> · <a href="${SITE_URL}/kullanim-kosullari">Kullanım Koşulları</a><br>
