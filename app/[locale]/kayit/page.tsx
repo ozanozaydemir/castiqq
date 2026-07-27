@@ -1,72 +1,35 @@
 'use client'
 
-import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { useActionState, useState } from 'react'
+import { useFormStatus } from 'react-dom'
 import { Clapperboard, Loader2, Eye, EyeOff, Mail, ArrowLeft } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import { useTranslations, useLocale } from 'next-intl'
+import { register } from '@/app/actions/auth'
 
-type Step = 'form' | 'done'
+function SubmitBtn({ label, loadingLabel }: { label: string; loadingLabel: string }) {
+  const { pending } = useFormStatus()
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="w-full flex items-center justify-center gap-2 py-2.5 bg-indigo-500 hover:bg-indigo-600 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition-colors shadow-sm shadow-indigo-500/20 mt-2"
+    >
+      {pending ? (<><Loader2 className="w-4 h-4 animate-spin" /> {loadingLabel}</>) : label}
+    </button>
+  )
+}
 
 export default function RegisterPage() {
   const t = useTranslations('auth')
   const locale = useLocale()
-  const [step, setStep] = useState<Step>('form')
-  const [form, setForm] = useState({
-    org_name: '',
-    full_name: '',
-    email: '',
-    password: '',
-    confirm: '',
-  })
+  const [state, action] = useActionState(register, null)
+  const [email, setEmail] = useState('')
   const [showPass, setShowPass] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  const set = (f: string, v: string) => setForm(p => ({ ...p, [f]: v }))
-
-  async function handleRegister(e: React.FormEvent) {
-    e.preventDefault()
-    setError('')
-
-    if (form.password !== form.confirm) {
-      setError(t('passwordMismatch'))
-      return
-    }
-    if (form.password.length < 6) {
-      setError(t('passwordTooShort'))
-      return
-    }
-
-    setLoading(true)
-    const supabase = createClient()
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin
-
-    const { error: signUpError } = await supabase.auth.signUp({
-      email: form.email,
-      password: form.password,
-      options: {
-        emailRedirectTo: `${siteUrl}/auth/callback?locale=${locale}`,
-        data: {
-          full_name: form.full_name,
-          org_name: form.org_name,
-        },
-      },
-    })
-
-    if (signUpError) {
-      setError(signUpError.message)
-      setLoading(false)
-      return
-    }
-
-    setStep('done')
-    setLoading(false)
-  }
 
   /* ── Email sent screen ──────────────────────────────── */
-  if (step === 'done') {
+  if (state?.success) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-sm text-center">
@@ -78,7 +41,7 @@ export default function RegisterPage() {
           <h1 className="text-2xl font-bold text-gray-900 mb-3">{t('verifyEmail')}</h1>
 
           <p className="text-gray-500 text-sm leading-relaxed mb-2">
-            <span className="font-semibold text-gray-700">{form.email}</span>{' '}
+            <span className="font-semibold text-gray-700">{email}</span>{' '}
             {t('verifyEmailSentTo')}
           </p>
           <p className="text-gray-400 text-sm leading-relaxed mb-8">
@@ -134,7 +97,8 @@ export default function RegisterPage() {
           <p className="text-sm text-gray-500">{t('createAccountSubtitle')}</p>
         </div>
 
-        <form onSubmit={handleRegister} className="space-y-4">
+        <form action={action} className="space-y-4">
+          <input type="hidden" name="locale" value={locale} />
 
           {/* Org name */}
           <div className="space-y-1.5">
@@ -143,8 +107,7 @@ export default function RegisterPage() {
             </label>
             <input
               required
-              value={form.org_name}
-              onChange={e => set('org_name', e.target.value)}
+              name="org_name"
               placeholder={t('orgNamePlaceholder')}
               className="sb-input"
             />
@@ -155,8 +118,7 @@ export default function RegisterPage() {
             <label className="block text-sm font-medium text-gray-700">{t('fullNameLabel')}</label>
             <input
               required
-              value={form.full_name}
-              onChange={e => set('full_name', e.target.value)}
+              name="full_name"
               placeholder={t('fullNamePlaceholder')}
               className="sb-input"
             />
@@ -168,8 +130,9 @@ export default function RegisterPage() {
             <input
               required
               type="email"
-              value={form.email}
-              onChange={e => set('email', e.target.value)}
+              name="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
               placeholder={t('registerEmailPlaceholder')}
               autoComplete="email"
               className="sb-input"
@@ -183,8 +146,7 @@ export default function RegisterPage() {
               <input
                 required
                 type={showPass ? 'text' : 'password'}
-                value={form.password}
-                onChange={e => set('password', e.target.value)}
+                name="password"
                 placeholder={t('passwordMinPlaceholder')}
                 minLength={6}
                 autoComplete="new-password"
@@ -208,8 +170,7 @@ export default function RegisterPage() {
               <input
                 required
                 type={showConfirm ? 'text' : 'password'}
-                value={form.confirm}
-                onChange={e => set('confirm', e.target.value)}
+                name="confirm"
                 placeholder={t('confirmPasswordPlaceholder')}
                 autoComplete="new-password"
                 className="sb-input pr-10"
@@ -226,23 +187,15 @@ export default function RegisterPage() {
           </div>
 
           {/* Error */}
-          {error && (
+          {state?.error && (
             <div className="flex items-start gap-2.5 bg-red-50 border border-red-100 text-red-600 px-3.5 py-3 rounded-xl text-sm">
               <div className="w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0 mt-1.5" />
-              {error}
+              {state.error}
             </div>
           )}
 
           {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-2 py-2.5 bg-indigo-500 hover:bg-indigo-600 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition-colors shadow-sm shadow-indigo-500/20 mt-2"
-          >
-            {loading ? (
-              <><Loader2 className="w-4 h-4 animate-spin" /> {t('creatingAccount')}</>
-            ) : t('registerCta')}
-          </button>
+          <SubmitBtn label={t('registerCta')} loadingLabel={t('creatingAccount')} />
         </form>
 
         <p className="text-center text-xs text-gray-400 mt-5 leading-relaxed">

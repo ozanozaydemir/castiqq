@@ -3,14 +3,16 @@
 import { useState } from 'react'
 import { AppSidebar } from './AppSidebar'
 import { MobileHeader } from './MobileHeader'
+import { BillingBanner } from './BillingBanner'
 
 interface AppShellProps {
   orgName?: string
   logoUrl?: string | null
+  showBillingWarning?: boolean
   children: React.ReactNode
 }
 
-export function AppShell({ orgName, children }: AppShellProps) {
+export function AppShell({ orgName, showBillingWarning, children }: AppShellProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -23,6 +25,7 @@ export function AppShell({ orgName, children }: AppShellProps) {
 
       <div className="flex flex-col flex-1 md:ml-56 min-w-0">
         <MobileHeader orgName={orgName} onMenuOpen={() => setIsOpen(true)} />
+        {showBillingWarning && <BillingBanner />}
         <main
           className="flex-1 overflow-y-auto pb-8 md:pb-0"
           style={{ paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}

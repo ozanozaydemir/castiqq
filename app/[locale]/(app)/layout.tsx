@@ -41,7 +41,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   const { data: org } = await supabase
     .from('organizations')
-    .select('name, logo_url, polar_subscription_id')
+    .select('name, logo_url, polar_subscription_id, subscription_status')
     .eq('id', profile?.organization_id ?? '')
     .single()
 
@@ -50,9 +50,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     redirect('/plan-sec')
   }
 
+  // Ödeme başarısız olmuş ama abonelik henüz iptal edilmemiş (grace period):
+  // erişimi kesmiyoruz, sadece kart güncelleme uyarısı gösteriyoruz.
+  const showBillingWarning = org.subscription_status === 'past_due' || org.subscription_status === 'unpaid'
+
   return (
     <OrgProvider value={profile?.organization_id ?? ''}>
-      <AppShell orgName={org?.name ?? 'Castiqq'} logoUrl={org?.logo_url ?? null}>
+      <AppShell orgName={org?.name ?? 'Castiqq'} logoUrl={org?.logo_url ?? null} showBillingWarning={showBillingWarning}>
         {children}
       </AppShell>
     </OrgProvider>

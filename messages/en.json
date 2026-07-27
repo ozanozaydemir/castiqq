@@ -46,6 +46,9 @@
     "loggingIn": "Signing in…",
     "freeStart": "Try free for 14 days",
     "wrongCredentials": "Incorrect email or password.",
+    "tooManyLoginAttempts": "Too many login attempts. Please wait a minute and try again.",
+    "tooManyRegisterAttempts": "Too many signup attempts. Please try again later.",
+    "allFieldsRequired": "All fields are required.",
     "createAccount": "Create account",
     "createAccountSubtitle": "First 14 days free.",
     "orgNameLabel": "Organization Name",
@@ -876,6 +879,10 @@
       "upgradeTo": "Upgrade your plan:",
       "perMonth": "/mo",
       "productIdMissing": "Product ID not configured."
+    },
+    "billingBanner": {
+      "pastDue": "There's an issue with your payment. Please update your card details to avoid losing access.",
+      "updateCard": "Update Card"
     },
     "language": {
       "title": "Language",

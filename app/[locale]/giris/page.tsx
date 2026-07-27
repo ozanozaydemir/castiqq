@@ -1,40 +1,30 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from '@/i18n/navigation'
-import { createClient } from '@/lib/supabase/client'
+import { useActionState } from 'react'
+import { useFormStatus } from 'react-dom'
 import { Clapperboard, Loader2, Eye, EyeOff } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
+import { useState } from 'react'
+import { login } from '@/app/actions/auth'
+
+function SubmitBtn({ label, loadingLabel }: { label: string; loadingLabel: string }) {
+  const { pending } = useFormStatus()
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="w-full flex items-center justify-center gap-2 py-2.5 bg-indigo-500 hover:bg-indigo-600 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition-colors shadow-sm shadow-indigo-500/20 mt-2"
+    >
+      {pending ? (<><Loader2 className="w-4 h-4 animate-spin" /> {loadingLabel}</>) : label}
+    </button>
+  )
+}
 
 export default function LoginPage() {
-  const router = useRouter()
   const t = useTranslations('auth')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [state, action] = useActionState(login, null)
   const [showPass, setShowPass] = useState(false)
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  async function handleLogin(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-
-    const supabase = createClient()
-    const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password })
-
-    if (authError) {
-      setError(t('wrongCredentials'))
-      setLoading(false)
-      return
-    }
-
-    if (data.user) {
-      router.push('/dashboard')
-      router.refresh()
-    }
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-12">
@@ -54,14 +44,13 @@ export default function LoginPage() {
           <p className="text-sm text-gray-500">{t('loginSubtitle')}</p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form action={action} className="space-y-4">
           {/* Email */}
           <div className="space-y-1.5">
             <label className="block text-sm font-medium text-gray-700">{t('emailLabel')}</label>
             <input
               type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
+              name="email"
               required
               autoComplete="email"
               placeholder={t('emailPlaceholder')}
@@ -81,8 +70,7 @@ export default function LoginPage() {
             <div className="relative">
               <input
                 type={showPass ? 'text' : 'password'}
-                value={password}
-                onChange={e => setPassword(e.target.value)}
+                name="password"
                 required
                 autoComplete="current-password"
                 placeholder={t('passwordPlaceholder')}
@@ -100,23 +88,15 @@ export default function LoginPage() {
           </div>
 
           {/* Error */}
-          {error && (
+          {state?.error && (
             <div className="flex items-start gap-2.5 bg-red-50 border border-red-100 text-red-600 px-3.5 py-3 rounded-xl text-sm">
               <div className="w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0 mt-1.5" />
-              {error}
+              {state.error}
             </div>
           )}
 
           {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-2 py-2.5 bg-indigo-500 hover:bg-indigo-600 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition-colors shadow-sm shadow-indigo-500/20 mt-2"
-          >
-            {loading ? (
-              <><Loader2 className="w-4 h-4 animate-spin" /> {t('loggingIn')}</>
-            ) : t('loginCta')}
-          </button>
+          <SubmitBtn label={t('loginCta')} loadingLabel={t('loggingIn')} />
         </form>
 
         <p className="text-center text-sm text-gray-500 mt-6">

@@ -4,6 +4,8 @@ import { revalidatePath } from 'next/cache'
 import { requireOrg } from '@/lib/require-org'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { PLAN_LIMITS, type Plan } from '@/lib/plan'
+import { sendTeamInviteEmail } from '@/lib/resend'
+import { getLocale } from 'next-intl/server'
 
 export type ActionState = { error?: string; success?: boolean } | null
 
@@ -12,7 +14,7 @@ export async function inviteTeamMember(_: ActionState, formData: FormData): Prom
 
   const [{ data: profile }, { data: org }, { count: memberCount }] = await Promise.all([
     supabase.from('profiles').select('role').eq('id', userId).single(),
-    supabase.from('organizations').select('subscription_plan, subscription_status').eq('id', orgId).single(),
+    supabase.from('organizations').select('name, subscription_plan, subscription_status').eq('id', orgId).single(),
     supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('organization_id', orgId),
   ])
 
@@ -20,7 +22,7 @@ export async function inviteTeamMember(_: ActionState, formData: FormData): Prom
 
   // Plan üye limitini kontrol et
   const rawPlan = org?.subscription_plan
-  const isActive = org?.subscription_status === 'active'
+  const isActive = org?.subscription_status === 'active' || org?.subscription_status === 'trialing'
   const effectivePlan: Plan = (isActive && rawPlan && rawPlan in PLAN_LIMITS)
     ? (rawPlan as Plan)
     : 'starter'
@@ -38,10 +40,17 @@ export async function inviteTeamMember(_: ActionState, formData: FormData): Prom
 
   const adminClient = createAdminClient()
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+  const locale = await getLocale()
 
-  const { error } = await adminClient.auth.admin.inviteUserByEmail(email, {
-    data: { organization_id: orgId, role },
-    redirectTo: `${siteUrl}/auth/callback?next=/dashboard`,
+  // Kullanıcıyı oluştur + davet linkini üret, ama Supabase'in çıplak
+  // şablonu yerine kendi markalı emailimizle (Resend) gönder.
+  const { data: linkData, error } = await adminClient.auth.admin.generateLink({
+    type: 'invite',
+    email,
+    options: {
+      data: { organization_id: orgId, role },
+      redirectTo: `${siteUrl}/auth/callback?next=/dashboard`,
+    },
   })
 
   if (error) {
@@ -49,6 +58,20 @@ export async function inviteTeamMember(_: ActionState, formData: FormData): Prom
       return { error: 'Bu e-posta adresi zaten sistemde kayıtlı veya davet gönderilmiş.' }
     }
     return { error: error.message }
+  }
+
+  const actionLink = linkData?.properties?.action_link
+  if (!actionLink) return { error: 'Davet linki üretilemedi.' }
+
+  const { error: emailError } = await sendTeamInviteEmail(
+    email,
+    org?.name ?? 'Castiqq',
+    actionLink,
+    locale as 'tr' | 'en',
+  )
+  if (emailError) {
+    console.error('[inviteTeamMember] email send failed', emailError.message)
+    return { error: 'Davet oluşturuldu ancak email gönderilemedi. Lütfen tekrar deneyin.' }
   }
 
   revalidatePath('/ayarlar/ekip')

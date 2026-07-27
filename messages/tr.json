@@ -46,6 +46,9 @@
     "loggingIn": "Giriş yapılıyor…",
     "freeStart": "14 gün ücretsiz deneyin",
     "wrongCredentials": "E-posta veya şifre hatalı.",
+    "tooManyLoginAttempts": "Çok fazla giriş denemesi yaptınız. Lütfen bir dakika bekleyip tekrar deneyin.",
+    "tooManyRegisterAttempts": "Çok fazla kayıt denemesi yapıldı. Lütfen daha sonra tekrar deneyin.",
+    "allFieldsRequired": "Tüm alanlar zorunludur.",
     "createAccount": "Hesap oluşturun",
     "createAccountSubtitle": "İlk 14 gün ücretsiz.",
     "orgNameLabel": "Organizasyon Adı",
@@ -876,6 +879,10 @@
       "upgradeTo": "Planını yükselt:",
       "perMonth": "/ay",
       "productIdMissing": "Ürün ID yapılandırılmamış."
+    },
+    "billingBanner": {
+      "pastDue": "Ödemenizde bir sorun oluştu. Erişiminizin kesilmemesi için lütfen kart bilgilerinizi güncelleyin.",
+      "updateCard": "Kartı Güncelle"
     },
     "language": {
       "title": "Dil",

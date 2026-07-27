@@ -6,17 +6,26 @@ interface Window {
   resetAt: number
 }
 
-const store = new Map<string, Window>()
+// Stored on globalThis instead of a plain module-level const — dev-mode
+// module re-evaluation (Fast Refresh / Turbopack recompiling server actions
+// per request) otherwise wipes a fresh Map on every single call, silently
+// disabling the limiter entirely.
+declare global {
+  // eslint-disable-next-line no-var
+  var __castiqqRateLimitStore: Map<string, Window> | undefined
+}
 
-// Clean up expired entries every 5 minutes to avoid unbounded growth
-if (typeof globalThis !== 'undefined') {
-  const cleanup = () => {
+const store = globalThis.__castiqqRateLimitStore ?? new Map<string, Window>()
+if (!globalThis.__castiqqRateLimitStore) {
+  globalThis.__castiqqRateLimitStore = store
+
+  // Clean up expired entries every 5 minutes to avoid unbounded growth
+  setInterval(() => {
     const now = Date.now()
     for (const [key, w] of store) {
       if (w.resetAt < now) store.delete(key)
     }
-  }
-  setInterval(cleanup, 5 * 60 * 1000)
+  }, 5 * 60 * 1000)
 }
 
 export interface RateLimitResult {
