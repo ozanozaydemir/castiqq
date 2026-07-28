@@ -250,7 +250,7 @@ export function AgencyLedger({
                 <p className="text-[10px] text-gray-400 truncate">{j.client} · {j.date}</p>
               </div>
               <div className="flex items-center gap-3 shrink-0">
-                <div className="text-right hidden xs:block">
+                <div className="text-right hidden sm:block">
                   <p className="text-[11px] font-semibold text-gray-900 leading-none">{j.gross}</p>
                   <p className="text-[9px] text-gray-400 mt-0.5">{labels.netLabel} {j.net}</p>
                 </div>
