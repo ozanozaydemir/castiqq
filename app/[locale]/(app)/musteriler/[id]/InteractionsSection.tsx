@@ -6,7 +6,7 @@ import { Plus, Pencil, Trash2, History } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { InteractionModal } from './InteractionModal'
 import { createInteraction, updateInteraction, deleteInteraction } from '@/app/actions/clientInteractions'
-import type { ClientInteraction } from '@/types/database'
+import type { ClientInteraction, ClientContact } from '@/types/database'
 
 export type InteractionRow = ClientInteraction & { talent: { full_name: string } | null }
 
@@ -27,7 +27,7 @@ const TYPE_COLORS: Record<string, string> = {
   diger: 'bg-gray-100 text-gray-500',
 }
 
-export function InteractionsSection({ clientId, interactions, talents }: { clientId: string; interactions: InteractionRow[]; talents: { id: string; full_name: string }[] }) {
+export function InteractionsSection({ clientId, interactions, talents, contacts = [] }: { clientId: string; interactions: InteractionRow[]; talents: { id: string; full_name: string }[]; contacts?: ClientContact[] }) {
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState<ClientInteraction | null>(null)
   const [isPending, startTransition] = useTransition()
@@ -41,6 +41,8 @@ export function InteractionsSection({ clientId, interactions, talents }: { clien
   function handleDelete(id: string) {
     startTransition(async () => { await deleteInteraction(id, clientId); router.refresh() })
   }
+
+  const contactNames = new Map(contacts.map(c => [c.id, c.full_name]))
 
   const boundCreate = createInteraction.bind(null, clientId)
   const boundUpdate = editing ? updateInteraction.bind(null, editing.id, clientId) : null
@@ -74,6 +76,9 @@ export function InteractionsSection({ clientId, interactions, talents }: { clien
                       {i.talent.full_name}
                     </Link>
                   )}
+                  {i.contact_id && contactNames.get(i.contact_id) && (
+                    <span className="text-xs text-gray-500">{contactNames.get(i.contact_id)}</span>
+                  )}
                 </div>
                 {i.notes && <p className="text-sm text-gray-600 mt-1.5 whitespace-pre-line">{i.notes}</p>}
               </div>
@@ -95,6 +100,7 @@ export function InteractionsSection({ clientId, interactions, talents }: { clien
           action={editing && boundUpdate ? boundUpdate : boundCreate}
           editingInteraction={editing}
           talents={talents}
+          contacts={contacts}
           onClose={closeModal}
         />
       )}

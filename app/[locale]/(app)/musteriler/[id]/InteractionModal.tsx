@@ -5,7 +5,7 @@ import { useFormStatus } from 'react-dom'
 import { X, Loader2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import type { ActionState } from '@/app/actions/clientInteractions'
-import type { ClientInteraction } from '@/types/database'
+import type { ClientInteraction, ClientContact } from '@/types/database'
 
 function SubmitButton({ label, savingLabel }: { label: string; savingLabel: string }) {
   const { pending } = useFormStatus()
@@ -26,11 +26,13 @@ export function InteractionModal({
   action,
   editingInteraction,
   talents,
+  contacts = [],
   onClose,
 }: {
   action: (state: ActionState, formData: FormData) => Promise<ActionState>
   editingInteraction?: ClientInteraction | null
   talents: { id: string; full_name: string }[]
+  contacts?: ClientContact[]
   onClose: () => void
 }) {
   const [state, formAction] = useActionState(action, null)
@@ -65,6 +67,16 @@ export function InteractionModal({
             <label className="block text-sm font-medium text-gray-700">{t('date')} <span className="text-red-400">*</span></label>
             <input type="date" name="interaction_date" required defaultValue={editingInteraction?.interaction_date ?? ''} className="sb-input" />
           </div>
+
+          {contacts.length > 0 && (
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-gray-700">{t('relatedContact')}</label>
+              <select name="contact_id" defaultValue={editingInteraction?.contact_id ?? ''} className="sb-input">
+                <option value="">{t('noContact')}</option>
+                {contacts.map(c => <option key={c.id} value={c.id}>{c.full_name}</option>)}
+              </select>
+            </div>
+          )}
 
           {talents.length > 0 && (
             <div className="space-y-1.5">

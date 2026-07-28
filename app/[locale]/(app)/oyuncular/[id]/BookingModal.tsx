@@ -6,11 +6,13 @@ import { X, Loader2, TriangleAlert } from 'lucide-react'
 import { createBrowserClient } from '@supabase/ssr'
 import { useTranslations } from 'next-intl'
 import type { ActionState } from '@/app/actions/bookings'
-import type { Booking } from '@/types/database'
+import type { Booking, BrandCategory } from '@/types/database'
+import { BRAND_CATEGORIES } from '@/lib/crm'
 
 type ExistingBookingRow = {
   id: string; client_name: string; work_date: string; work_date_end: string | null
   job_type: string; is_ongoing: boolean; exclusivity_end_date: string | null; exclusivity_notes: string | null
+  exclusivity_category: BrandCategory | null
 }
 
 function rangesOverlap(aStart: string, aEnd: string, bStart: string, bEnd: string) {
@@ -46,6 +48,9 @@ export function BookingModal({
   const [state, formAction] = useActionState(action, null)
   const t = useTranslations('talent.bookings')
   const tc = useTranslations('common')
+  // Marka kategorisi sözlükleri teklif/müşteri taraflarıyla ortak.
+  const tp = useTranslations('pitches')
+  const tcl = useTranslations('clients')
 
   const isMinor = !!birthYear && (new Date().getFullYear() - birthYear) < 18
   const [hasValidWorkPermit, setHasValidWorkPermit] = useState<boolean | null>(null)
@@ -59,6 +64,8 @@ export function BookingModal({
   const [paymentStatus, setPaymentStatus] = useState<string>(editingBooking?.payment_status ?? 'pending')
   const [amountPaid, setAmountPaid] = useState(editingBooking?.amount_paid?.toString() ?? '')
   const [paymentFlow, setPaymentFlow] = useState<string>(editingBooking?.payment_flow ?? 'client_to_agency')
+
+  const [brandCategory, setBrandCategory] = useState<string>(editingBooking?.exclusivity_category ?? '')
 
   const [dateConflicts, setDateConflicts] = useState<ExistingBookingRow[]>([])
   const [exclusivityConflicts, setExclusivityConflicts] = useState<ExistingBookingRow[]>([])
@@ -78,7 +85,7 @@ export function BookingModal({
 
     supabase
       .from('bookings')
-      .select('id, client_name, work_date, work_date_end, job_type, is_ongoing, exclusivity_end_date, exclusivity_notes')
+      .select('id, client_name, work_date, work_date_end, job_type, is_ongoing, exclusivity_end_date, exclusivity_notes, exclusivity_category')
       .eq('talent_id', talentId)
       .then(({ data }) => {
         if (cancelled || !data) return
@@ -90,13 +97,19 @@ export function BookingModal({
         const end = workDateEnd || workDate
 
         setDateConflicts(rows.filter(b => !b.is_ongoing && rangesOverlap(workDate, end, b.work_date, b.work_date_end || b.work_date)))
-        setExclusivityConflicts(rows.filter(b =>
-          b.exclusivity_end_date && b.work_date <= workDate && workDate <= b.exclusivity_end_date
-        ))
+        // Yasak yalnızca aynı marka kategorisinde anlamlı: bir banka reklamı
+        // başka bir banka reklamını engeller, otomotivi engellemez. Kategori
+        // seçilmemiş eski kayıtlar için eski davranış (tarih bazlı) korunuyor.
+        setExclusivityConflicts(rows.filter(b => {
+          if (!b.exclusivity_end_date) return false
+          if (!(b.work_date <= workDate && workDate <= b.exclusivity_end_date)) return false
+          if (brandCategory && b.exclusivity_category) return b.exclusivity_category === brandCategory
+          return true
+        }))
       })
 
     return () => { cancelled = true }
-  }, [workDate, workDateEnd, talentId, editingBooking?.id])
+  }, [workDate, workDateEnd, talentId, editingBooking?.id, brandCategory])
 
   useEffect(() => {
     if (!isMinor) return
@@ -284,6 +297,14 @@ export function BookingModal({
 
             {jobType === 'reklam' && (
               <>
+                <div className="space-y-1.5">
+                  <label className="block text-sm font-medium text-gray-700">{tp('brandCategory')}</label>
+                  <select name="exclusivity_category" value={brandCategory} onChange={e => setBrandCategory(e.target.value)} className="sb-input">
+                    <option value="">{tp('noBrandCategory')}</option>
+                    {BRAND_CATEGORIES.map(k => <option key={k} value={k}>{tcl(`brandCategories.${k}`)}</option>)}
+                  </select>
+                  <p className="text-xs text-gray-400">{tp('brandCategoryHint')}</p>
+                </div>
                 <div className="space-y-1.5">
                   <label className="block text-sm font-medium text-gray-700">{t('exclusivityEndDate')}</label>
                   <input type="date" name="exclusivity_end_date" defaultValue={editingBooking?.exclusivity_end_date ?? ''} className="sb-input" />

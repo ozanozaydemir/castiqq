@@ -1,3 +1,22 @@
+// ── Menajerlik CRM ortak enum'ları ──
+// Karşılık gelen etiketler lib/crm.ts'te, DB CHECK'leri 047_agency_crm.sql'de.
+export type ClientType = 'yapim_sirketi' | 'reklam_ajansi' | 'marka' | 'casting_ajansi' | 'pr_ajansi' | 'diger'
+export type ClientTier = 'tier_1' | 'tier_2' | 'tier_3'
+export type IndustrySegment = 'dizi' | 'sinema' | 'dijital_ott' | 'reklam' | 'moda' | 'etkinlik' | 'tiyatro' | 'seslendirme'
+export type PaymentTerms = 'avans' | 'net_15' | 'net_30' | 'net_60' | 'net_90' | 'yayin_sonrasi'
+export type PaymentRating = 'belirsiz' | 'guvenilir' | 'gecikmeli' | 'riskli'
+export type BudgetRange = 'dusuk' | 'orta' | 'premium'
+export type WorkingStatus = 'aktif' | 'potansiyel' | 'gecmis' | 'kara_liste'
+export type ContactRole =
+  | 'uygulayici_yapimci' | 'casting_direktoru' | 'yonetmen' | 'marka_muduru'
+  | 'ajans_produktoru' | 'yapim_koordinatoru' | 'finans' | 'diger'
+export type BrandCategory =
+  | 'bankacilik' | 'telekom' | 'icecek' | 'otomotiv' | 'gida' | 'kozmetik' | 'perakende' | 'moda'
+  | 'elektronik' | 'sigorta' | 'havayolu' | 'gayrimenkul' | 'saglik' | 'e_ticaret' | 'enerji' | 'sans_oyunlari'
+export type PitchStage = 'brief' | 'oyuncu_onerildi' | 'opsiyon' | 'sozlesme' | 'kazanildi' | 'kaybedildi'
+export type PitchProjectType = 'dizi' | 'reklam' | 'film' | 'dijital' | 'tiyatro' | 'sunuculuk' | 'seslendirme' | 'etkinlik' | 'diger'
+export type PitchItemStatus = 'onerildi' | 'on_elemede' | 'geri_cagrildi' | 'secildi' | 'elendi' | 'geri_cekildi'
+
 export type Database = {
   public: {
     Tables: {
@@ -131,16 +150,52 @@ export type Database = {
           id: string
           organization_id: string
           name: string
-          client_type: 'yapim_sirketi' | 'reklam_ajansi' | 'marka' | 'diger'
+          client_type: ClientType
           contact_name: string | null
           phone: string | null
           email: string | null
           notes: string | null
+          industry_segments: IndustrySegment[]
+          parent_client_id: string | null
+          tier: ClientTier
+          website: string | null
+          address: string | null
+          tax_office: string | null
+          tax_number: string | null
+          payment_terms: PaymentTerms
+          payment_rating: PaymentRating
+          credit_limit: number | null
+          billing_email: string | null
+          account_manager_id: string | null
+          exclusivity_categories: BrandCategory[]
+          preferred_pitch_styles: string | null
+          budget_range: BudgetRange | null
+          working_status: WorkingStatus
           created_at: string
           updated_at: string
         }
         Insert: Omit<Database['public']['Tables']['clients']['Row'], 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['clients']['Insert']>
+      }
+      client_contacts: {
+        Row: {
+          id: string
+          organization_id: string
+          client_id: string
+          full_name: string
+          role: ContactRole
+          title: string | null
+          email: string | null
+          phone: string | null
+          is_primary: boolean
+          last_contacted_at: string | null
+          notes: string | null
+          created_by: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['client_contacts']['Row'], 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Database['public']['Tables']['client_contacts']['Insert']>
       }
       client_interactions: {
         Row: {
@@ -148,6 +203,7 @@ export type Database = {
           organization_id: string
           client_id: string
           talent_id: string | null
+          contact_id: string | null
           interaction_type:
             | 'tanisma' | 'telefon_gorusmesi' | 'toplanti' | 'oyuncu_onerisi'
             | 'audition_talebi' | 'okuma_provasi' | 'kostum_provasi'
@@ -160,6 +216,50 @@ export type Database = {
         }
         Insert: Omit<Database['public']['Tables']['client_interactions']['Row'], 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['client_interactions']['Insert']>
+      }
+      pitches: {
+        Row: {
+          id: string
+          organization_id: string
+          client_id: string
+          title: string
+          project_type: PitchProjectType
+          stage: PitchStage
+          brand_category: BrandCategory | null
+          expected_start_date: string | null
+          decision_due_date: string | null
+          estimated_value: number | null
+          currency: string
+          owner_id: string | null
+          lost_reason: string | null
+          notes: string | null
+          created_by: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['pitches']['Row'], 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Database['public']['Tables']['pitches']['Insert']>
+      }
+      pitch_items: {
+        Row: {
+          id: string
+          organization_id: string
+          pitch_id: string
+          talent_id: string
+          role_name: string | null
+          status: PitchItemStatus
+          proposed_fee: number | null
+          client_offer: number | null
+          fee_type: 'daily' | 'weekly' | 'per_episode' | 'monthly' | 'per_project' | 'hourly' | null
+          currency: string
+          client_feedback: string | null
+          booking_id: string | null
+          created_by: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['pitch_items']['Row'], 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Database['public']['Tables']['pitch_items']['Insert']>
       }
       bookings: {
         Row: {
@@ -183,6 +283,8 @@ export type Database = {
           amount_paid: number
           exclusivity_end_date: string | null
           exclusivity_notes: string | null
+          exclusivity_category: BrandCategory | null
+          pitch_item_id: string | null
           payment_due_date: string | null
           payment_status: 'pending' | 'partial' | 'paid'
           payment_flow: 'client_to_agency' | 'client_to_talent'
@@ -356,7 +458,10 @@ export type TalentLanguage = Database['public']['Tables']['talent_languages']['R
 export type TalentExperience = Database['public']['Tables']['talent_experiences']['Row']
 export type TalentEducation = Database['public']['Tables']['talent_education']['Row']
 export type Client = Database['public']['Tables']['clients']['Row']
+export type ClientContact = Database['public']['Tables']['client_contacts']['Row']
 export type ClientInteraction = Database['public']['Tables']['client_interactions']['Row']
+export type Pitch = Database['public']['Tables']['pitches']['Row']
+export type PitchItem = Database['public']['Tables']['pitch_items']['Row']
 export type Booking = Database['public']['Tables']['bookings']['Row']
 export type TalentDocument = Database['public']['Tables']['talent_documents']['Row']
 export type RepresentationPeriod = Database['public']['Tables']['talent_representation_history']['Row']

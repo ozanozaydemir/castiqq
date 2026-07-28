@@ -20,6 +20,7 @@ export async function createInteraction(clientId: string, _: ActionState, formDa
     organization_id: orgId,
     client_id: clientId,
     talent_id: str(formData.get('talent_id')),
+    contact_id: str(formData.get('contact_id')),
     interaction_type: (formData.get('interaction_type') as string) || 'diger',
     interaction_date: interactionDate,
     notes: str(formData.get('notes')),
@@ -39,10 +40,10 @@ export async function updateInteraction(interactionId: string, clientId: string,
 
   const { error } = await supabase.from('client_interactions').update({
     talent_id: str(formData.get('talent_id')),
+    contact_id: str(formData.get('contact_id')),
     interaction_type: (formData.get('interaction_type') as string) || 'diger',
     interaction_date: interactionDate,
     notes: str(formData.get('notes')),
-    updated_at: new Date().toISOString(),
   }).eq('id', interactionId)
 
   if (error) return { error: error.message }
