@@ -121,245 +121,400 @@
     }
   },
   "landing": {
-    "hero": {
-      "badge": "Built for casting professionals",
-      "title": "Redefine your",
-      "titleGradient": "casting process.",
-      "subtitle": "From project management to final selection — your entire casting workflow in one platform. Review videos, rate talent, and make instant decisions with your team.",
-      "ctaPrimary": "Try Free for 14 Days",
-      "ctaSecondary": "Explore Features",
-      "disclaimer": "Free for 14 days · Cancel anytime",
-      "freeBadge": "14 Days Free"
-    },
     "nav": {
       "features": "Features",
+      "modules": "Who It's For",
       "pricing": "Pricing",
       "howItWorks": "How It Works",
       "login": "Log In"
     },
+    "hero": {
+      "badge": "For production companies and talent agencies",
+      "title": "Casting management,",
+      "titleGradient": "finally in order.",
+      "subtitle": "Stop losing self-tapes in WhatsApp, your roster in Excel and fee negotiations in email. Castiqq brings both sides onto one platform.",
+      "ctaPrimary": "Start 14-Day Free Trial",
+      "ctaSecondary": "How It Works",
+      "disclaimer": "No credit card required · Cancel anytime",
+      "freeBadge": "Start Free"
+    },
     "floatingBadge": {
-      "ratedLabel": "Rating saved",
-      "ratedSub": "Ayse Kaya · 4 / 5 stars",
-      "uploadedLabel": "Video uploaded",
-      "uploadedSub": "Can Demir · Video 2",
-      "inviteLabel": "Re-invite sent",
-      "inviteSub": "WhatsApp · Zeynep Er"
-    },
-    "mockup": {
-      "management": "Management",
-      "roleTitle": "North Star — Lead Character",
-      "roleSubtitle": "8 candidates · In casting",
-      "rankingSubtitle": "8 candidates · Sorted by rating",
-      "ratingLabel": "Rating",
-      "statusLabel": "Status",
-      "tagsLabel": "Tags",
-      "noteLabel": "Note",
-      "timestampLabel": "Timestamp Note",
-      "reAuditionBtn": "Request Again (WhatsApp)",
-      "reAuditionFooter": "Meeting mode active — team is watching live",
-      "candidateOf": "1 / 8 candidates",
-      "videoCount": "3 videos",
-      "noteText": "Very strong in emotional scenes. Could be invited for re-shoot.",
-      "timestampNote": "Scene transition is perfect — watch again",
-      "shortlist": "Shortlisted",
-      "reviewing": "Reviewing",
-      "waiting": "Pending"
-    },
-    "heroTags": {
-      "videoReview": "✦ Video review",
-      "starRating": "✦ 5-star rating",
-      "timestampNotes": "✦ Timestamp notes",
-      "whatsapp": "✦ WhatsApp integration",
-      "teamCollab": "✦ Team collaboration"
+      "ratedLabel": "Rated",
+      "ratedSub": "Team decision ready",
+      "uploadedLabel": "Self-tape received",
+      "uploadedSub": "New video uploaded",
+      "inviteLabel": "Payment collected",
+      "inviteSub": "Commission processed"
     },
     "stats": {
-      "activeProductions": "Active Productions",
+      "activeProductions": "Active Projects",
       "appliedTalent": "Talent Applied",
-      "definedRoles": "Defined Roles",
+      "definedRoles": "Roles Defined",
       "finalSelections": "Final Selections"
+    },
+    "modules": {
+      "sectionLabel": "Who It's For",
+      "title": "One platform, two workflows",
+      "subtitle": "You pick your side at signup — the interface, navigation and reports adapt accordingly.",
+      "production": {
+        "label": "Production Companies",
+        "sublabel": "Casting directors",
+        "headline": "Forty self-tapes for one role. One decision screen.",
+        "description": "Define the role, invite talent, review incoming videos with your team on the same screen. Who said what, who rated what — all inside the record.",
+        "features": [
+          "Self-tapes in one list per role, with drag-and-drop ordering",
+          "Five-star ratings, tags and notes pinned to a moment in the video",
+          "Automatic talent matching from your pool against role criteria",
+          "Passwordless public application link — talent uploads without an account",
+          "Send shortlists to producers via a shareable link"
+        ]
+      },
+      "agency": {
+        "label": "Talent Agencies",
+        "sublabel": "Artist management",
+        "headline": "Your roster, jobs and receivables in one ledger.",
+        "description": "From representation contracts to fees, gross to withholding, client relationships to the pitch pipeline — everything in one place.",
+        "features": [
+          "Gross, withholding, net and commission calculated automatically",
+          "Alerts for overdue payments, expiring documents and contracts",
+          "B2B CRM for producers and brands — contacts, fee history, risk rating",
+          "Pitch pipeline: brief to contract, converted to a booking in one click",
+          "Competitor exclusivity conflicts caught automatically by brand category"
+        ]
+      }
+    },
+    "mockup": {
+      "nav": {
+        "dashboard": "Dashboard",
+        "projects": "Projects",
+        "roles": "Roles",
+        "talent": "Talent",
+        "lists": "Lists",
+        "overview": "Overview",
+        "roster": "Roster",
+        "jobs": "Jobs",
+        "clients": "Clients",
+        "pitches": "Pitches"
+      },
+      "roleTitle": "Zeynep — Lead",
+      "roleSubtitle": "Broken Wings · 12 candidates · 3 reviewing",
+      "noteAuthor": "Ayşe",
+      "timestampLabel": "01:24",
+      "candidates": [
+        {
+          "name": "Elif Yılmaz",
+          "meta": "29 · Istanbul · 168 cm",
+          "status": "Shortlisted",
+          "tags": [
+            "Strong performance",
+            "Callback"
+          ],
+          "note": "Deeply convincing in the crying scene — move to round two."
+        },
+        {
+          "name": "Selin Kaya",
+          "meta": "27 · Izmir · 170 cm",
+          "status": "Reviewing",
+          "tags": [
+            "Takes direction"
+          ]
+        },
+        {
+          "name": "Zeynep Korkmaz",
+          "meta": "25 · Istanbul · 172 cm",
+          "status": "Pending"
+        }
+      ],
+      "ledger": {
+        "title": "Jobs & Receivables",
+        "subtitle": "Every job across the roster and its payment status",
+        "grossLabel": "Gross",
+        "netLabel": "Net",
+        "stats": [
+          {
+            "label": "Collected this month",
+            "value": "₺184,500"
+          },
+          {
+            "label": "Outstanding",
+            "value": "₺62,000"
+          },
+          {
+            "label": "Overdue",
+            "value": "2 invoices"
+          }
+        ],
+        "jobs": [
+          {
+            "talent": "Cem Yıldırım",
+            "client": "Baba Yapım",
+            "date": "Aug 20",
+            "gross": "₺50,000",
+            "net": "₺32,500",
+            "status": "Paid",
+            "tone": "paid"
+          },
+          {
+            "talent": "Aslı Güneş",
+            "client": "Momentum Agency",
+            "date": "Jul 10",
+            "gross": "₺80,000",
+            "net": "₺48,000",
+            "status": "Paid",
+            "tone": "paid"
+          },
+          {
+            "talent": "Nur Demirtaş",
+            "client": "Turkcell",
+            "date": "May 5",
+            "gross": "₺60,000",
+            "net": "₺37,200",
+            "status": "Partial",
+            "tone": "partial"
+          },
+          {
+            "talent": "Onur Kaplan",
+            "client": "Momentum Agency",
+            "date": "Aug 1",
+            "gross": "₺12,000",
+            "net": "₺8,160",
+            "status": "Overdue",
+            "tone": "overdue"
+          }
+        ]
+      },
+      "pipeline": {
+        "stages": {
+          "brief": "Brief Received",
+          "pitched": "Talent Pitched",
+          "option": "Optioned",
+          "contract": "Contract"
+        },
+        "cards": [
+          {
+            "title": "New Season Casting",
+            "client": "Baba Yapım",
+            "value": "₺450,000",
+            "stage": "brief"
+          },
+          {
+            "title": "Summer Campaign",
+            "client": "Momentum Agency",
+            "value": "₺180,000",
+            "stage": "pitched"
+          },
+          {
+            "title": "Digital Series — 2 Roles",
+            "client": "Fide Yapım",
+            "value": "₺320,000",
+            "stage": "pitched"
+          },
+          {
+            "title": "Bank Commercial",
+            "client": "Turkcell",
+            "value": "₺240,000",
+            "stage": "option"
+          },
+          {
+            "title": "Award Ceremony",
+            "client": "Fide Yapım",
+            "value": "₺20,000",
+            "stage": "contract"
+          }
+        ]
+      }
+    },
+    "conflict": {
+      "sectionLabel": "Silent Mistakes",
+      "title": "The same actor can't be pitched to two competing brands.",
+      "subtitle": "Commercial jobs record the brand category. If an unexpired exclusivity exists in that category, the system warns you before the pitch goes out — no breached contract, no damaged reputation.",
+      "cardTalent": "Aslı Güneş",
+      "cardRole": "Bank Commercial — Lead",
+      "cardTitle": "Exclusivity conflict",
+      "cardDetail": "Blocked by Garanti BBVA in the banking category until 14.03.2027.",
+      "points": [
+        "Sixteen brand categories predefined",
+        "The warning clears itself when the exclusivity expires",
+        "Checked in the pitch screen and the booking record alike"
+      ]
+    },
+    "bridge": {
+      "sectionLabel": "What Connects Both Sides",
+      "title": "Producers share the role, agencies pitch the talent.",
+      "subtitle": "This is why Castiqq holds both sides in one product: proposals move through the system, not through email attachments.",
+      "steps": [
+        {
+          "actor": "Production Company",
+          "action": "Shares the role with the agency — criteria and budget included"
+        },
+        {
+          "actor": "Talent Agency",
+          "action": "Pitches suitable talent from its roster, fees attached"
+        },
+        {
+          "actor": "Production Company",
+          "action": "Reviews every pitch on one screen and marks its favourites"
+        }
+      ],
+      "submission": {
+        "title": "Timur Management pitch",
+        "subtitle": "Zeynep — Lead · 3 talent",
+        "pdf": "PDF",
+        "rows": [
+          {
+            "name": "Aslı Güneş",
+            "role": "Pitched for lead",
+            "fee": "₺80,000",
+            "decision": "liked"
+          },
+          {
+            "name": "Nur Demirtaş",
+            "role": "Pitched for lead",
+            "fee": "₺60,000",
+            "decision": "liked"
+          },
+          {
+            "name": "Buse Ergin",
+            "role": "Supporting role",
+            "fee": "₺35,000",
+            "decision": "pending"
+          }
+        ]
+      }
     },
     "features": {
       "sectionLabel": "Features",
-      "title": "Everything in one place",
-      "subtitle": "Say goodbye to scattered spreadsheets, endless emails, and WhatsApp groups.",
+      "title": "The details that speed up the daily work",
+      "subtitle": "Not grand promises — the things that shorten what you do a dozen times a day.",
       "items": {
-        "projectManagement": {
-          "title": "Project & Role Management",
-          "desc": "Create projects for every production, define roles for every project. Full control with status, deadlines, and attributes."
+        "videoReview": {
+          "title": "Video Review Screen",
+          "desc": "Rate, tag and pin a note to the exact moment while watching a self-tape."
         },
-        "talentDb": {
-          "title": "Talent Database",
-          "desc": "Record complete profiles with photos, languages, experience, and physical attributes. Filter in seconds."
+        "matching": {
+          "title": "Automatic Matching",
+          "desc": "Surfaces talent from your pool matching the role's age, height, gender, skills and city."
         },
-        "multiVideo": {
-          "title": "Multi-Video Review",
-          "desc": "Up to 3 videos per candidate. Switch between tabs to compare all performances side by side."
+        "publicApply": {
+          "title": "Passwordless Application Link",
+          "desc": "Talent submits video and profile through a single link, no account needed."
         },
-        "starRating": {
-          "title": "5-Star Rating",
-          "desc": "Rate every candidate, sort by score. Instantly surface the best in meetings."
+        "financials": {
+          "title": "Withholding & Net",
+          "desc": "20% withholding applied automatically for freelance status; gross, net and commission derive themselves."
         },
-        "tags": {
-          "title": "Tag System",
-          "desc": "\"Strong performance\", \"Camera-friendly\", \"Open to direction\" — define custom org-level tags."
+        "crm": {
+          "title": "Client CRM",
+          "desc": "Contacts, payment discipline, credit limit and fee history for producers and brands on one card."
         },
-        "collections": {
-          "title": "Custom Collections",
-          "desc": "Save your favorite talent in custom lists. Build shortlists independent of projects, share them."
+        "pipeline": {
+          "title": "Pitch Pipeline",
+          "desc": "Every stage from brief to contract; a won pitch becomes a booking in one click."
         },
-        "timestampNotes": {
-          "title": "Timestamp Notes",
-          "desc": "Leave a note at the exact moment in the video. Click it and the video jumps to that point. Instant, precise feedback."
+        "documents": {
+          "title": "Document Tracking",
+          "desc": "Work permits, health reports, guardian consent — flagged before they expire."
         },
-        "whatsapp": {
-          "title": "WhatsApp Integration",
-          "desc": "Send new audition requests with a ready-made message template via WhatsApp in one click."
+        "calendar": {
+          "title": "Calendar Sync",
+          "desc": "A booking lands in the talent's own calendar as an invite; works with Google and Apple."
         },
-        "dnd": {
-          "title": "Drag & Drop Sorting",
-          "desc": "Reorder candidate priorities by dragging. Dynamically re-rank during meetings."
+        "team": {
+          "title": "Team & Permissions",
+          "desc": "Agents see only their own talent, admins see everything. Team joins by invite."
         },
-        "teamAccess": {
-          "title": "Team & Access Management",
-          "desc": "Control access with Admin, Member, and Viewer roles. Give external stakeholders a secure link."
+        "i18n": {
+          "title": "Turkish & English",
+          "desc": "The interface speaks both, so international productions aren't a language problem."
         },
-        "dashboard": {
-          "title": "Dashboard & Analytics",
-          "desc": "Active projects, pending auditions, upcoming deadlines — your entire operation on one screen, live."
+        "export": {
+          "title": "Export to Accounting",
+          "desc": "Jobs and receivables to CSV in one click — hand it to your accountant as is."
         },
         "security": {
-          "title": "Multi-tenant Security",
-          "desc": "Every agency and production company works in complete isolation. Your data belongs only to you."
+          "title": "Data Isolation",
+          "desc": "Each organization's data is separated at the database level. KVKK and GDPR compliant."
         }
-      }
-    },
-    "videoSpotlight": {
-      "badge": "Video Review Engine",
-      "title": "Watch together with your team,",
-      "titleLine2": "decide",
-      "titleGradient": "instantly.",
-      "subtitle": "Director, producer, production company — everyone on the same page at the same time. Leave comments, rate, add tags.",
-      "checkItems": {
-        "multiVideo": "3 videos per candidate, fast tab switching",
-        "timestampNote": "Timestamp note at the exact video moment",
-        "starRating": "5-star rating + sort by score",
-        "orgTags": "Custom org-level tag system",
-        "whatsapp": "Re-invite via WhatsApp with ready-made message template"
       }
     },
     "howItWorks": {
       "sectionLabel": "How It Works",
-      "title": "Casting in 4 steps",
-      "steps": {
-        "s1": {
-          "step": "01",
-          "title": "Open Project",
-          "desc": "Create the project with production name, type, and deadline."
+      "title": "You can open your first project today",
+      "steps": [
+        {
+          "title": "Create your account",
+          "desc": "Choose production company or talent agency — the system configures itself for you."
         },
-        "s2": {
-          "step": "02",
-          "title": "Define Roles",
-          "desc": "Enter age, gender, and attribute details for each character."
+        {
+          "title": "Add your roster or project",
+          "desc": "Import your talent or define your first role. Migrating from Excel is supported."
         },
-        "s3": {
-          "step": "03",
-          "title": "Invite Talent",
-          "desc": "Send links to talent, wait for their video uploads."
-        },
-        "s4": {
-          "step": "04",
-          "title": "Final Selection",
-          "desc": "Watch with your team, vote, and record the final decision."
+        {
+          "title": "Invite, collect, decide",
+          "desc": "Share the link; self-tapes and pitches gather on a single screen."
         }
-      }
+      ]
     },
     "pricing": {
       "sectionLabel": "Pricing",
-      "title": "Choose the right plan for your team",
-      "subtitle": "Simple, transparent pricing. First 14 days free.",
-      "popular": "Most Popular",
-      "free": "Free",
+      "title": "One plan per side",
+      "subtitle": "No hidden tiers, no per-seat pricing. Fourteen days free.",
       "perMonth": "/mo",
-      "cta": "Get Started",
-      "trialCta": "Get Started",
-      "extraStorage": "Need more storage?",
-      "extraStorageDetail": "+100 GB blocks for just $8/month",
+      "trialCta": "Start 14-Day Free Trial",
+      "popular": "Most chosen",
       "plans": {
-        "starter": {
-          "name": "Starter",
-          "desc": "For small productions and solo casting directors.",
-          "include": [
-            "1 user",
-            "10 GB video storage",
-            "Unlimited projects & roles",
-            "Talent database",
-            "Video upload (3 videos/candidate)",
-            "Basic status tracking"
-          ],
-          "exclude": [
-            "Team collaboration",
-            "Tags & collections",
-            "Rating system"
-          ]
-        },
         "pro": {
-          "name": "Pro",
-          "desc": "For active casting agencies and production teams.",
+          "name": "Production Company",
+          "desc": "For casting directors and production companies",
           "include": [
-            "3 users",
-            "200 GB video storage",
-            "Unlimited projects & roles",
-            "Team collaboration",
-            "5-star rating",
-            "Tags & collections",
-            "Timestamp notes",
-            "WhatsApp integration",
-            "Drag & drop sorting"
+            "Unlimited projects and roles",
+            "Unlimited self-tape uploads",
+            "Video review, rating and tagging",
+            "Automatic talent matching",
+            "Passwordless application links",
+            "Team members and permissions",
+            "Role sharing with talent agencies"
           ],
           "exclude": [
-            "Priority support",
-            "Custom integrations"
+            "Roster financial management",
+            "Pitch pipeline"
           ]
         },
         "agency": {
-          "name": "Agency",
-          "desc": "For large production companies and multi-team setups.",
+          "name": "Talent Agency",
+          "desc": "For artist management and talent agencies",
           "include": [
-            "Unlimited users",
-            "1 TB video storage",
-            "Everything in Pro",
-            "Priority support",
-            "Custom integrations",
-            "Billing & accounting support",
-            "Custom onboarding",
-            "SLA guarantee"
+            "Unlimited roster",
+            "Job, fee and receivable tracking",
+            "Withholding, net and commission calculation",
+            "Client CRM and fee history",
+            "Pitch pipeline",
+            "Competitor exclusivity checks",
+            "Document expiry tracking and alerts",
+            "Calendar sync and CSV export"
           ],
           "exclude": []
         }
       }
     },
     "testimonial": {
-      "quote": "As a casting director, I had been working with emails and drive folders for years. With Castiqq, our casting process",
-      "quoteHighlight": "is 3x faster.",
-      "name": "Zeynep Yildiz",
-      "role": "Casting Director, Atlas Productions"
+      "quote": "The team no longer opens three different apps to coordinate. A role's entire history sits in one place.",
+      "author": "Agency Partner",
+      "role": "Istanbul"
     },
     "cta": {
-      "title": "Start today.",
-      "titleGradient": "14 days free.",
-      "subtitle": "Get started right away. First 14 days free.",
-      "ctaPrimary": "Try Free for 14 Days",
-      "ctaLogin": "Log In →",
-      "items": {
-        "trial": "Instant access",
-        "noSetup": "No setup",
-        "cancel": "Cancel anytime"
-      }
+      "title": "Start your next project in order.",
+      "subtitle": "No setup, no training. Create your account and define your first role today.",
+      "primary": "Start Free",
+      "secondary": "Log In"
     },
     "footer": {
-      "rights": "All rights reserved.",
-      "privacy": "Privacy",
-      "terms": "Terms of Use"
+      "tagline": "Casting management platform for production companies and talent agencies.",
+      "product": "Product",
+      "legal": "Legal",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Use",
+      "rights": "All rights reserved."
     }
   },
   "dashboard": {

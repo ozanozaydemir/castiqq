@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" fill="none">
+  <!-- Apple touch icon — marka kılavuzu 03. Bu ölçekte sembolün
+       tamamı okunuyor: üç köşe beyaz, seçim köşesi açık indigo
+       (#a5b4fc) ve daha kalın. -->
+  <rect width="180" height="180" rx="40" fill="#6366f1"/>
+  <g stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M54 72 L54 54 L72 54" stroke="#ffffff" stroke-width="11"/>
+    <path d="M108 54 L126 54 L126 72" stroke="#ffffff" stroke-width="11"/>
+    <path d="M126 108 L126 126 L108 126" stroke="#ffffff" stroke-width="11"/>
+    <path d="M72 126 L54 126 L54 108" stroke="#a5b4fc" stroke-width="14"/>
+  </g>
+</svg>

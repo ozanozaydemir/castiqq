@@ -107,6 +107,27 @@ body {
   box-shadow: 0 0 0 2px #6366f1, 0 20px 60px -12px rgba(99,102,241,0.5);
 }
 
+/* ── Landing mockup girişleri ────────────────── */
+@keyframes mockRise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes mockFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Modül sekmesi değişiminde ve mockup girişlerinde hareket, azaltılmış
+   hareket tercihi olan kullanıcılarda kapatılır. */
+@media (prefers-reduced-motion: reduce) {
+  [data-animate] { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .animate-float,
+  .animate-float-slow,
+  .animate-float-delay { animation: none !important; }
+  *[style*="mockRise"],
+  *[style*="mockFade"] { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
+
 /* ── Scrollbar ──────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--elevated); }

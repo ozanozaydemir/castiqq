@@ -121,245 +121,400 @@
     }
   },
   "landing": {
-    "hero": {
-      "badge": "Casting profesyonelleri için tasarlandı",
-      "title": "Casting sürecini",
-      "titleGradient": "yeniden tanımla.",
-      "subtitle": "Proje yönetiminden final seçime — tüm casting süreciniz tek platformda. Video izleyin, puanlayın, ekibinizle anlık karar verin.",
-      "ctaPrimary": "14 Gün Ücretsiz Dene",
-      "ctaSecondary": "Özellikleri İncele",
-      "disclaimer": "14 gün ücretsiz dene · İstediğin zaman iptal",
-      "freeBadge": "14 Gün Ücretsiz"
-    },
     "nav": {
       "features": "Özellikler",
+      "modules": "Kimler İçin",
       "pricing": "Fiyatlar",
       "howItWorks": "Nasıl Çalışır",
       "login": "Giriş Yap"
     },
+    "hero": {
+      "badge": "Yapım şirketleri ve menajerlikler için",
+      "title": "Casting yönetiminde",
+      "titleGradient": "dağınıklığa son.",
+      "subtitle": "Self-tape'ler WhatsApp'ta, kadro Excel'de, kaşe pazarlığı e-postada kaybolmasın. Castiqq iki tarafı da tek platformda buluşturur.",
+      "ctaPrimary": "14 Gün Ücretsiz Dene",
+      "ctaSecondary": "Nasıl Çalışır",
+      "disclaimer": "Kredi kartı gerekmez · İstediğin an iptal et",
+      "freeBadge": "Ücretsiz Başla"
+    },
     "floatingBadge": {
-      "ratedLabel": "Puan kaydedildi",
-      "ratedSub": "Ayşe Kaya · 4 / 5 yıldız",
-      "uploadedLabel": "Video yüklendi",
-      "uploadedSub": "Can Demir · 2. video",
-      "inviteLabel": "Tekrar davet gönderildi",
-      "inviteSub": "WhatsApp · Zeynep Er"
-    },
-    "mockup": {
-      "management": "Yönetim",
-      "roleTitle": "Kuzey Yıldızı — Baş Karakter",
-      "roleSubtitle": "8 aday · Casting aşamasında",
-      "rankingSubtitle": "8 aday · Puana göre sıralandı",
-      "ratingLabel": "Puan",
-      "statusLabel": "Durum",
-      "tagsLabel": "Etiketler",
-      "noteLabel": "Not",
-      "timestampLabel": "Zaman Notu",
-      "reAuditionBtn": "Tekrar İste (WhatsApp)",
-      "reAuditionFooter": "Toplantı modu aktif — ekip canlı izliyor",
-      "candidateOf": "1 / 8 aday",
-      "videoCount": "3 video",
-      "noteText": "Duygusal sahnelerde çok başarılı. Yeniden çekim için davet edilebilir.",
-      "timestampNote": "Sahne geçişi mükemmel — tekrar izle",
-      "shortlist": "Kısa Liste",
-      "reviewing": "İncelemede",
-      "waiting": "Bekliyor"
-    },
-    "heroTags": {
-      "videoReview": "✦ Video inceleme",
-      "starRating": "✦ 5 yıldız puanlama",
-      "timestampNotes": "✦ Zaman damgalı notlar",
-      "whatsapp": "✦ WhatsApp entegrasyonu",
-      "teamCollab": "✦ Ekip iş birliği"
+      "ratedLabel": "Puanlandı",
+      "ratedSub": "Ekip kararı hazır",
+      "uploadedLabel": "Self-tape geldi",
+      "uploadedSub": "Yeni video yüklendi",
+      "inviteLabel": "Ödeme tahsil edildi",
+      "inviteSub": "Komisyon işlendi"
     },
     "stats": {
-      "activeProductions": "Aktif Prodüksiyon",
-      "appliedTalent": "Başvurulan Oyuncu",
+      "activeProductions": "Aktif Proje",
+      "appliedTalent": "Başvuran Oyuncu",
       "definedRoles": "Tanımlı Rol",
       "finalSelections": "Final Seçim"
     },
-    "features": {
-      "sectionLabel": "Özellikler",
-      "title": "Her şey tek bir yerde",
-      "subtitle": "Dağınık tablolar, sonsuz e-postalar ve WhatsApp gruplarına son.",
-      "items": {
-        "projectManagement": {
-          "title": "Proje & Rol Yönetimi",
-          "desc": "Her prodüksiyon için proje oluşturun, her projeye rol tanımlayın. Durum, deadline ve özelliklerle tam kontrol."
-        },
-        "talentDb": {
-          "title": "Oyuncu Veritabanı",
-          "desc": "Profilleri fotoğraf, dil, deneyim ve fiziksel özelliklerle eksiksiz kayıt altına alın. Saniyeler içinde filtreleyin."
-        },
-        "multiVideo": {
-          "title": "Çoklu Video İnceleme",
-          "desc": "Aday başına 3 video. Sekmeler arası geçişle tüm performansları yan yana karşılaştırın."
-        },
-        "starRating": {
-          "title": "5 Yıldız Puanlama",
-          "desc": "Her adaya yıldız verin, puana göre sıralayın. Toplantıda en iyileri anında öne çıkarın."
-        },
-        "tags": {
-          "title": "Etiket Sistemi",
-          "desc": "\"Güçlü performans\", \"Kamera dostu\", \"Yönlendirmeye açık\" — org bazlı özel etiketlerinizi tanımlayın."
-        },
-        "collections": {
-          "title": "Özel Koleksiyonlar",
-          "desc": "Favori oyuncularınızı özel listelerde toplayın. Projeden bağımsız shortlist oluşturun, paylaşın."
-        },
-        "timestampNotes": {
-          "title": "Zaman Damgalı Notlar",
-          "desc": "Videonun tam o anına not bırakın. Tıklayın, video o noktaya atlasın. Anlık ve kesin geri bildirim."
-        },
-        "whatsapp": {
-          "title": "WhatsApp Entegrasyonu",
-          "desc": "Yeni audition talebini hazır mesaj şablonuyla WhatsApp'tan tek tıkla gönderin."
-        },
-        "dnd": {
-          "title": "Sürükle-Bırak Sıralama",
-          "desc": "Aday önceliğini sürükleyerek düzenleyin. Toplantı sırasında dinamik olarak yeniden sıralayın."
-        },
-        "teamAccess": {
-          "title": "Ekip & Yetki Yönetimi",
-          "desc": "Admin, Üye ve İzleyici rolleriyle erişimi kontrol edin. Dış paydaşlara güvenli link verin."
-        },
-        "dashboard": {
-          "title": "Dashboard & Analitik",
-          "desc": "Aktif proje, bekleyen audition, yaklaşan deadline — tüm operasyonunuz tek ekranda, anlık."
-        },
-        "security": {
-          "title": "Multi-tenant Güvenlik",
-          "desc": "Her ajans ve yapım şirketi tamamen izole çalışır. Verileriniz sadece size aittir."
-        }
+    "modules": {
+      "sectionLabel": "Kimler İçin",
+      "title": "Tek platform, iki iş akışı",
+      "subtitle": "Kayıt olurken tarafını seçiyorsun; arayüz, menü ve raporlar buna göre şekilleniyor.",
+      "production": {
+        "label": "Yapım Şirketleri",
+        "sublabel": "Cast direktörleri",
+        "headline": "Bir rol için 40 self-tape. Tek karar ekranı.",
+        "description": "Rolü tanımla, oyuncuları davet et, gelen videoları ekiple aynı ekranda izle. Kim ne dedi, kim ne puan verdi — hepsi kaydın içinde.",
+        "features": [
+          "Self-tape'ler role bağlı tek listede; sürükle-bırak sıralama",
+          "5 yıldız puanlama, etiketleme ve videonun anına bağlı not",
+          "Rol kriterlerine göre havuzdan otomatik oyuncu eşleştirme",
+          "Şifresiz public başvuru linki — oyuncu hesap açmadan yükler",
+          "Seçim listelerini paylaşılabilir linkle yapımcıya gönder"
+        ]
+      },
+      "agency": {
+        "label": "Menajerlikler",
+        "sublabel": "Oyuncu ajansları",
+        "headline": "Kadron, işlerin ve tahsilatın tek defterde.",
+        "description": "Temsil ettiğin oyuncuların sözleşmesinden kaşesine, işin brütünden stopajına, müşteri ilişkisinden teklif pipeline'ına kadar her şey tek yerde.",
+        "features": [
+          "Brüt / stopaj / net ve komisyon otomatik hesaplanır",
+          "Gecikmiş tahsilat, süresi dolan belge ve sözleşme uyarıları",
+          "Yapımcı ve marka müşterileri için B2B CRM — kişiler, kaşe geçmişi, risk notu",
+          "Teklif pipeline'ı: brief'ten sözleşmeye, kazanınca tek tıkla işe dönüşür",
+          "Reklam yasağı çakışmasını marka kategorisi bazında otomatik yakalar"
+        ]
       }
     },
-    "videoSpotlight": {
-      "badge": "Video İnceleme Motoru",
-      "title": "Ekibinizle birlikte",
-      "titleLine2": "izleyin, anında",
-      "titleGradient": "karar verin.",
-      "subtitle": "Cast direktörü, yönetmen, yapım şirketi — herkes aynı anda aynı sayfada. Yorum bırakın, puan verin, etiket ekleyin.",
-      "checkItems": {
-        "multiVideo": "Aday başına 3 video, sekmeler arası hızlı geçiş",
-        "timestampNote": "Videonun tam anına zaman damgalı not",
-        "starRating": "5 yıldız puanlama + puana göre sıralama",
-        "orgTags": "Org bazlı özel etiket sistemi",
-        "whatsapp": "WhatsApp'tan tekrar davet, hazır mesaj şablonu"
+    "mockup": {
+      "nav": {
+        "dashboard": "Dashboard",
+        "projects": "Projeler",
+        "roles": "Roller",
+        "talent": "Oyuncular",
+        "lists": "Listeler",
+        "overview": "Genel Bakış",
+        "roster": "Kadro",
+        "jobs": "İşler",
+        "clients": "Müşteriler",
+        "pitches": "Teklifler"
+      },
+      "roleTitle": "Zeynep — Başrol",
+      "roleSubtitle": "Kırık Kanatlar · 12 aday · 3 kişi izliyor",
+      "noteAuthor": "Ayşe",
+      "timestampLabel": "01:24",
+      "candidates": [
+        {
+          "name": "Elif Yılmaz",
+          "meta": "29 · İstanbul · 168 cm",
+          "status": "Ön elemede",
+          "tags": [
+            "Güçlü performans",
+            "Callback"
+          ],
+          "note": "Ağlama sahnesinde çok inandırıcı — ikinci tura kalsın."
+        },
+        {
+          "name": "Selin Kaya",
+          "meta": "27 · İzmir · 170 cm",
+          "status": "İnceleniyor",
+          "tags": [
+            "Yönlendirmeye açık"
+          ]
+        },
+        {
+          "name": "Zeynep Korkmaz",
+          "meta": "25 · İstanbul · 172 cm",
+          "status": "Bekliyor"
+        }
+      ],
+      "ledger": {
+        "title": "İşler & Tahsilat",
+        "subtitle": "Kadro genelindeki tüm işler ve ödeme durumu",
+        "grossLabel": "Brüt",
+        "netLabel": "Net",
+        "stats": [
+          {
+            "label": "Bu ay tahsil edilen",
+            "value": "184.500 ₺"
+          },
+          {
+            "label": "Bekleyen alacak",
+            "value": "62.000 ₺"
+          },
+          {
+            "label": "Vadesi geçen",
+            "value": "2 fatura"
+          }
+        ],
+        "jobs": [
+          {
+            "talent": "Cem Yıldırım",
+            "client": "Baba Yapım",
+            "date": "20 Ağu",
+            "gross": "50.000 ₺",
+            "net": "32.500 ₺",
+            "status": "Ödendi",
+            "tone": "paid"
+          },
+          {
+            "talent": "Aslı Güneş",
+            "client": "Momentum Ajans",
+            "date": "10 Tem",
+            "gross": "80.000 ₺",
+            "net": "48.000 ₺",
+            "status": "Ödendi",
+            "tone": "paid"
+          },
+          {
+            "talent": "Nur Demirtaş",
+            "client": "Turkcell",
+            "date": "5 May",
+            "gross": "60.000 ₺",
+            "net": "37.200 ₺",
+            "status": "Kısmi",
+            "tone": "partial"
+          },
+          {
+            "talent": "Onur Kaplan",
+            "client": "Momentum Ajans",
+            "date": "1 Ağu",
+            "gross": "12.000 ₺",
+            "net": "8.160 ₺",
+            "status": "Vadesi geçti",
+            "tone": "overdue"
+          }
+        ]
+      },
+      "pipeline": {
+        "stages": {
+          "brief": "Brief Geldi",
+          "pitched": "Oyuncu Önerildi",
+          "option": "Opsiyon",
+          "contract": "Sözleşme"
+        },
+        "cards": [
+          {
+            "title": "Yeni Sezon Cast",
+            "client": "Baba Yapım",
+            "value": "450.000 ₺",
+            "stage": "brief"
+          },
+          {
+            "title": "Yaz Kampanyası",
+            "client": "Momentum Ajans",
+            "value": "180.000 ₺",
+            "stage": "pitched"
+          },
+          {
+            "title": "Dijital Dizi — 2 Rol",
+            "client": "Fide Yapım",
+            "value": "320.000 ₺",
+            "stage": "pitched"
+          },
+          {
+            "title": "Banka Reklamı",
+            "client": "Turkcell",
+            "value": "240.000 ₺",
+            "stage": "option"
+          },
+          {
+            "title": "Ödül Töreni",
+            "client": "Fide Yapım",
+            "value": "20.000 ₺",
+            "stage": "contract"
+          }
+        ]
+      }
+    },
+    "conflict": {
+      "sectionLabel": "Sessiz Hatalar",
+      "title": "Bir oyuncuya iki rakip marka teklif edilemez.",
+      "subtitle": "Reklam işlerinde marka kategorisi kaydediliyor. Aynı kategoride süresi dolmamış bir yasak varsa, sen teklifi göndermeden önce sistem uyarıyor — sözleşme ihlali ve itibar kaybı olmadan.",
+      "cardTalent": "Aslı Güneş",
+      "cardRole": "Banka Reklamı — Başrol",
+      "cardTitle": "Reklam yasağı çakışması",
+      "cardDetail": "Garanti BBVA ile bankacılık kategorisinde 14.03.2027 tarihine kadar yasak var.",
+      "points": [
+        "16 marka kategorisi hazır tanımlı",
+        "Yasak süresi dolunca uyarı otomatik kalkar",
+        "Teklif ekranında ve iş kaydında aynı anda kontrol edilir"
+      ]
+    },
+    "bridge": {
+      "sectionLabel": "İki Tarafı Birleştiren Şey",
+      "title": "Yapımcı rolü paylaşır, menajerlik oyuncu önerir.",
+      "subtitle": "Castiqq'in tek üründe iki tarafı da barındırmasının sebebi bu: teklif alışverişi e-posta ekinde değil, sistemin içinde oluyor.",
+      "steps": [
+        {
+          "actor": "Yapım Şirketi",
+          "action": "Rolü menajerlikle paylaşır — kriterler ve bütçe dahil"
+        },
+        {
+          "actor": "Menajerlik",
+          "action": "Kadrosundan uygun oyuncuları kaşesiyle birlikte önerir"
+        },
+        {
+          "actor": "Yapım Şirketi",
+          "action": "Önerileri tek ekranda değerlendirir, beğendiğini işaretler"
+        }
+      ],
+      "submission": {
+        "title": "Timur Menajerlik önerisi",
+        "subtitle": "Zeynep — Başrol · 3 oyuncu",
+        "pdf": "PDF",
+        "rows": [
+          {
+            "name": "Aslı Güneş",
+            "role": "Başrol için önerildi",
+            "fee": "80.000 ₺",
+            "decision": "liked"
+          },
+          {
+            "name": "Nur Demirtaş",
+            "role": "Başrol için önerildi",
+            "fee": "60.000 ₺",
+            "decision": "liked"
+          },
+          {
+            "name": "Buse Ergin",
+            "role": "Yardımcı rol",
+            "fee": "35.000 ₺",
+            "decision": "pending"
+          }
+        ]
+      }
+    },
+    "features": {
+      "sectionLabel": "Özellikler",
+      "title": "Günlük işi hızlandıran detaylar",
+      "subtitle": "Büyük vaatler değil; her gün defalarca yaptığın işleri kısaltan şeyler.",
+      "items": {
+        "videoReview": {
+          "title": "Video İnceleme Ekranı",
+          "desc": "Self-tape'i izlerken puanla, etiketle, videonun tam o anına not düş."
+        },
+        "matching": {
+          "title": "Otomatik Eşleştirme",
+          "desc": "Rolün yaş, boy, cinsiyet, yetenek ve şehir kriterlerine uyan oyuncuları havuzdan öne çıkarır."
+        },
+        "publicApply": {
+          "title": "Şifresiz Başvuru Linki",
+          "desc": "Oyuncu hesap açmadan, tek linkle videosunu ve profilini gönderir."
+        },
+        "financials": {
+          "title": "Stopaj & Net Hesabı",
+          "desc": "Serbest meslek makbuzunda %20 stopaj otomatik; brüt, net ve komisyon kendiliğinden çıkar."
+        },
+        "crm": {
+          "title": "Müşteri CRM'i",
+          "desc": "Yapımcı ve markaların kişileri, ödeme disiplini, kredi limiti ve kaşe geçmişi tek kartta."
+        },
+        "pipeline": {
+          "title": "Teklif Pipeline'ı",
+          "desc": "Brief'ten sözleşmeye her aşama; kazanılan teklif tek tıkla iş kaydına dönüşür."
+        },
+        "documents": {
+          "title": "Belge Takibi",
+          "desc": "Çalışma izni, sağlık raporu, veli izni — süresi dolmadan önce uyarır."
+        },
+        "calendar": {
+          "title": "Takvim Senkronu",
+          "desc": "İş kaydı oyuncunun kendi takvimine davet olarak düşer; Google ve Apple çalışır."
+        },
+        "team": {
+          "title": "Ekip & Yetki",
+          "desc": "Menajer sadece kendi oyuncularını görür, yönetici hepsini. Ekip davetle katılır."
+        },
+        "i18n": {
+          "title": "Türkçe & İngilizce",
+          "desc": "Arayüz iki dilde; uluslararası yapımlarla çalışırken dil engeli olmaz."
+        },
+        "export": {
+          "title": "Muhasebeye Aktarım",
+          "desc": "İşler ve tahsilat verisi tek tıkla CSV; mali müşavirine olduğu gibi gider."
+        },
+        "security": {
+          "title": "Veri İzolasyonu",
+          "desc": "Her organizasyonun verisi veritabanı seviyesinde ayrık. KVKK ve GDPR uyumlu."
+        }
       }
     },
     "howItWorks": {
       "sectionLabel": "Nasıl Çalışır",
-      "title": "4 adımda casting",
-      "steps": {
-        "s1": {
-          "step": "01",
-          "title": "Proje Aç",
-          "desc": "Prodüksiyon adı, türü ve son tarihi ile projeyi oluşturun."
+      "title": "İlk projeni bugün açabilirsin",
+      "steps": [
+        {
+          "title": "Hesabını aç",
+          "desc": "Yapım şirketi mi menajerlik mi olduğunu seç — sistem sana göre kurulur."
         },
-        "s2": {
-          "step": "02",
-          "title": "Rol Tanımla",
-          "desc": "Her karakter için yaş, cinsiyet ve özellik bilgilerini girin."
+        {
+          "title": "Kadronu veya projeni ekle",
+          "desc": "Oyuncularını içe aktar ya da ilk rolünü tanımla. Excel'den taşıma desteklenir."
         },
-        "s3": {
-          "step": "03",
-          "title": "Oyuncu Davet Et",
-          "desc": "Oyunculara bağlantı gönderin, video yüklemelerini bekleyin."
-        },
-        "s4": {
-          "step": "04",
-          "title": "Final Seçim",
-          "desc": "Ekibinizle izleyin, oylayın ve final kararını kaydedin."
+        {
+          "title": "Davet et, topla, karar ver",
+          "desc": "Linki paylaş; gelen self-tape ve öneriler tek ekranda birikir."
         }
-      }
+      ]
     },
     "pricing": {
-      "sectionLabel": "Fiyatlar",
-      "title": "Ekibinize uygun plan seçin",
-      "subtitle": "Basit, şeffaf fiyatlandırma. İlk 14 gün ücretsiz.",
-      "popular": "En Popüler",
-      "free": "Ücretsiz",
+      "sectionLabel": "Fiyatlandırma",
+      "title": "Tarafına göre tek plan",
+      "subtitle": "Gizli paket yok, kullanıcı başına ücret yok. 14 gün ücretsiz deneme.",
       "perMonth": "/ay",
-      "cta": "Hemen Başla",
-      "trialCta": "Hemen Başla",
-      "extraStorage": "Ek depolama ihtiyacınız mı var?",
-      "extraStorageDetail": "+100 GB blok yalnızca /ay",
+      "trialCta": "14 Gün Ücretsiz Dene",
+      "popular": "En çok tercih edilen",
       "plans": {
-        "starter": {
-          "name": "Başlangıç",
-          "desc": "Küçük yapımlar ve solo cast direktörleri için.",
-          "include": [
-            "1 kullanıcı",
-            "10 GB video depolama",
-            "Sınırsız proje & rol",
-            "Oyuncu veritabanı",
-            "Video yükleme (3 video/aday)",
-            "Temel durum takibi"
-          ],
-          "exclude": [
-            "Ekip işbirliği",
-            "Etiket & koleksiyonlar",
-            "Puan sistemi"
-          ]
-        },
         "pro": {
-          "name": "Pro",
-          "desc": "Aktif casting ajansları ve prodüksiyon ekipleri için.",
+          "name": "Yapım Şirketi",
+          "desc": "Cast direktörleri ve yapım şirketleri için",
           "include": [
-            "3 kullanıcı",
-            "200 GB video depolama",
-            "Sınırsız proje & rol",
-            "Ekip işbirliği",
-            "5 yıldız puanlama",
-            "Etiket & koleksiyonlar",
-            "Zaman damgalı notlar",
-            "WhatsApp entegrasyonu",
-            "Sürükle-bırak sıralama"
+            "Sınırsız proje ve rol",
+            "Sınırsız self-tape yükleme",
+            "Video inceleme, puanlama, etiketleme",
+            "Otomatik oyuncu eşleştirme",
+            "Şifresiz başvuru linkleri",
+            "Ekip üyeleri ve yetki yönetimi",
+            "Menajerliklerle rol paylaşımı"
           ],
           "exclude": [
-            "Öncelikli destek",
-            "Özel entegrasyonlar"
+            "Kadro finans yönetimi",
+            "Teklif pipeline'ı"
           ]
         },
         "agency": {
-          "name": "Ajans",
-          "desc": "Büyük yapım şirketleri ve çok ekipli yapılar için.",
+          "name": "Menajerlik",
+          "desc": "Oyuncu ajansları ve menajerlikler için",
           "include": [
-            "Sınırsız kullanıcı",
-            "1 TB video depolama",
-            "Pro'daki her şey",
-            "Öncelikli destek",
-            "Özel entegrasyonlar",
-            "Fatura & muhasebe desteği",
-            "Özel onboarding",
-            "SLA garantisi"
+            "Sınırsız oyuncu kadrosu",
+            "İş, kaşe ve tahsilat takibi",
+            "Stopaj, net ve komisyon hesabı",
+            "Müşteri CRM'i ve kaşe geçmişi",
+            "Teklif pipeline'ı",
+            "Reklam yasağı çakışma kontrolü",
+            "Belge süre takibi ve uyarılar",
+            "Takvim senkronu ve CSV aktarım"
           ],
           "exclude": []
         }
       }
     },
     "testimonial": {
-      "quote": "Cast direktörü olarak yıllardır e-posta ve drive klasörleriyle çalışıyordum. Castiqq ile casting sürecimiz",
-      "quoteHighlight": "3 kat hızlandı.",
-      "name": "Zeynep Yıldız",
-      "role": "Cast Direktörü, Atlas Yapım"
+      "quote": "Ekip artık koordinasyon için üç farklı uygulama açmıyor. Bir rolün bütün geçmişi tek yerde duruyor.",
+      "author": "Menajerlik Ortağı",
+      "role": "İstanbul"
     },
     "cta": {
-      "title": "Bugün başlayın.",
-      "titleGradient": "14 gün ücretsiz.",
-      "subtitle": "Hemen kullanmaya başlayın. İlk 14 gün ücretsiz.",
-      "ctaPrimary": "14 Gün Ücretsiz Dene",
-      "ctaLogin": "Giriş Yap →",
-      "items": {
-        "trial": "Anında başla",
-        "noSetup": "Kurulum yok",
-        "cancel": "İstediğin zaman iptal"
-      }
+      "title": "Bir sonraki projene düzenle başla.",
+      "subtitle": "Kurulum yok, eğitim gerekmez. Hesabını aç, ilk rolünü bugün tanımla.",
+      "primary": "Ücretsiz Başla",
+      "secondary": "Giriş Yap"
     },
     "footer": {
-      "rights": "Tüm hakları saklıdır.",
-      "privacy": "Gizlilik",
-      "terms": "Kullanım Koşulları"
+      "tagline": "Yapım şirketleri ve menajerlikler için casting yönetim platformu.",
+      "product": "Ürün",
+      "legal": "Yasal",
+      "privacy": "Gizlilik Politikası",
+      "terms": "Kullanım Koşulları",
+      "rights": "Tüm hakları saklıdır."
     }
   },
   "dashboard": {
