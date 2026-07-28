@@ -4,7 +4,7 @@ import { Link } from '@/i18n/navigation'
 import {
   ArrowRight, Check, X, Star, Play, Sparkles, Users2, Building2,
   Video, Wand2, Link2, Calculator, Contact, GitBranch, FileCheck2,
-  CalendarCheck, Shield, Languages, FileSpreadsheet, UserCog,
+  CalendarCheck, Shield, Languages, FileSpreadsheet, UserCog, Share2,
 } from 'lucide-react'
 import { AnimationInit } from '@/components/AnimationInit'
 import { JsonLd } from '@/components/JsonLd'
@@ -22,6 +22,7 @@ type RawCandidate = { name: string; meta: string; status: string; tags?: string[
 type RawJob = { talent: string; client: string; date: string; gross: string; net: string; status: string; tone: 'paid' | 'partial' | 'pending' | 'overdue' }
 type RawCard = { title: string; client: string; value: string; stage: string }
 type RawStep = { actor: string; action: string }
+type RawBenefit = { title: string; desc: string }
 type RawRow = { name: string; role: string; fee: string; decision: 'liked' | 'pending' }
 type RawHowStep = { title: string; desc: string }
 type RawStat = { label: string; value: string }
@@ -133,6 +134,7 @@ export default async function HomePage() {
     { key: 'publicApply', icon: Link2,           tone: 'bg-blue-50 text-blue-500' },
     { key: 'financials',  icon: Calculator,      tone: 'bg-emerald-50 text-emerald-600' },
     { key: 'crm',         icon: Contact,         tone: 'bg-amber-50 text-amber-600' },
+    { key: 'roleShare',   icon: Share2,          tone: 'bg-indigo-50 text-indigo-500' },
     { key: 'pipeline',    icon: GitBranch,       tone: 'bg-purple-50 text-purple-500' },
     { key: 'documents',   icon: FileCheck2,      tone: 'bg-rose-50 text-rose-500' },
     { key: 'calendar',    icon: CalendarCheck,   tone: 'bg-sky-50 text-sky-500' },
@@ -149,6 +151,7 @@ export default async function HomePage() {
 
   const navLinks = [
     { label: t('nav.modules'),     href: '#kimler-icin' },
+    { label: t('nav.bridge'),      href: '#baglanti' },
     { label: t('nav.features'),    href: '#ozellikler' },
     { label: t('nav.howItWorks'),  href: '#nasil-calisir' },
     { label: t('nav.pricing'),     href: '#fiyatlar' },
@@ -284,6 +287,61 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── KÖPRÜ — Castiqq'i ayıran şey, o yüzden modüllerin hemen
+              ardında ve koyu zeminde: sayfanın görsel ağırlık merkezi. ── */}
+      <section id="baglanti" className="py-28 px-6 bg-[#0f0f1a] relative overflow-hidden">
+        <div
+          className="absolute -top-52 left-1/2 -translate-x-1/2 w-[760px] h-[520px] rounded-full opacity-20 blur-2xl"
+          style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6,#a78bfa)' }}
+        />
+        <div className="max-w-6xl mx-auto relative">
+          <div className="text-center max-w-3xl mx-auto mb-14" data-animate>
+            <p className="text-[13px] font-semibold uppercase tracking-[0.05em] text-[#a5b4fc] mb-3">
+              {t('bridge.sectionLabel')}
+            </p>
+            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-[-0.03em] text-white leading-[1.1] mb-5">
+              {t('bridge.title')}
+            </h2>
+            <p className="text-[#c7c9f5] leading-relaxed text-lg">{t('bridge.subtitle')}</p>
+          </div>
+
+          <BridgeFlow
+            dark
+            steps={(t.raw('bridge.steps') as RawStep[]).map((s, i) => ({
+              ...s,
+              tone: i === 1 ? ('agency' as const) : ('production' as const),
+            }))}
+          />
+
+          <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)] gap-10 items-center mt-16">
+            <ul className="space-y-5">
+              {(t.raw('bridge.benefits') as RawBenefit[]).map((b, i) => (
+                <li key={b.title} className="flex items-start gap-3" data-animate data-delay={String(i + 1)}>
+                  <span className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                    <Check className="w-3.5 h-3.5 text-[#a5b4fc]" />
+                  </span>
+                  <div>
+                    <p className="text-white font-semibold">{b.title}</p>
+                    <p className="text-sm text-white/60 mt-1 leading-relaxed">{b.desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <div data-animate data-delay="3">
+              <SubmissionPreview
+                labels={{
+                  title: t('bridge.submission.title'),
+                  subtitle: t('bridge.submission.subtitle'),
+                  pdf: t('bridge.submission.pdf'),
+                }}
+                rows={t.raw('bridge.submission.rows') as RawRow[]}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── TEKLİF PIPELINE'I ───────────────────────── */}
       <section className="py-24 px-6">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] gap-12 items-center">
@@ -315,28 +373,28 @@ export default async function HomePage() {
       </section>
 
       {/* ── ÇAKIŞMA MOTORU ──────────────────────────── */}
-      <section className="py-24 px-6 bg-[#0f0f1a] relative overflow-hidden">
+      <section className="py-24 px-6 bg-[#f8f8f8] border-y border-gray-100 relative overflow-hidden">
         <div
-          className="absolute -top-40 -left-32 w-[520px] h-[520px] rounded-full opacity-20 blur-2xl"
+          className="absolute -top-40 -left-32 w-[520px] h-[520px] rounded-full opacity-10 blur-2xl"
           style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6,#a78bfa)' }}
         />
         <div className="max-w-6xl mx-auto relative grid lg:grid-cols-2 gap-14 items-center">
           <div data-animate>
-            <p className="text-[13px] font-semibold uppercase tracking-[0.05em] text-[#a5b4fc] mb-3">
+            <p className="text-[13px] font-semibold uppercase tracking-[0.05em] text-indigo-600 mb-3">
               {t('conflict.sectionLabel')}
             </p>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] text-white leading-tight mb-5">
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] leading-tight mb-5">
               {t('conflict.title')}
             </h2>
-            <p className="text-[#c7c9f5] leading-relaxed mb-8">{t('conflict.subtitle')}</p>
+            <p className="text-gray-500 leading-relaxed mb-8">{t('conflict.subtitle')}</p>
 
             <ul className="space-y-3">
               {(t.raw('conflict.points') as string[]).map((p, i) => (
                 <li key={p} className="flex items-start gap-2.5" data-animate data-delay={String(i + 1)}>
-                  <span className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
-                    <Check className="w-3 h-3 text-[#a5b4fc]" />
+                  <span className="w-5 h-5 rounded-full bg-indigo-50 flex items-center justify-center shrink-0 mt-0.5">
+                    <Check className="w-3 h-3 text-indigo-600" />
                   </span>
-                  <span className="text-sm text-white/70">{p}</span>
+                  <span className="text-sm text-gray-600">{p}</span>
                 </li>
               ))}
             </ul>
@@ -348,37 +406,6 @@ export default async function HomePage() {
               role={t('conflict.cardRole')}
               title={t('conflict.cardTitle')}
               detail={t('conflict.cardDetail')}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ── KÖPRÜ ───────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#f8f8f8]">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12" data-animate>
-            <p className="text-[13px] font-semibold uppercase tracking-[0.05em] text-indigo-600 mb-3">
-              {t('bridge.sectionLabel')}
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] mb-4">{t('bridge.title')}</h2>
-            <p className="text-gray-500 leading-relaxed">{t('bridge.subtitle')}</p>
-          </div>
-
-          <BridgeFlow
-            steps={(t.raw('bridge.steps') as RawStep[]).map((s, i) => ({
-              ...s,
-              tone: i === 1 ? ('agency' as const) : ('production' as const),
-            }))}
-          />
-
-          <div className="max-w-lg mx-auto mt-12" data-animate data-delay="3">
-            <SubmissionPreview
-              labels={{
-                title: t('bridge.submission.title'),
-                subtitle: t('bridge.submission.subtitle'),
-                pdf: t('bridge.submission.pdf'),
-              }}
-              rows={t.raw('bridge.submission.rows') as RawRow[]}
             />
           </div>
         </div>

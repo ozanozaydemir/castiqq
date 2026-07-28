@@ -122,17 +122,18 @@
   },
   "landing": {
     "nav": {
-      "features": "Özellikler",
       "modules": "Kimler İçin",
-      "pricing": "Fiyatlar",
+      "bridge": "Bağlantı",
+      "features": "Özellikler",
       "howItWorks": "Nasıl Çalışır",
+      "pricing": "Fiyatlar",
       "login": "Giriş Yap"
     },
     "hero": {
-      "badge": "Yapım şirketleri ve menajerlikler için",
+      "badge": "Cast direktörleri ve menajerlik ajansları için",
       "title": "Casting yönetiminde",
       "titleGradient": "dağınıklığa son.",
-      "subtitle": "Self-tape'ler WhatsApp'ta, kadro Excel'de, kaşe pazarlığı e-postada kaybolmasın. Castiqq iki tarafı da tek platformda buluşturur.",
+      "subtitle": "Audition videoları WhatsApp'ta, kadro Excel'de, kaşe pazarlığı e-postada kaybolmasın. Castiqq cast direktörüyle menajerlik ajansını aynı platformda birbirine bağlar.",
       "ctaPrimary": "14 Gün Ücretsiz Dene",
       "ctaSecondary": "Nasıl Çalışır",
       "disclaimer": "Kredi kartı gerekmez · İstediğin an iptal et",
@@ -141,7 +142,7 @@
     "floatingBadge": {
       "ratedLabel": "Puanlandı",
       "ratedSub": "Ekip kararı hazır",
-      "uploadedLabel": "Self-tape geldi",
+      "uploadedLabel": "Audition geldi",
       "uploadedSub": "Yeni video yüklendi",
       "inviteLabel": "Ödeme tahsil edildi",
       "inviteSub": "Komisyon işlendi"
@@ -154,32 +155,32 @@
     },
     "modules": {
       "sectionLabel": "Kimler İçin",
-      "title": "Tek platform, iki iş akışı",
-      "subtitle": "Kayıt olurken tarafını seçiyorsun; arayüz, menü ve raporlar buna göre şekilleniyor.",
+      "title": "Tek platform, iki taraf",
+      "subtitle": "Kayıt olurken tarafını seçiyorsun; arayüz, menü ve raporlar buna göre şekilleniyor — ama iki taraf birbirine bağlı kalıyor.",
       "production": {
-        "label": "Yapım Şirketleri",
-        "sublabel": "Cast direktörleri",
-        "headline": "Bir rol için 40 self-tape. Tek karar ekranı.",
+        "label": "Cast Direktörleri",
+        "sublabel": "Yapım şirketleri & serbest direktörler",
+        "headline": "Bir rol için 40 audition. Tek karar ekranı.",
         "description": "Rolü tanımla, oyuncuları davet et, gelen videoları ekiple aynı ekranda izle. Kim ne dedi, kim ne puan verdi — hepsi kaydın içinde.",
         "features": [
-          "Self-tape'ler role bağlı tek listede; sürükle-bırak sıralama",
+          "Audition videoları role bağlı tek listede; sürükle-bırak sıralama",
           "5 yıldız puanlama, etiketleme ve videonun anına bağlı not",
           "Rol kriterlerine göre havuzdan otomatik oyuncu eşleştirme",
-          "Şifresiz public başvuru linki — oyuncu hesap açmadan yükler",
-          "Seçim listelerini paylaşılabilir linkle yapımcıya gönder"
+          "Şifresiz başvuru linki — oyuncu hesap açmadan videosunu yükler",
+          "Rolü menajerlik ajanslarıyla paylaşıp öneri topla"
         ]
       },
       "agency": {
-        "label": "Menajerlikler",
-        "sublabel": "Oyuncu ajansları",
+        "label": "Menajerlik Ajansları",
+        "sublabel": "Oyuncu menajerlikleri",
         "headline": "Kadron, işlerin ve tahsilatın tek defterde.",
         "description": "Temsil ettiğin oyuncuların sözleşmesinden kaşesine, işin brütünden stopajına, müşteri ilişkisinden teklif pipeline'ına kadar her şey tek yerde.",
         "features": [
           "Brüt / stopaj / net ve komisyon otomatik hesaplanır",
           "Gecikmiş tahsilat, süresi dolan belge ve sözleşme uyarıları",
-          "Yapımcı ve marka müşterileri için B2B CRM — kişiler, kaşe geçmişi, risk notu",
+          "Cast direktörü ve marka müşterileri için B2B CRM — kişiler, kaşe geçmişi, risk notu",
           "Teklif pipeline'ı: brief'ten sözleşmeye, kazanınca tek tıkla işe dönüşür",
-          "Reklam yasağı çakışmasını marka kategorisi bazında otomatik yakalar"
+          "Gelen rollere kadrondan oyuncu önerip doğrudan geri gönder"
         ]
       }
     },
@@ -191,7 +192,7 @@
         "talent": "Oyuncular",
         "lists": "Listeler",
         "overview": "Genel Bakış",
-        "roster": "Kadro",
+        "roster": "Roster",
         "jobs": "İşler",
         "clients": "Müşteriler",
         "pitches": "Teklifler"
@@ -327,7 +328,7 @@
     "conflict": {
       "sectionLabel": "Sessiz Hatalar",
       "title": "Bir oyuncuya iki rakip marka teklif edilemez.",
-      "subtitle": "Reklam işlerinde marka kategorisi kaydediliyor. Aynı kategoride süresi dolmamış bir yasak varsa, sen teklifi göndermeden önce sistem uyarıyor — sözleşme ihlali ve itibar kaybı olmadan.",
+      "subtitle": "Reklam işlerinde marka kategorisi kaydediliyor. Aynı kategoride süresi dolmamış bir yasak varsa, sen öneriyi göndermeden önce sistem uyarıyor — sözleşme ihlali ve itibar kaybı olmadan.",
       "cardTalent": "Aslı Güneş",
       "cardRole": "Banka Reklamı — Başrol",
       "cardTitle": "Reklam yasağı çakışması",
@@ -339,21 +340,35 @@
       ]
     },
     "bridge": {
-      "sectionLabel": "İki Tarafı Birleştiren Şey",
-      "title": "Yapımcı rolü paylaşır, menajerlik oyuncu önerir.",
-      "subtitle": "Castiqq'in tek üründe iki tarafı da barındırmasının sebebi bu: teklif alışverişi e-posta ekinde değil, sistemin içinde oluyor.",
+      "sectionLabel": "Castiqq'i Ayıran Şey",
+      "title": "İki taraf aynı platformda, aynı kayıtta.",
+      "subtitle": "Castiqq yalnızca iki ayrı araç değil; cast direktörüyle menajerlik ajansını birbirine bağlayan tek sistem. Rol paylaşımı, oyuncu önerisi ve kaşe pazarlığı e-posta ekinde değil, ürünün içinde akıyor.",
       "steps": [
         {
-          "actor": "Yapım Şirketi",
-          "action": "Rolü menajerlikle paylaşır — kriterler ve bütçe dahil"
+          "actor": "Cast Direktörü",
+          "action": "Rolü menajerlik ajansıyla paylaşır — kriterler, bütçe ve senaryo parçası dahil"
         },
         {
-          "actor": "Menajerlik",
-          "action": "Kadrosundan uygun oyuncuları kaşesiyle birlikte önerir"
+          "actor": "Menajerlik Ajansı",
+          "action": "Gelen Roller ekranında görür, kadrosundan uygun oyuncuları kaşesiyle önerir"
         },
         {
-          "actor": "Yapım Şirketi",
-          "action": "Önerileri tek ekranda değerlendirir, beğendiğini işaretler"
+          "actor": "Cast Direktörü",
+          "action": "Önerileri tek ekranda değerlendirir, beğendiğini işaretler, PDF olarak dışa aktarır"
+        }
+      ],
+      "benefits": [
+        {
+          "title": "Tek kaynak",
+          "desc": "Öneri sistemin içinde; kimse ek dosya, WhatsApp mesajı veya eski sürüm kovalamıyor."
+        },
+        {
+          "title": "Veri izolasyonu korunur",
+          "desc": "İki organizasyon birbirinin tablosuna erişmez; paylaşılan her satır snapshot olarak taşınır."
+        },
+        {
+          "title": "Otomatik takip",
+          "desc": "Süre dolumu ve rol kapanışı otomatik; her adımda bildirim ve e-posta gider."
         }
       ],
       "submission": {
@@ -389,7 +404,7 @@
       "items": {
         "videoReview": {
           "title": "Video İnceleme Ekranı",
-          "desc": "Self-tape'i izlerken puanla, etiketle, videonun tam o anına not düş."
+          "desc": "Audition videosunu izlerken puanla, etiketle, videonun tam o anına not düş."
         },
         "matching": {
           "title": "Otomatik Eşleştirme",
@@ -397,7 +412,7 @@
         },
         "publicApply": {
           "title": "Şifresiz Başvuru Linki",
-          "desc": "Oyuncu hesap açmadan, tek linkle videosunu ve profilini gönderir."
+          "desc": "Oyuncu hesap açmadan, tek linkle audition videosunu ve profilini gönderir."
         },
         "financials": {
           "title": "Stopaj & Net Hesabı",
@@ -405,7 +420,7 @@
         },
         "crm": {
           "title": "Müşteri CRM'i",
-          "desc": "Yapımcı ve markaların kişileri, ödeme disiplini, kredi limiti ve kaşe geçmişi tek kartta."
+          "desc": "Cast direktörü ve markaların kişileri, ödeme disiplini, kredi limiti ve kaşe geçmişi tek kartta."
         },
         "pipeline": {
           "title": "Teklif Pipeline'ı",
@@ -434,6 +449,10 @@
         "security": {
           "title": "Veri İzolasyonu",
           "desc": "Her organizasyonun verisi veritabanı seviyesinde ayrık. KVKK ve GDPR uyumlu."
+        },
+        "roleShare": {
+          "title": "Rol Paylaşımı",
+          "desc": "Cast direktörü rolü ajansla paylaşır, ajans kadrosundan öneri gönderir — hepsi sistemin içinde."
         }
       }
     },
@@ -451,7 +470,7 @@
         },
         {
           "title": "Davet et, topla, karar ver",
-          "desc": "Linki paylaş; gelen self-tape ve öneriler tek ekranda birikir."
+          "desc": "Linki paylaş; gelen audition videoları ve ajans önerileri tek ekranda birikir."
         }
       ]
     },
@@ -464,16 +483,16 @@
       "popular": "En çok tercih edilen",
       "plans": {
         "pro": {
-          "name": "Yapım Şirketi",
-          "desc": "Cast direktörleri ve yapım şirketleri için",
+          "name": "Cast Direktörü",
+          "desc": "Yapım şirketleri ve serbest cast direktörleri için",
           "include": [
             "Sınırsız proje ve rol",
-            "Sınırsız self-tape yükleme",
+            "Sınırsız audition videosu",
             "Video inceleme, puanlama, etiketleme",
             "Otomatik oyuncu eşleştirme",
             "Şifresiz başvuru linkleri",
             "Ekip üyeleri ve yetki yönetimi",
-            "Menajerliklerle rol paylaşımı"
+            "Menajerlik ajanslarıyla rol paylaşımı"
           ],
           "exclude": [
             "Kadro finans yönetimi",
@@ -481,8 +500,8 @@
           ]
         },
         "agency": {
-          "name": "Menajerlik",
-          "desc": "Oyuncu ajansları ve menajerlikler için",
+          "name": "Menajerlik Ajansı",
+          "desc": "Oyuncu menajerlikleri için",
           "include": [
             "Sınırsız oyuncu kadrosu",
             "İş, kaşe ve tahsilat takibi",
@@ -491,7 +510,7 @@
             "Teklif pipeline'ı",
             "Reklam yasağı çakışma kontrolü",
             "Belge süre takibi ve uyarılar",
-            "Takvim senkronu ve CSV aktarım"
+            "Cast direktörlerinden gelen rollere öneri gönderme"
           ],
           "exclude": []
         }
@@ -509,7 +528,7 @@
       "secondary": "Giriş Yap"
     },
     "footer": {
-      "tagline": "Yapım şirketleri ve menajerlikler için casting yönetim platformu.",
+      "tagline": "Cast direktörleri ve menajerlik ajansları için casting yönetim platformu.",
       "product": "Ürün",
       "legal": "Yasal",
       "privacy": "Gizlilik Politikası",

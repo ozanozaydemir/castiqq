@@ -122,17 +122,18 @@
   },
   "landing": {
     "nav": {
-      "features": "Features",
       "modules": "Who It's For",
-      "pricing": "Pricing",
+      "bridge": "The Link",
+      "features": "Features",
       "howItWorks": "How It Works",
+      "pricing": "Pricing",
       "login": "Log In"
     },
     "hero": {
-      "badge": "For production companies and talent agencies",
+      "badge": "For casting directors and talent agencies",
       "title": "Casting management,",
       "titleGradient": "finally in order.",
-      "subtitle": "Stop losing self-tapes in WhatsApp, your roster in Excel and fee negotiations in email. Castiqq brings both sides onto one platform.",
+      "subtitle": "Stop losing audition videos in WhatsApp, your roster in Excel and fee negotiations in email. Castiqq connects casting directors and talent agencies on one platform.",
       "ctaPrimary": "Start 14-Day Free Trial",
       "ctaSecondary": "How It Works",
       "disclaimer": "No credit card required · Cancel anytime",
@@ -141,7 +142,7 @@
     "floatingBadge": {
       "ratedLabel": "Rated",
       "ratedSub": "Team decision ready",
-      "uploadedLabel": "Self-tape received",
+      "uploadedLabel": "Audition received",
       "uploadedSub": "New video uploaded",
       "inviteLabel": "Payment collected",
       "inviteSub": "Commission processed"
@@ -154,19 +155,19 @@
     },
     "modules": {
       "sectionLabel": "Who It's For",
-      "title": "One platform, two workflows",
-      "subtitle": "You pick your side at signup — the interface, navigation and reports adapt accordingly.",
+      "title": "One platform, two sides",
+      "subtitle": "You pick your side at signup — the interface, navigation and reports adapt. But the two sides stay connected.",
       "production": {
-        "label": "Production Companies",
-        "sublabel": "Casting directors",
-        "headline": "Forty self-tapes for one role. One decision screen.",
+        "label": "Casting Directors",
+        "sublabel": "Production companies & freelance directors",
+        "headline": "Forty auditions for one role. One decision screen.",
         "description": "Define the role, invite talent, review incoming videos with your team on the same screen. Who said what, who rated what — all inside the record.",
         "features": [
-          "Self-tapes in one list per role, with drag-and-drop ordering",
+          "Audition videos in one list per role, with drag-and-drop ordering",
           "Five-star ratings, tags and notes pinned to a moment in the video",
           "Automatic talent matching from your pool against role criteria",
-          "Passwordless public application link — talent uploads without an account",
-          "Send shortlists to producers via a shareable link"
+          "Passwordless application link — talent uploads without an account",
+          "Share the role with talent agencies and collect their pitches"
         ]
       },
       "agency": {
@@ -177,9 +178,9 @@
         "features": [
           "Gross, withholding, net and commission calculated automatically",
           "Alerts for overdue payments, expiring documents and contracts",
-          "B2B CRM for producers and brands — contacts, fee history, risk rating",
+          "B2B CRM for casting directors and brands — contacts, fee history, risk rating",
           "Pitch pipeline: brief to contract, converted to a booking in one click",
-          "Competitor exclusivity conflicts caught automatically by brand category"
+          "Pitch talent from your roster straight back to incoming roles"
         ]
       }
     },
@@ -339,21 +340,35 @@
       ]
     },
     "bridge": {
-      "sectionLabel": "What Connects Both Sides",
-      "title": "Producers share the role, agencies pitch the talent.",
-      "subtitle": "This is why Castiqq holds both sides in one product: proposals move through the system, not through email attachments.",
+      "sectionLabel": "What Sets Castiqq Apart",
+      "title": "Both sides, one platform, one record.",
+      "subtitle": "Castiqq isn't two separate tools — it's the system that links casting directors and talent agencies. Role sharing, talent pitches and fee negotiation flow inside the product, not through email attachments.",
       "steps": [
         {
-          "actor": "Production Company",
-          "action": "Shares the role with the agency — criteria and budget included"
+          "actor": "Casting Director",
+          "action": "Shares the role with the agency — criteria, budget and script excerpt included"
         },
         {
           "actor": "Talent Agency",
-          "action": "Pitches suitable talent from its roster, fees attached"
+          "action": "Sees it under Incoming Roles and pitches suitable talent with fees attached"
         },
         {
-          "actor": "Production Company",
-          "action": "Reviews every pitch on one screen and marks its favourites"
+          "actor": "Casting Director",
+          "action": "Reviews every pitch on one screen, marks favourites, exports as PDF"
+        }
+      ],
+      "benefits": [
+        {
+          "title": "Single source",
+          "desc": "The pitch lives in the system — nobody chases attachments, WhatsApp threads or stale versions."
+        },
+        {
+          "title": "Isolation preserved",
+          "desc": "Neither organization touches the other's tables; every shared row travels as a snapshot."
+        },
+        {
+          "title": "Tracked automatically",
+          "desc": "Expiry and role closure are automatic; every step sends a notification and an email."
         }
       ],
       "submission": {
@@ -389,7 +404,7 @@
       "items": {
         "videoReview": {
           "title": "Video Review Screen",
-          "desc": "Rate, tag and pin a note to the exact moment while watching a self-tape."
+          "desc": "Rate, tag and pin a note to the exact moment while watching an audition video."
         },
         "matching": {
           "title": "Automatic Matching",
@@ -397,7 +412,7 @@
         },
         "publicApply": {
           "title": "Passwordless Application Link",
-          "desc": "Talent submits video and profile through a single link, no account needed."
+          "desc": "Talent submits an audition video and profile through a single link, no account needed."
         },
         "financials": {
           "title": "Withholding & Net",
@@ -405,7 +420,7 @@
         },
         "crm": {
           "title": "Client CRM",
-          "desc": "Contacts, payment discipline, credit limit and fee history for producers and brands on one card."
+          "desc": "Contacts, payment discipline, credit limit and fee history for casting directors and brands on one card."
         },
         "pipeline": {
           "title": "Pitch Pipeline",
@@ -434,6 +449,10 @@
         "security": {
           "title": "Data Isolation",
           "desc": "Each organization's data is separated at the database level. KVKK and GDPR compliant."
+        },
+        "roleShare": {
+          "title": "Role Sharing",
+          "desc": "A casting director shares the role, the agency pitches from its roster — all inside the system."
         }
       }
     },
@@ -451,7 +470,7 @@
         },
         {
           "title": "Invite, collect, decide",
-          "desc": "Share the link; self-tapes and pitches gather on a single screen."
+          "desc": "Share the link; audition videos and agency pitches gather on a single screen."
         }
       ]
     },
@@ -464,11 +483,11 @@
       "popular": "Most chosen",
       "plans": {
         "pro": {
-          "name": "Production Company",
-          "desc": "For casting directors and production companies",
+          "name": "Casting Director",
+          "desc": "For production companies and freelance casting directors",
           "include": [
             "Unlimited projects and roles",
-            "Unlimited self-tape uploads",
+            "Unlimited audition videos",
             "Video review, rating and tagging",
             "Automatic talent matching",
             "Passwordless application links",
@@ -491,7 +510,7 @@
             "Pitch pipeline",
             "Competitor exclusivity checks",
             "Document expiry tracking and alerts",
-            "Calendar sync and CSV export"
+            "Pitching talent to incoming roles from casting directors"
           ],
           "exclude": []
         }
@@ -509,7 +528,7 @@
       "secondary": "Log In"
     },
     "footer": {
-      "tagline": "Casting management platform for production companies and talent agencies.",
+      "tagline": "Casting management platform for casting directors and talent agencies.",
       "product": "Product",
       "legal": "Legal",
       "privacy": "Privacy Policy",

@@ -357,31 +357,48 @@ export function ConflictCard({
 
 export function BridgeFlow({
   steps,
+  dark = false,
 }: {
   steps: { actor: string; action: string; tone: 'production' | 'agency' }[]
+  dark?: boolean
 }) {
+  // Menajerlik adımı karşı taraftan görsel olarak ayrılıyor: akışın iki
+  // farklı organizasyon arasında gidip geldiği tek bakışta okunsun.
+  const card = (tone: 'production' | 'agency') => {
+    if (dark) {
+      return tone === 'production'
+        ? 'bg-white/[0.06] border-white/10'
+        : 'bg-indigo-500/15 border-indigo-400/30'
+    }
+    return tone === 'production'
+      ? 'bg-white border-gray-200'
+      : 'bg-indigo-50/50 border-indigo-100'
+  }
+  const actorTone = (tone: 'production' | 'agency') => {
+    if (dark) return tone === 'production' ? 'text-white/45' : 'text-[#a5b4fc]'
+    return tone === 'production' ? 'text-gray-400' : 'text-indigo-500'
+  }
+
   return (
     <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-3">
       {steps.map((s, i) => (
         <div key={s.action} className="flex items-center gap-3 flex-1">
           <div
-            className={`flex-1 rounded-2xl border p-4 ${
-              s.tone === 'production'
-                ? 'bg-white border-gray-200'
-                : 'bg-indigo-50/50 border-indigo-100'
-            }`}
+            className={`flex-1 rounded-2xl border p-4 ${card(s.tone)}`}
             data-animate
             data-delay={String(Math.min(i + 1, 6))}
           >
-            <p className={`text-[10px] font-semibold uppercase tracking-widest mb-1.5 ${
-              s.tone === 'production' ? 'text-gray-400' : 'text-indigo-500'
-            }`}>
+            <p className={`text-[10px] font-semibold uppercase tracking-widest mb-1.5 ${actorTone(s.tone)}`}>
               {s.actor}
             </p>
-            <p className="text-sm font-medium text-gray-800 leading-snug">{s.action}</p>
+            <p className={`text-sm font-medium leading-snug ${dark ? 'text-white/90' : 'text-gray-800'}`}>
+              {s.action}
+            </p>
           </div>
           {i < steps.length - 1 && (
-            <ArrowRight className="w-4 h-4 text-gray-300 shrink-0 rotate-90 lg:rotate-0" />
+            <ArrowRight
+              className={`w-4 h-4 shrink-0 rotate-90 lg:rotate-0 ${dark ? 'text-white/25' : 'text-gray-300'}`}
+            />
           )}
         </div>
       ))}
