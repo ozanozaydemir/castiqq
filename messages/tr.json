@@ -913,7 +913,9 @@
       "paymentFlowHintTalent": "Yapım şirketi ödemeyi doğrudan oyuncuya yapar — ajansın komisyonunu ayrıca oyuncudan tahsil etmesi gerekir.",
       "commissionCollected": "Komisyon tahsil edildi",
       "commissionNotCollected": "Komisyon henüz tahsil edilmedi",
-      "syncedToGoogle": "Google Calendar'a senkronize edildi"
+      "syncedToGoogle": "Oyuncuya Google Calendar daveti gönderildi",
+      "calendarInviteHint": "Kaydettiğinde {email} adresine Google Calendar daveti gönderilecek.",
+      "calendarInviteMissingEmail": "Oyuncunun kayıtlı e-postası yok — takvim daveti gönderilemeyecek. Kimlik bilgilerinden e-posta ekleyebilirsin."
     },
     "documents": {
       "sectionTitle": "Belgeler",
@@ -1108,7 +1110,7 @@
       "productIdMissing": "Ürün ID yapılandırılmamış."
     },
     "google": {
-      "description": "Oyuncu listenizi Google Sheets'e aktarın veya mevcut bir tablodan toplu içe aktarın. Menajerlik hesaplarında ayrıca roster işleri Google Calendar'a otomatik senkronize edilir.",
+      "description": "Oyuncu listenizi Google Sheets'e aktarın veya mevcut bir tablodan toplu içe aktarın. Menajerlik hesaplarında ayrıca roster işleri, oyuncunun kayıtlı e-postasına Google Calendar daveti olarak otomatik gönderilir — oyuncu Castiqq'i hiç kullanmadan kendi takviminde (Google, Apple veya Outlook) görebilir.",
       "connectCta": "Google'a Bağlan",
       "disconnectCta": "Bağlantıyı Kes",
       "connectedAs": "Bağlı hesap: {email}",

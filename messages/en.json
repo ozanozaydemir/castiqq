@@ -913,7 +913,9 @@
       "paymentFlowHintTalent": "The client pays the talent directly — the agency must separately collect its commission from the talent.",
       "commissionCollected": "Commission collected",
       "commissionNotCollected": "Commission not yet collected",
-      "syncedToGoogle": "Synced to Google Calendar"
+      "syncedToGoogle": "Google Calendar invite sent to talent",
+      "calendarInviteHint": "A Google Calendar invite will be sent to {email} when you save.",
+      "calendarInviteMissingEmail": "This talent has no email on file — a calendar invite can't be sent. Add one in their contact info."
     },
     "documents": {
       "sectionTitle": "Documents",
@@ -1108,7 +1110,7 @@
       "productIdMissing": "Product ID not configured."
     },
     "google": {
-      "description": "Export your talent list to Google Sheets or bulk-import from an existing sheet. For agency accounts, roster bookings are also synced automatically to Google Calendar.",
+      "description": "Export your talent list to Google Sheets or bulk-import from an existing sheet. For agency accounts, roster bookings are also automatically sent as Google Calendar invites to the talent's registered email — they can see it in their own calendar (Google, Apple, or Outlook) without ever using Castiqq.",
       "connectCta": "Connect Google",
       "disconnectCta": "Disconnect",
       "connectedAs": "Connected account: {email}",

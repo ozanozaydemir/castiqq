@@ -373,7 +373,7 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
         {/* Right column */}
         <div className="lg:col-span-2 space-y-4">
           {/* İş Geçmişi / Booking Log (yalnızca menajerlik hesapları) */}
-          {isAgency && <BookingsSection talentId={talent.id} bookings={bookings} clients={clients} birthYear={talent.birth_year} />}
+          {isAgency && <BookingsSection talentId={talent.id} bookings={bookings} clients={clients} birthYear={talent.birth_year} talentEmail={talent.email} />}
 
           {/* Experience */}
           {experiences.length > 0 && (

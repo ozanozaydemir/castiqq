@@ -45,7 +45,7 @@ export async function createBooking(talentId: string, _: ActionState, formData: 
 
   const { data: talent } = await supabase
     .from('talent')
-    .select('full_name, commission_rate, tax_status')
+    .select('full_name, email, commission_rate, tax_status')
     .eq('id', talentId)
     .single()
 
@@ -97,7 +97,7 @@ export async function createBooking(talentId: string, _: ActionState, formData: 
     const googleEventId = await syncBookingToGoogleCalendar(orgId, {
       client_name: clientName, title: str(formData.get('title')), job_type: jobType,
       work_date: workDate, work_date_end: workDateEnd, is_ongoing: isOngoing, google_event_id: null,
-    }, talent?.full_name ?? 'Oyuncu')
+    }, talent?.full_name ?? 'Oyuncu', talent?.email ?? null)
     if (googleEventId) await supabase.from('bookings').update({ google_event_id: googleEventId }).eq('id', inserted.id)
   } catch (err) {
     console.error('[createBooking] google calendar sync error', (err as Error).message)
@@ -120,13 +120,13 @@ export async function updateBooking(bookingId: string, talentId: string, _: Acti
 
   const { data: existing } = await supabase
     .from('bookings')
-    .select('commission_rate, google_event_id, talent:talent_id(full_name, tax_status)')
+    .select('commission_rate, google_event_id, talent:talent_id(full_name, email, tax_status)')
     .eq('id', bookingId)
     .single()
 
   const commissionRate = existing?.commission_rate ?? null
   const commissionAmount = commissionRate !== null ? Math.round(grossAmount * (commissionRate / 100) * 100) / 100 : null
-  const talentInfo = existing?.talent as unknown as { full_name: string; tax_status: string } | null
+  const talentInfo = existing?.talent as unknown as { full_name: string; email: string | null; tax_status: string } | null
   const taxStatus = talentInfo?.tax_status ?? null
 
   const { withholdingRate, withholdingAmount, netAmount, amountPaid } = computeFinancials(
@@ -170,7 +170,7 @@ export async function updateBooking(bookingId: string, talentId: string, _: Acti
       client_name: clientName, title: str(formData.get('title')), job_type: jobType,
       work_date: workDate, work_date_end: workDateEnd, is_ongoing: isOngoing,
       google_event_id: existing?.google_event_id ?? null,
-    }, talentInfo?.full_name ?? 'Oyuncu')
+    }, talentInfo?.full_name ?? 'Oyuncu', talentInfo?.email ?? null)
     if (googleEventId !== existing?.google_event_id) {
       await supabase.from('bookings').update({ google_event_id: googleEventId }).eq('id', bookingId)
     }

@@ -32,6 +32,7 @@ export function BookingModal({
   talentId,
   clients = [],
   birthYear,
+  talentEmail,
   onClose,
 }: {
   action: (state: ActionState, formData: FormData) => Promise<ActionState>
@@ -39,6 +40,7 @@ export function BookingModal({
   talentId: string
   clients?: { id: string; name: string }[]
   birthYear?: number | null
+  talentEmail?: string | null
   onClose: () => void
 }) {
   const [state, formAction] = useActionState(action, null)
@@ -319,6 +321,12 @@ export function BookingModal({
             <label className="block text-sm font-medium text-gray-700">{t('notes')}</label>
             <textarea name="notes" defaultValue={editingBooking?.notes ?? ''} rows={2} placeholder={t('notesPlaceholder')} className="sb-input resize-none w-full" />
           </div>
+
+          {!isOngoing && (
+            <p className="text-xs text-gray-400">
+              {talentEmail ? t('calendarInviteHint', { email: talentEmail }) : t('calendarInviteMissingEmail')}
+            </p>
+          )}
 
           {state?.error && (
             <div className="flex items-start gap-2.5 bg-red-50 border border-red-100 text-red-600 px-3.5 py-3 rounded-xl text-sm">
