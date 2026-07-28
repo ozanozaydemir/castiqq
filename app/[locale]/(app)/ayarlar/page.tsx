@@ -7,7 +7,8 @@ import { ProfilForm } from './ProfilForm'
 import { SifreForm } from './SifreForm'
 import { PlanCard } from './PlanCard'
 import { GoogleSheetsCard } from './GoogleSheetsCard'
-import { Building2, User, Lock, Globe, FileSpreadsheet } from 'lucide-react'
+import { ShareSettingsForm } from './ShareSettingsForm'
+import { Building2, User, Lock, Globe, FileSpreadsheet, Share2 } from 'lucide-react'
 import { LanguageForm } from './LanguageForm'
 
 const GOOGLE_MESSAGE_KEYS: Record<string, string> = {
@@ -51,9 +52,11 @@ export default async function AyarlarPage({
 
   const { data: org } = await supabase
     .from('organizations')
-    .select('name, subscription_plan, subscription_status, subscription_ends_at, polar_customer_id, org_type')
+    .select('name, subscription_plan, subscription_status, subscription_ends_at, polar_customer_id, org_type, public_slug, accepts_external_shares')
     .eq('id', profile?.organization_id ?? '')
     .single()
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castiqq.app'
 
   const { data: googleConnection } = await supabase
     .from('google_connections')
@@ -94,6 +97,14 @@ export default async function AyarlarPage({
 
       <SettingsCard title={t('sectionGoogle')} icon={<FileSpreadsheet className="w-4 h-4" />}>
         <GoogleSheetsCard connectedEmail={googleConnection?.google_email ?? null} message={googleMessage} />
+      </SettingsCard>
+
+      <SettingsCard title={t('share.sectionTitle')} icon={<Share2 className="w-4 h-4" />}>
+        <ShareSettingsForm
+          initialSlug={org?.public_slug ?? null}
+          initialAccepts={org?.accepts_external_shares ?? true}
+          siteUrl={siteUrl}
+        />
       </SettingsCard>
 
       <SettingsCard title={t('sectionPassword')} icon={<Lock className="w-4 h-4" />}>

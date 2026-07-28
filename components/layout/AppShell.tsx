@@ -25,8 +25,10 @@ export function AppShell({ orgName, showBillingWarning, orgType = 'production', 
         onClose={() => setIsOpen(false)}
       />
 
-      <div className="flex flex-col flex-1 md:ml-56 min-w-0">
-        <MobileHeader orgName={orgName} onMenuOpen={() => setIsOpen(true)} />
+      <div className="flex flex-col flex-1 md:ml-56 print:ml-0 min-w-0">
+        <div className="print:hidden">
+          <MobileHeader orgName={orgName} onMenuOpen={() => setIsOpen(true)} />
+        </div>
         {showBillingWarning && <BillingBanner />}
         <main
           className="flex-1 overflow-y-auto pb-8 md:pb-0"

@@ -17,6 +17,12 @@ export type PitchStage = 'brief' | 'oyuncu_onerildi' | 'opsiyon' | 'sozlesme' | 
 export type PitchProjectType = 'dizi' | 'reklam' | 'film' | 'dijital' | 'tiyatro' | 'sunuculuk' | 'seslendirme' | 'etkinlik' | 'diger'
 export type PitchItemStatus = 'onerildi' | 'on_elemede' | 'geri_cagrildi' | 'secildi' | 'elendi' | 'geri_cekildi'
 
+// ── Org-arası rol paylaşımı (production ↔ agency) ──
+export type RoleShareStatus = 'active' | 'revoked' | 'role_closed' | 'expired'
+export type RoleShareSubmissionStatus = 'taslak' | 'gonderildi' | 'incelendi' | 'kismen_kabul' | 'kabul' | 'red'
+export type SubmissionItemDecision = 'beklemede' | 'begenildi' | 'reddedildi'
+export type NotificationType = 'role_shared' | 'submission_received' | 'submission_decided' | 'share_revoked' | 'share_expiring'
+
 export type Database = {
   public: {
     Tables: {
@@ -28,6 +34,8 @@ export type Database = {
           subscription_plan: 'trial' | 'pro'
           subscription_status: 'active' | 'cancelled' | 'past_due' | 'trial'
           trial_ends_at: string | null
+          public_slug: string | null
+          accepts_external_shares: boolean
           created_at: string
           updated_at: string
         }
@@ -261,6 +269,97 @@ export type Database = {
         Insert: Omit<Database['public']['Tables']['pitch_items']['Row'], 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['pitch_items']['Insert']>
       }
+      org_partners: {
+        Row: {
+          id: string
+          organization_id: string
+          partner_organization_id: string
+          first_connected_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['org_partners']['Row'], 'id' | 'first_connected_at'>
+        Update: Partial<Database['public']['Tables']['org_partners']['Insert']>
+      }
+      role_shares: {
+        Row: {
+          id: string
+          organization_id: string
+          project_role_id: string
+          target_organization_id: string
+          role_title: string
+          role_description: string | null
+          project_title: string | null
+          gender: string | null
+          age_min: number | null
+          age_max: number | null
+          height_min: number | null
+          height_max: number | null
+          required_skills: string[]
+          city: string | null
+          submission_deadline: string | null
+          script_asset_path: string | null
+          share_token: string
+          message: string | null
+          status: RoleShareStatus
+          expires_at: string | null
+          reminder_sent_at: string | null
+          created_by: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['role_shares']['Row'], 'id' | 'share_token' | 'created_at' | 'updated_at'> & { share_token?: string }
+        Update: Partial<Database['public']['Tables']['role_shares']['Insert']>
+      }
+      role_share_submissions: {
+        Row: {
+          id: string
+          role_share_id: string
+          agency_organization_id: string
+          submitted_by: string | null
+          status: RoleShareSubmissionStatus
+          pdf_url: string | null
+          reviewed_by: string | null
+          reviewed_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['role_share_submissions']['Row'], 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Database['public']['Tables']['role_share_submissions']['Insert']>
+      }
+      role_share_submission_items: {
+        Row: {
+          id: string
+          submission_id: string
+          source_talent_id: string | null
+          full_name: string
+          photo_url: string | null
+          age: number | null
+          height_cm: number | null
+          city: string | null
+          reel_url: string | null
+          proposed_fee: number | null
+          currency: string
+          agency_notes: string | null
+          cd_decision: SubmissionItemDecision
+          created_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['role_share_submission_items']['Row'], 'id' | 'created_at'>
+        Update: Partial<Database['public']['Tables']['role_share_submission_items']['Insert']>
+      }
+      notifications: {
+        Row: {
+          id: string
+          organization_id: string
+          type: NotificationType
+          title: string
+          body: string | null
+          link_url: string | null
+          related_id: string | null
+          read_at: string | null
+          created_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['notifications']['Row'], 'id' | 'created_at'>
+        Update: Partial<Database['public']['Tables']['notifications']['Insert']>
+      }
       bookings: {
         Row: {
           id: string
@@ -462,6 +561,11 @@ export type ClientContact = Database['public']['Tables']['client_contacts']['Row
 export type ClientInteraction = Database['public']['Tables']['client_interactions']['Row']
 export type Pitch = Database['public']['Tables']['pitches']['Row']
 export type PitchItem = Database['public']['Tables']['pitch_items']['Row']
+export type OrgPartner = Database['public']['Tables']['org_partners']['Row']
+export type RoleShare = Database['public']['Tables']['role_shares']['Row']
+export type RoleShareSubmission = Database['public']['Tables']['role_share_submissions']['Row']
+export type RoleShareSubmissionItem = Database['public']['Tables']['role_share_submission_items']['Row']
+export type Notification = Database['public']['Tables']['notifications']['Row']
 export type Booking = Database['public']['Tables']['bookings']['Row']
 export type TalentDocument = Database['public']['Tables']['talent_documents']['Row']
 export type RepresentationPeriod = Database['public']['Tables']['talent_representation_history']['Row']

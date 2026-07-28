@@ -273,3 +273,110 @@ function agencyDigestHtmlEN(orgName: string, items: AgencyDigestItem[], overview
     <a class="btn" href="${overviewUrl}">Open Overview →</a>
   `)
 }
+
+// ── Org-arası rol paylaşımı bildirimleri ─────────────────────────────
+
+export async function sendRoleSharedEmail(
+  to: string, senderOrgName: string, roleTitle: string, url: string, locale: 'tr' | 'en' = 'tr',
+) {
+  return resend.emails.send({
+    from: FROM,
+    to,
+    subject: locale === 'en'
+      ? `${senderOrgName} shared a new role with you: "${roleTitle}"`
+      : `${senderOrgName} sizinle bir rol paylaştı: "${roleTitle}"`,
+    html: baseHtml(locale === 'en' ? `
+      <p class="h1">New role shared 🎬</p>
+      <p class="p"><strong>${senderOrgName}</strong> shared the <strong>"${roleTitle}"</strong> role with your agency. Review the role and submit matching talent from your roster.</p>
+      <a class="btn" href="${url}">View Role →</a>
+    ` : `
+      <p class="h1">Yeni bir rol paylaşıldı 🎬</p>
+      <p class="p"><strong>${senderOrgName}</strong> ajansınızla <strong>"${roleTitle}"</strong> rolünü paylaştı. Rolü inceleyip roster'ınızdan uygun oyuncuları önerebilirsiniz.</p>
+      <a class="btn" href="${url}">Rolü Görüntüle →</a>
+    `),
+  })
+}
+
+export async function sendSubmissionReceivedEmail(
+  to: string, agencyOrgName: string, roleTitle: string, url: string, locale: 'tr' | 'en' = 'tr',
+) {
+  return resend.emails.send({
+    from: FROM,
+    to,
+    subject: locale === 'en'
+      ? `${agencyOrgName} submitted talent for "${roleTitle}"`
+      : `${agencyOrgName} "${roleTitle}" rolü için oyuncu önerdi`,
+    html: baseHtml(locale === 'en' ? `
+      <p class="h1">New submission received 📥</p>
+      <p class="p"><strong>${agencyOrgName}</strong> proposed talent for your <strong>"${roleTitle}"</strong> role.</p>
+      <a class="btn" href="${url}">Review Submission →</a>
+    ` : `
+      <p class="h1">Yeni öneri geldi 📥</p>
+      <p class="p"><strong>${agencyOrgName}</strong>, <strong>"${roleTitle}"</strong> rolünüz için oyuncu önerdi.</p>
+      <a class="btn" href="${url}">Öneriyi İncele →</a>
+    `),
+  })
+}
+
+export async function sendSubmissionDecidedEmail(
+  to: string, roleTitle: string, decision: 'kabul' | 'kismen_kabul' | 'red', url: string, locale: 'tr' | 'en' = 'tr',
+) {
+  const decisionLabelTr = decision === 'kabul' ? 'kabul edildi' : decision === 'kismen_kabul' ? 'kısmen kabul edildi' : 'reddedildi'
+  const decisionLabelEn = decision === 'kabul' ? 'accepted' : decision === 'kismen_kabul' ? 'partially accepted' : 'declined'
+  return resend.emails.send({
+    from: FROM,
+    to,
+    subject: locale === 'en'
+      ? `Your submission for "${roleTitle}" was ${decisionLabelEn}`
+      : `"${roleTitle}" rolü için öneriniz ${decisionLabelTr}`,
+    html: baseHtml(locale === 'en' ? `
+      <p class="h1">Submission update</p>
+      <p class="p">Your submission for the <strong>"${roleTitle}"</strong> role was <strong>${decisionLabelEn}</strong>.</p>
+      <a class="btn" href="${url}">View Details →</a>
+    ` : `
+      <p class="h1">Öneri durumu güncellendi</p>
+      <p class="p"><strong>"${roleTitle}"</strong> rolü için gönderdiğiniz öneri <strong>${decisionLabelTr}</strong>.</p>
+      <a class="btn" href="${url}">Detayları Gör →</a>
+    `),
+  })
+}
+
+export async function sendShareRevokedEmail(
+  to: string, senderOrgName: string, roleTitle: string, locale: 'tr' | 'en' = 'tr',
+) {
+  return resend.emails.send({
+    from: FROM,
+    to,
+    subject: locale === 'en'
+      ? `${senderOrgName} withdrew the "${roleTitle}" role share`
+      : `${senderOrgName} "${roleTitle}" rol paylaşımını geri çekti`,
+    html: baseHtml(locale === 'en' ? `
+      <p class="h1">Role share withdrawn</p>
+      <p class="p"><strong>${senderOrgName}</strong> withdrew the <strong>"${roleTitle}"</strong> role share. No further submissions can be made for this role.</p>
+    ` : `
+      <p class="h1">Rol paylaşımı geri çekildi</p>
+      <p class="p"><strong>${senderOrgName}</strong>, <strong>"${roleTitle}"</strong> rol paylaşımını geri çekti. Bu rol için artık yeni öneri gönderilemez.</p>
+    `),
+  })
+}
+
+export async function sendShareExpiringEmail(
+  to: string, roleTitle: string, url: string, locale: 'tr' | 'en' = 'tr',
+) {
+  return resend.emails.send({
+    from: FROM,
+    to,
+    subject: locale === 'en'
+      ? `Reminder: "${roleTitle}" role share expires soon`
+      : `Hatırlatma: "${roleTitle}" rol paylaşımının süresi doluyor`,
+    html: baseHtml(locale === 'en' ? `
+      <p class="h1">Share expiring soon ⏰</p>
+      <p class="p">The <strong>"${roleTitle}"</strong> role share expires in 3 days. Submit your talent before it closes.</p>
+      <a class="btn" href="${url}">View Role →</a>
+    ` : `
+      <p class="h1">Paylaşımın süresi doluyor ⏰</p>
+      <p class="p"><strong>"${roleTitle}"</strong> rol paylaşımının süresi 3 gün içinde doluyor. Kapanmadan önce oyuncu önerinizi gönderin.</p>
+      <a class="btn" href="${url}">Rolü Görüntüle →</a>
+    `),
+  })
+}

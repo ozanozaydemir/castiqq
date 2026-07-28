@@ -33,7 +33,8 @@
     "clients": "Müşteriler",
     "calendar": "Takvim",
     "tasks": "Görevler",
-    "pitches": "Teklifler"
+    "pitches": "Teklifler",
+    "incomingRoles": "Gelen Roller"
   },
   "auth": {
     "login": "Giriş Yap",
@@ -539,6 +540,49 @@
       "reasonSkills": "{count} yetenek eşleşiyor",
       "reasonCity": "Şehir uygun",
       "reasonAvailable": "Müsait"
+    },
+    "share": {
+      "shareBtn": "Menajerliklerle Paylaş",
+      "modalTitle": "Rolü Menajerlikle Paylaş",
+      "quickSelectLabel": "Daha Önce Paylaşılanlar",
+      "quickSelectPlaceholder": "Bir menajerlik seçin…",
+      "slugLabel": "Menajerlik Slug",
+      "slugPlaceholder": "menajerlik-slug",
+      "findBtn": "Bul",
+      "messageLabel": "Mesaj (opsiyonel)",
+      "messagePlaceholder": "Menajerliğe iletmek istediğiniz not…",
+      "deadlineLabel": "Son Başvuru Tarihi",
+      "expiresLabel": "Paylaşım Süresi",
+      "expires7": "7 gün",
+      "expires14": "14 gün",
+      "expires30": "30 gün",
+      "includeScript": "Senaryo parçasını da ekle",
+      "submitCta": "Paylaş",
+      "sending": "Paylaşılıyor…",
+      "sharesSectionTitle": "Menajerlik Paylaşımları",
+      "status": {
+        "active": "Aktif",
+        "revoked": "Geri Çekildi",
+        "role_closed": "Rol Kapandı",
+        "expired": "Süresi Doldu"
+      },
+      "revokeBtn": "Geri Çek",
+      "noSubmissionsYet": "Henüz öneri gelmedi.",
+      "submissionRound": "{count} oyuncu önerildi",
+      "acceptBtn": "Kabul Et",
+      "partialBtn": "Kısmen Kabul",
+      "rejectBtn": "Reddet",
+      "submissionStatus": {
+        "taslak": "Taslak",
+        "gonderildi": "Gönderildi",
+        "incelendi": "İncelendi",
+        "kismen_kabul": "Kısmen Kabul",
+        "kabul": "Kabul Edildi",
+        "red": "Reddedildi"
+      },
+      "liked": "Beğenildi",
+      "rejected": "Reddedildi",
+      "expiresAt": "{date} tarihinde süresi doluyor"
     }
   },
   "auditions": {
@@ -1149,6 +1193,13 @@
     "language": {
       "title": "Dil",
       "description": "Uygulama dili tercihinizi seçin."
+    },
+    "share": {
+      "sectionTitle": "Org Paylaşımı",
+      "slugLabel": "Benzersiz Slug",
+      "slugHint": "Menajerliklerin sizi bulabilmesi için benzersiz bir kimlik belirleyin (küçük harf, rakam, tire).",
+      "acceptsLabel": "Dış paylaşım kabul et (yapım şirketleri size rol paylaşabilir)",
+      "saved": "Kaydedildi"
     }
   },
   "upload": {
@@ -1591,5 +1642,49 @@
       "exclusivityConflict": "Reklam yasağı çakışması",
       "exclusivityConflictDetail": "{client} ile {category} kategorisinde {date} tarihine kadar yasak var."
     }
+  },
+  "incomingRoles": {
+    "title": "Gelen Roller",
+    "description": "Yapım şirketlerinin sizinle paylaştığı roller",
+    "empty": "Henüz sizinle paylaşılan bir rol yok.",
+    "status": {
+      "active": "Aktif",
+      "revoked": "Geri Çekildi",
+      "role_closed": "Rol Kapandı",
+      "expired": "Süresi Doldu"
+    },
+    "backToList": "Gelen Roller",
+    "deadlineLabel": "Son Başvuru",
+    "roleDescription": "Rol Açıklaması",
+    "messageFromSender": "Gönderenin Notu",
+    "downloadScript": "Senaryo Parçasını İndir",
+    "closedBanner": {
+      "revoked": "Bu paylaşım gönderen tarafından geri çekildi. Yeni öneri gönderilemez.",
+      "role_closed": "Bu rol artık dolu/iptal edildi. Yeni öneri gönderilemez.",
+      "expired": "Bu paylaşımın süresi doldu. Yeni öneri gönderilemez."
+    },
+    "matchesTitle": "Roster'ınızdan Uygun Oyuncular",
+    "noMatches": "Rol kriterlerine uyan oyuncu bulunamadı.",
+    "matchScore": "{score} kriter uygun",
+    "proposeCta": "Öner",
+    "proposed": "Önerildi",
+    "draftTitle": "Taslak Öneri",
+    "sendRoundCta": "Öneriyi Gönder",
+    "pastRoundsTitle": "Gönderilen Öneriler",
+    "submissionStatus": {
+      "taslak": "Taslak",
+      "gonderildi": "Gönderildi",
+      "incelendi": "İncelendi",
+      "kismen_kabul": "Kısmen Kabul",
+      "kabul": "Kabul Edildi",
+      "red": "Reddedildi"
+    },
+    "printCta": "Yazdır / PDF",
+    "printHint": "Yazdırmak için tarayıcınızın yazdırma penceresini kullanın."
+  },
+  "notifications": {
+    "title": "Bildirimler",
+    "markAllRead": "Tümünü okundu işaretle",
+    "empty": "Henüz bildirim yok."
   }
 }

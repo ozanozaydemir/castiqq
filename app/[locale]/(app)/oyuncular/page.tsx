@@ -36,7 +36,7 @@ async function OyuncuGrid({ searchParams }: { searchParams: SearchParams }) {
 
   let query = supabase
     .from('talent')
-    .select('id, full_name, city, gender, playable_age_min, playable_age_max, height_cm, agency_name, availability, skills, avatar_url, photos')
+    .select('id, full_name, city, gender, playable_age_min, playable_age_max, height_cm, agency_name, availability, skills, avatar_url, photos', { count: 'exact' })
 
   switch (sort) {
     case 'name_desc':
@@ -67,8 +67,11 @@ async function OyuncuGrid({ searchParams }: { searchParams: SearchParams }) {
   if (searchParams.assigned === 'unassigned') query = query.is('assigned_to', null)
   else if (searchParams.assigned)             query = query.eq('assigned_to', searchParams.assigned)
 
-  const [{ data }, { data: projectsRaw }, { data: collectionsRaw }] = await Promise.all([
-    query as Promise<{ data: TalentRow[] | null }>,
+  const page = Math.max(1, Number(searchParams.page) || 1)
+  query = query.range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1)
+
+  const [{ data, count }, { data: projectsRaw }, { data: collectionsRaw }] = await Promise.all([
+    query as Promise<{ data: TalentRow[] | null; count: number | null }>,
     supabase
       .from('projects')
       .select('id, title, project_roles(id, name)')
@@ -80,18 +83,17 @@ async function OyuncuGrid({ searchParams }: { searchParams: SearchParams }) {
       .order('name') as Promise<{ data: { id: string; name: string }[] | null }>,
   ])
 
-  const allList   = data ?? []
+  const list       = data ?? []
+  const totalCount = count ?? 0
   const projects  = (projectsRaw ?? []).filter(p => p.project_roles.length > 0)
   const collections = collectionsRaw ?? []
 
-  const page       = Math.max(1, Number(searchParams.page) || 1)
-  const totalPages = Math.max(1, Math.ceil(allList.length / PAGE_SIZE))
-  const list       = allList.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
 
   return (
     <TalentGridClient
       list={list}
-      totalCount={allList.length}
+      totalCount={totalCount}
       page={page}
       totalPages={totalPages}
       projects={projects}

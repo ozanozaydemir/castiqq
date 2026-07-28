@@ -3,8 +3,9 @@
 import { Link, usePathname } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { NotificationBell } from '@/components/layout/NotificationBell'
 import {
-  LayoutDashboard, Film, Users, UserSearch, Settings, LogOut, Clapperboard, BookMarked, Compass, Briefcase, Building2, CalendarDays, ListTodo, Target,
+  LayoutDashboard, Film, Users, UserSearch, Settings, LogOut, Clapperboard, BookMarked, Compass, Briefcase, Building2, CalendarDays, ListTodo, Target, Inbox,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { logout } from '@/app/actions/auth'
@@ -27,6 +28,7 @@ export function AppSidebar({ orgName = 'Castiqq', orgType = 'production', isOpen
         { href: '/oyuncular',   label: t('roster'),    icon: Users },
         { href: '/isler',       label: t('jobs'),      icon: Briefcase },
         { href: '/takvim',      label: t('calendar'),  icon: CalendarDays },
+        { href: '/gelen-roller', label: t('incomingRoles'), icon: Inbox },
         { href: '/musteriler',  label: t('clients'),   icon: Building2 },
         { href: '/teklifler',   label: t('pitches'),   icon: Target },
         { href: '/gorevler',    label: t('tasks'),     icon: ListTodo },
@@ -78,7 +80,8 @@ export function AppSidebar({ orgName = 'Castiqq', orgType = 'production', isOpen
 
       {/* Bottom */}
       <div className="px-3 py-4 border-t border-gray-200 space-y-1">
-        <div className="flex justify-center py-1">
+        <div className="flex items-center justify-center gap-2 py-1">
+          <NotificationBell />
           <LanguageSwitcher />
         </div>
         <form action={logout}>
@@ -97,7 +100,7 @@ export function AppSidebar({ orgName = 'Castiqq', orgType = 'production', isOpen
   return (
     <>
       {/* Desktop */}
-      <div className="hidden md:block fixed left-0 top-0 bottom-0 z-40 w-56">
+      <div className="hidden md:block fixed left-0 top-0 bottom-0 z-40 w-56 print:hidden">
         {sidebarContent}
       </div>
 

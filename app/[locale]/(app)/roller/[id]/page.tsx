@@ -5,10 +5,14 @@ import { RolStatusSelect } from './RolStatusSelect'
 import { RolDuzenleButton } from './RolDuzenleButton'
 import { RolPublicToggle } from './RolPublicToggle'
 import { RoleMatches } from './RoleMatches'
+import { ShareRoleButton } from './ShareRoleButton'
+import { IncomingSharesPanel } from './IncomingSharesPanel'
 import { Link } from '@/i18n/navigation'
 import { ArrowLeft, User, Calendar, Users } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { matchTalentToRole, type TalentCandidate } from '@/lib/roleMatching'
+import { listRoleShares } from '@/app/actions/roleShares'
+import { listSubmissionsForShare } from '@/app/actions/roleShareSubmissions'
 
 export default async function RolDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -108,6 +112,11 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
     (talents ?? []) as TalentCandidate[],
   ).filter(m => !existingTalentIds.includes(m.talent.id))
 
+  const rawShares = await listRoleShares(id)
+  const sharesWithSubmissions = await Promise.all(
+    rawShares.map(async s => ({ ...s, submissions: await listSubmissionsForShare(s.id) })),
+  )
+
   return (
     <div>
       {/* Top bar */}
@@ -128,7 +137,10 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
               </Link>
             )}
           </div>
-          <RolDuzenleButton role={role as any} />
+          <div className="flex items-center gap-2">
+            <ShareRoleButton projectRoleId={id} hasScript={!!role.script_url} />
+            <RolDuzenleButton role={role as any} />
+          </div>
         </div>
         <h1 className="text-2xl font-bold text-gray-900">{role.name}</h1>
 
@@ -179,6 +191,9 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
 
         {/* Eşleşen Oyuncular — rol kriterlerine göre org'un talent havuzundan otomatik eşleştirme */}
         <RoleMatches roleId={id} matches={matches} existingTalentIds={existingTalentIds} />
+
+        {/* Menajerliklere yapılan paylaşımlar + gelen öneriler */}
+        <IncomingSharesPanel projectRoleId={id} shares={sharesWithSubmissions} />
 
         {/* Auditions — client component (davet modal + status update) */}
         <RolAuditions
