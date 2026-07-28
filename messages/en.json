@@ -584,7 +584,8 @@
       },
       "liked": "Liked",
       "rejected": "Rejected",
-      "expiresAt": "Expires on {date}"
+      "expiresAt": "Expires on {date}",
+      "agencyNoteLabel": "Agency note"
     }
   },
   "auditions": {
@@ -1682,7 +1683,11 @@
       "red": "Rejected"
     },
     "printCta": "Print / PDF",
-    "printHint": "Use your browser's print dialog to print or save as PDF."
+    "printHint": "Use your browser's print dialog to print or save as PDF.",
+    "otherTalentsTitle": "Other Talent (Not Matching Criteria)",
+    "otherTalentsHint": "You can still propose any talent from your roster, even if they don't strictly match the role criteria.",
+    "otherTalentsSearchPlaceholder": "Search by name…",
+    "otherTalentsEmpty": "No talent found."
   },
   "notifications": {
     "title": "Notifications",

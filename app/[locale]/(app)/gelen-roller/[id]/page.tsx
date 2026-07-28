@@ -48,6 +48,12 @@ export default async function GelenRolDetailPage({ params }: { params: Promise<{
     (talents ?? []) as TalentCandidate[],
   ).filter(m => !proposedElsewhere.has(m.talent.id))
 
+  // Rol kriterlerine uymayan (sert filtrede elenen) oyuncular da menajer
+  // isterse yine önerebilsin diye ayrı bir "roster'da ara" listesi.
+  const matchedIds = new Set(matches.map(m => m.talent.id))
+  const otherTalents = ((talents ?? []) as TalentCandidate[])
+    .filter(tl => !matchedIds.has(tl.id) && !proposedElsewhere.has(tl.id))
+
   const ageLabel = share.age_min && share.age_max
     ? `${share.age_min}–${share.age_max} yaş`
     : share.age_min ? `${share.age_min}+` : share.age_max ? `≤${share.age_max}` : null
@@ -114,6 +120,7 @@ export default async function GelenRolDetailPage({ params }: { params: Promise<{
         <SubmissionBuilder
           shareId={id}
           matches={matches}
+          otherTalents={otherTalents}
           draftSubmissionId={draftSubmission?.id ?? null}
           draftItems={draftSubmission?.role_share_submission_items.map(i => ({ id: i.id, full_name: i.full_name, photo_url: i.photo_url, source_talent_id: i.source_talent_id ?? null })) ?? []}
           pastRounds={pastRounds}

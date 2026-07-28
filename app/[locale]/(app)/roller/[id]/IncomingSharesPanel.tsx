@@ -12,6 +12,8 @@ type SubmissionItem = {
   height_cm: number | null; city: string | null; reel_url: string | null
   proposed_fee: number | null; currency: string; agency_notes: string | null
   cd_decision: 'beklemede' | 'begenildi' | 'reddedildi'
+  gender: string | null; skills: string[]; languages: string[]
+  bio: string | null; notable_experience: string | null; photos: string[]
 }
 type Submission = {
   id: string; status: string; pdf_url: string | null; created_at: string; reviewed_at: string | null
@@ -106,40 +108,64 @@ export function IncomingSharesPanel({ projectRoleId, shares }: { projectRoleId: 
 
                     <div className="space-y-2">
                       {sub.role_share_submission_items.map(item => (
-                        <div key={item.id} className="flex items-center gap-3 bg-white rounded-lg p-2.5 border border-gray-100">
+                        <div key={item.id} className="flex gap-3 bg-white rounded-lg p-3 border border-gray-100">
                           {item.photo_url ? (
-                            <img src={item.photo_url} alt="" className="w-9 h-9 rounded-full object-cover flex-shrink-0" />
+                            <img src={item.photo_url} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
                           ) : (
-                            <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0 text-xs font-bold text-indigo-600">
+                            <div className="w-16 h-16 rounded-lg bg-indigo-100 flex items-center justify-center flex-shrink-0 text-sm font-bold text-indigo-600">
                               {item.full_name.slice(0, 2).toUpperCase()}
                             </div>
                           )}
                           <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium text-gray-900 truncate">{item.full_name}</p>
+                            <div className="flex items-start justify-between gap-2">
+                              <p className="text-sm font-medium text-gray-900 truncate">{item.full_name}</p>
+                              <div className="flex items-center gap-1 flex-shrink-0">
+                                {item.cd_decision === 'beklemede' ? (
+                                  <>
+                                    <button onClick={() => handleItemDecision(item.id, 'begenildi', share.id)} disabled={isPending} className="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-green-600 transition-colors">
+                                      <Check className="w-3.5 h-3.5" />
+                                    </button>
+                                    <button onClick={() => handleItemDecision(item.id, 'reddedildi', share.id)} disabled={isPending} className="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors">
+                                      <XIcon className="w-3.5 h-3.5" />
+                                    </button>
+                                  </>
+                                ) : (
+                                  <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${item.cd_decision === 'begenildi' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-500'}`}>
+                                    {item.cd_decision === 'begenildi' ? t('liked') : t('rejected')}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
                             <div className="flex flex-wrap gap-2 mt-0.5 text-[11px] text-gray-400">
+                              {item.gender && <span>{item.gender}</span>}
                               {item.age && <span>{item.age} yaş</span>}
                               {item.height_cm && <span>{item.height_cm} cm</span>}
                               {item.city && <span className="flex items-center gap-0.5"><MapPin className="w-2.5 h-2.5" />{item.city}</span>}
                               {item.proposed_fee && <span className="flex items-center gap-0.5"><Banknote className="w-2.5 h-2.5" />{item.proposed_fee.toLocaleString('tr-TR')} {item.currency}</span>}
                               {item.reel_url && <a href={item.reel_url} target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline">Reel</a>}
                             </div>
-                            {item.agency_notes && <p className="text-xs text-gray-500 mt-1">{item.agency_notes}</p>}
-                          </div>
-                          <div className="flex items-center gap-1 flex-shrink-0">
-                            {item.cd_decision === 'beklemede' ? (
-                              <>
-                                <button onClick={() => handleItemDecision(item.id, 'begenildi', share.id)} disabled={isPending} className="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-green-600 transition-colors">
-                                  <Check className="w-3.5 h-3.5" />
-                                </button>
-                                <button onClick={() => handleItemDecision(item.id, 'reddedildi', share.id)} disabled={isPending} className="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors">
-                                  <XIcon className="w-3.5 h-3.5" />
-                                </button>
-                              </>
-                            ) : (
-                              <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${item.cd_decision === 'begenildi' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-500'}`}>
-                                {item.cd_decision === 'begenildi' ? t('liked') : t('rejected')}
-                              </span>
+                            {item.skills.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-1.5">
+                                {item.skills.map(s => (
+                                  <span key={s} className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-indigo-50 text-indigo-600">{s}</span>
+                                ))}
+                              </div>
                             )}
+                            {item.languages.length > 0 && (
+                              <p className="text-[11px] text-gray-500 mt-1">{item.languages.join(' · ')}</p>
+                            )}
+                            {item.notable_experience && (
+                              <p className="text-xs text-gray-600 mt-1">{item.notable_experience}</p>
+                            )}
+                            {item.bio && <p className="text-xs text-gray-500 mt-1 whitespace-pre-line">{item.bio}</p>}
+                            {item.photos.length > 1 && (
+                              <div className="flex gap-1.5 mt-2">
+                                {item.photos.slice(0, 5).map((p, i) => (
+                                  <img key={i} src={p} alt="" className="w-10 h-10 rounded object-cover" />
+                                ))}
+                              </div>
+                            )}
+                            {item.agency_notes && <p className="text-xs text-gray-500 mt-1.5 italic">{t('agencyNoteLabel')}: {item.agency_notes}</p>}
                           </div>
                         </div>
                       ))}

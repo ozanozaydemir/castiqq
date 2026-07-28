@@ -340,6 +340,12 @@ export type Database = {
           currency: string
           agency_notes: string | null
           cd_decision: SubmissionItemDecision
+          gender: string | null
+          skills: string[]
+          languages: string[]
+          bio: string | null
+          notable_experience: string | null
+          photos: string[]
           created_at: string
         }
         Insert: Omit<Database['public']['Tables']['role_share_submission_items']['Row'], 'id' | 'created_at'>

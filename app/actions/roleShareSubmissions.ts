@@ -45,11 +45,23 @@ export async function addSubmissionItem(submissionId: string, talentId: string, 
 
   const { data: talent } = await supabase
     .from('talent')
-    .select('id, full_name, avatar_url, photos, birth_year, playable_age_min, height_cm, city, showreel_url')
+    .select('id, full_name, avatar_url, photos, birth_year, playable_age_min, height_cm, city, showreel_url, gender, skills, notes')
     .eq('id', talentId)
     .single()
 
   if (!talent) return { error: 'Oyuncu bulunamadı.' }
+
+  const [{ data: languages }, { data: experiences }] = await Promise.all([
+    supabase.from('talent_languages').select('language, level').eq('talent_id', talentId).order('sort_order'),
+    supabase.from('talent_experiences').select('project_name, role_name, year').eq('talent_id', talentId).order('year', { ascending: false }).limit(3),
+  ])
+
+  const LEVEL_LABELS: Record<string, string> = { native: 'Ana dil', C2: 'C2', C1: 'C1', B2: 'B2', B1: 'B1', A2: 'A2', A1: 'A1' }
+  const languageLabels = (languages ?? []).map((l: { language: string; level: string }) => `${l.language} (${LEVEL_LABELS[l.level] ?? l.level})`)
+  const notableExperience = (experiences ?? [])
+    .map((e: { project_name: string; role_name: string | null; year: number | null }) =>
+      [e.project_name, e.role_name].filter(Boolean).join(' — ') + (e.year ? ` (${e.year})` : ''))
+    .join(', ') || null
 
   const age = talent.playable_age_min ?? (talent.birth_year ? new Date().getFullYear() - talent.birth_year : null)
   const proposedFee = Number(formData.get('proposed_fee'))
@@ -66,6 +78,12 @@ export async function addSubmissionItem(submissionId: string, talentId: string, 
     proposed_fee: formData.get('proposed_fee') && !isNaN(proposedFee) ? proposedFee : null,
     currency: (formData.get('currency') as string) || 'TRY',
     agency_notes: (formData.get('agency_notes') as string)?.trim() || null,
+    gender: talent.gender,
+    skills: talent.skills ?? [],
+    languages: languageLabels,
+    bio: talent.notes,
+    notable_experience: notableExperience,
+    photos: talent.photos ?? [],
   })
 
   if (error) {
@@ -152,17 +170,21 @@ export type SubmissionItemRow = {
   height_cm: number | null; city: string | null; reel_url: string | null
   proposed_fee: number | null; currency: string; agency_notes: string | null
   cd_decision: 'beklemede' | 'begenildi' | 'reddedildi'; source_talent_id: string | null
+  gender: string | null; skills: string[]; languages: string[]
+  bio: string | null; notable_experience: string | null; photos: string[]
 }
 export type SubmissionRow = {
   id: string; status: string; pdf_url: string | null; created_at: string; reviewed_at: string | null
   role_share_submission_items: SubmissionItemRow[]
 }
 
+const SUBMISSION_ITEM_FIELDS = 'id, full_name, photo_url, age, height_cm, city, reel_url, proposed_fee, currency, agency_notes, cd_decision, source_talent_id, gender, skills, languages, bio, notable_experience, photos'
+
 export async function listSubmissionsForShare(shareId: string): Promise<SubmissionRow[]> {
   const { supabase } = await requireOrg()
   const { data } = await supabase
     .from('role_share_submissions')
-    .select('id, status, pdf_url, created_at, reviewed_at, role_share_submission_items(id, full_name, photo_url, age, height_cm, city, reel_url, proposed_fee, currency, agency_notes, cd_decision, source_talent_id)')
+    .select(`id, status, pdf_url, created_at, reviewed_at, role_share_submission_items(${SUBMISSION_ITEM_FIELDS})`)
     .eq('role_share_id', shareId)
     .order('created_at', { ascending: false })
   return (data ?? []) as unknown as SubmissionRow[]

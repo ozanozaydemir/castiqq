@@ -11,7 +11,7 @@ export default async function OneriYazdirPage({ params }: { params: Promise<{ su
 
   const { data: submission } = await supabase
     .from('role_share_submissions')
-    .select('id, created_at, role_shares(role_title, project_title), role_share_submission_items(id, full_name, photo_url, age, height_cm, city, reel_url, proposed_fee, currency, agency_notes)')
+    .select('id, created_at, role_shares(role_title, project_title), role_share_submission_items(id, full_name, photo_url, age, height_cm, city, reel_url, proposed_fee, currency, agency_notes, gender, skills, languages, bio, notable_experience)')
     .eq('id', submissionId)
     .single()
 
@@ -22,6 +22,8 @@ export default async function OneriYazdirPage({ params }: { params: Promise<{ su
     id: string; full_name: string; photo_url: string | null; age: number | null
     height_cm: number | null; city: string | null; reel_url: string | null
     proposed_fee: number | null; currency: string; agency_notes: string | null
+    gender: string | null; skills: string[]; languages: string[]
+    bio: string | null; notable_experience: string | null
   }[]
 
   return (
@@ -55,11 +57,22 @@ export default async function OneriYazdirPage({ params }: { params: Promise<{ su
               <div className="p-4 flex-1 min-w-0">
                 <p className="font-semibold text-gray-900">{item.full_name}</p>
                 <div className="flex flex-wrap gap-3 mt-1.5 text-xs text-gray-500">
+                  {item.gender && <span>{item.gender}</span>}
                   {item.age && <span>{item.age} yaş</span>}
                   {item.height_cm && <span>{item.height_cm} cm</span>}
                   {item.city && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{item.city}</span>}
                   {item.proposed_fee && <span className="flex items-center gap-1"><Banknote className="w-3 h-3" />{item.proposed_fee.toLocaleString('tr-TR')} {item.currency}</span>}
                 </div>
+                {item.skills.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-1.5">
+                    {item.skills.map(s => (
+                      <span key={s} className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-indigo-50 text-indigo-600">{s}</span>
+                    ))}
+                  </div>
+                )}
+                {item.languages.length > 0 && <p className="text-xs text-gray-500 mt-1.5">{item.languages.join(' · ')}</p>}
+                {item.notable_experience && <p className="text-xs text-gray-700 mt-1.5">{item.notable_experience}</p>}
+                {item.bio && <p className="text-xs text-gray-500 mt-1.5 whitespace-pre-line">{item.bio}</p>}
                 {item.reel_url && (
                   <a href={item.reel_url} target="_blank" rel="noopener noreferrer" className="no-print text-xs text-indigo-500 hover:text-indigo-700 mt-1.5 inline-block">
                     {item.reel_url}

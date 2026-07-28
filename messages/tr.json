@@ -584,7 +584,8 @@
       },
       "liked": "Beğenildi",
       "rejected": "Reddedildi",
-      "expiresAt": "{date} tarihinde süresi doluyor"
+      "expiresAt": "{date} tarihinde süresi doluyor",
+      "agencyNoteLabel": "Ajans notu"
     }
   },
   "auditions": {
@@ -1682,7 +1683,11 @@
       "red": "Reddedildi"
     },
     "printCta": "Yazdır / PDF",
-    "printHint": "Yazdırmak için tarayıcınızın yazdırma penceresini kullanın."
+    "printHint": "Yazdırmak için tarayıcınızın yazdırma penceresini kullanın.",
+    "otherTalentsTitle": "Diğer Oyuncular (Kriterlere Tam Uymayan)",
+    "otherTalentsHint": "Rol kriterlerine tam uymasa da roster'ınızdan istediğiniz oyuncuyu yine önerebilirsiniz.",
+    "otherTalentsSearchPlaceholder": "İsim ara…",
+    "otherTalentsEmpty": "Oyuncu bulunamadı."
   },
   "notifications": {
     "title": "Bildirimler",
