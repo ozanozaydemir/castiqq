@@ -14,6 +14,9 @@ type SubmissionItem = {
   cd_decision: 'beklemede' | 'begenildi' | 'reddedildi'
   gender: string | null; skills: string[]; languages: string[]
   bio: string | null; notable_experience: string | null; photos: string[]
+  weight_kg: number | null; hair_color: string | null; eye_color: string | null
+  education: string | null; selftape_drama_url: string | null
+  selftape_comedy_url: string | null; selftape_ad_url: string | null; voice_sample_url: string | null
 }
 type Submission = {
   id: string; status: string; pdf_url: string | null; created_at: string; reviewed_at: string | null
@@ -140,9 +143,18 @@ export function IncomingSharesPanel({ projectRoleId, shares }: { projectRoleId: 
                               {item.gender && <span>{item.gender}</span>}
                               {item.age && <span>{item.age} yaş</span>}
                               {item.height_cm && <span>{item.height_cm} cm</span>}
+                              {item.weight_kg && <span>{item.weight_kg} kg</span>}
+                              {item.hair_color && <span>{item.hair_color} saç</span>}
+                              {item.eye_color && <span>{item.eye_color} göz</span>}
                               {item.city && <span className="flex items-center gap-0.5"><MapPin className="w-2.5 h-2.5" />{item.city}</span>}
                               {item.proposed_fee && <span className="flex items-center gap-0.5"><Banknote className="w-2.5 h-2.5" />{item.proposed_fee.toLocaleString('tr-TR')} {item.currency}</span>}
+                            </div>
+                            <div className="flex flex-wrap gap-2 mt-0.5 text-[11px]">
                               {item.reel_url && <a href={item.reel_url} target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline">Reel</a>}
+                              {item.selftape_drama_url && <a href={item.selftape_drama_url} target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline">{t('selftapeDrama')}</a>}
+                              {item.selftape_comedy_url && <a href={item.selftape_comedy_url} target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline">{t('selftapeComedy')}</a>}
+                              {item.selftape_ad_url && <a href={item.selftape_ad_url} target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline">{t('selftapeAd')}</a>}
+                              {item.voice_sample_url && <a href={item.voice_sample_url} target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline">{t('voiceSample')}</a>}
                             </div>
                             {item.skills.length > 0 && (
                               <div className="flex flex-wrap gap-1 mt-1.5">
@@ -154,6 +166,7 @@ export function IncomingSharesPanel({ projectRoleId, shares }: { projectRoleId: 
                             {item.languages.length > 0 && (
                               <p className="text-[11px] text-gray-500 mt-1">{item.languages.join(' · ')}</p>
                             )}
+                            {item.education && <p className="text-[11px] text-gray-500 mt-1">{t('educationLabel')}: {item.education}</p>}
                             {item.notable_experience && (
                               <p className="text-xs text-gray-600 mt-1">{item.notable_experience}</p>
                             )}

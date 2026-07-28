@@ -346,6 +346,14 @@ export type Database = {
           bio: string | null
           notable_experience: string | null
           photos: string[]
+          weight_kg: number | null
+          hair_color: string | null
+          eye_color: string | null
+          education: string | null
+          selftape_drama_url: string | null
+          selftape_comedy_url: string | null
+          selftape_ad_url: string | null
+          voice_sample_url: string | null
           created_at: string
         }
         Insert: Omit<Database['public']['Tables']['role_share_submission_items']['Row'], 'id' | 'created_at'>

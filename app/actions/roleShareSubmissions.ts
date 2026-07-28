@@ -45,15 +45,16 @@ export async function addSubmissionItem(submissionId: string, talentId: string, 
 
   const { data: talent } = await supabase
     .from('talent')
-    .select('id, full_name, avatar_url, photos, birth_year, playable_age_min, height_cm, city, showreel_url, gender, skills, notes')
+    .select('id, full_name, avatar_url, photos, birth_year, playable_age_min, height_cm, city, showreel_url, gender, skills, notes, weight_kg, hair_color, eye_color, selftape_drama_url, selftape_comedy_url, selftape_ad_url, voice_sample_url')
     .eq('id', talentId)
     .single()
 
   if (!talent) return { error: 'Oyuncu bulunamadı.' }
 
-  const [{ data: languages }, { data: experiences }] = await Promise.all([
+  const [{ data: languages }, { data: experiences }, { data: educationRows }] = await Promise.all([
     supabase.from('talent_languages').select('language, level').eq('talent_id', talentId).order('sort_order'),
     supabase.from('talent_experiences').select('project_name, role_name, year').eq('talent_id', talentId).order('year', { ascending: false }).limit(3),
+    supabase.from('talent_education').select('school, program, year').eq('talent_id', talentId).order('sort_order'),
   ])
 
   const LEVEL_LABELS: Record<string, string> = { native: 'Ana dil', C2: 'C2', C1: 'C1', B2: 'B2', B1: 'B1', A2: 'A2', A1: 'A1' }
@@ -61,6 +62,10 @@ export async function addSubmissionItem(submissionId: string, talentId: string, 
   const notableExperience = (experiences ?? [])
     .map((e: { project_name: string; role_name: string | null; year: number | null }) =>
       [e.project_name, e.role_name].filter(Boolean).join(' — ') + (e.year ? ` (${e.year})` : ''))
+    .join(', ') || null
+  const education = (educationRows ?? [])
+    .map((e: { school: string; program: string | null; year: number | null }) =>
+      [e.school, e.program].filter(Boolean).join(' — ') + (e.year ? ` (${e.year})` : ''))
     .join(', ') || null
 
   const age = talent.playable_age_min ?? (talent.birth_year ? new Date().getFullYear() - talent.birth_year : null)
@@ -84,6 +89,14 @@ export async function addSubmissionItem(submissionId: string, talentId: string, 
     bio: talent.notes,
     notable_experience: notableExperience,
     photos: talent.photos ?? [],
+    weight_kg: talent.weight_kg,
+    hair_color: talent.hair_color,
+    eye_color: talent.eye_color,
+    education,
+    selftape_drama_url: talent.selftape_drama_url,
+    selftape_comedy_url: talent.selftape_comedy_url,
+    selftape_ad_url: talent.selftape_ad_url,
+    voice_sample_url: talent.voice_sample_url,
   })
 
   if (error) {
@@ -172,13 +185,16 @@ export type SubmissionItemRow = {
   cd_decision: 'beklemede' | 'begenildi' | 'reddedildi'; source_talent_id: string | null
   gender: string | null; skills: string[]; languages: string[]
   bio: string | null; notable_experience: string | null; photos: string[]
+  weight_kg: number | null; hair_color: string | null; eye_color: string | null
+  education: string | null; selftape_drama_url: string | null
+  selftape_comedy_url: string | null; selftape_ad_url: string | null; voice_sample_url: string | null
 }
 export type SubmissionRow = {
   id: string; status: string; pdf_url: string | null; created_at: string; reviewed_at: string | null
   role_share_submission_items: SubmissionItemRow[]
 }
 
-const SUBMISSION_ITEM_FIELDS = 'id, full_name, photo_url, age, height_cm, city, reel_url, proposed_fee, currency, agency_notes, cd_decision, source_talent_id, gender, skills, languages, bio, notable_experience, photos'
+const SUBMISSION_ITEM_FIELDS = 'id, full_name, photo_url, age, height_cm, city, reel_url, proposed_fee, currency, agency_notes, cd_decision, source_talent_id, gender, skills, languages, bio, notable_experience, photos, weight_kg, hair_color, eye_color, education, selftape_drama_url, selftape_comedy_url, selftape_ad_url, voice_sample_url'
 
 export async function listSubmissionsForShare(shareId: string): Promise<SubmissionRow[]> {
   const { supabase } = await requireOrg()

@@ -585,7 +585,12 @@
       "liked": "Liked",
       "rejected": "Rejected",
       "expiresAt": "Expires on {date}",
-      "agencyNoteLabel": "Agency note"
+      "agencyNoteLabel": "Agency note",
+      "selftapeDrama": "Self-tape (Drama)",
+      "selftapeComedy": "Self-tape (Comedy)",
+      "selftapeAd": "Self-tape (Ad)",
+      "voiceSample": "Voice Sample",
+      "educationLabel": "Education"
     }
   },
   "auditions": {

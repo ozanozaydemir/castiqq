@@ -585,7 +585,12 @@
       "liked": "Beğenildi",
       "rejected": "Reddedildi",
       "expiresAt": "{date} tarihinde süresi doluyor",
-      "agencyNoteLabel": "Ajans notu"
+      "agencyNoteLabel": "Ajans notu",
+      "selftapeDrama": "Self-tape (Drama)",
+      "selftapeComedy": "Self-tape (Komedi)",
+      "selftapeAd": "Self-tape (Reklam)",
+      "voiceSample": "Ses Örneği",
+      "educationLabel": "Eğitim"
     }
   },
   "auditions": {

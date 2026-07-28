@@ -11,7 +11,7 @@ export default async function OneriYazdirPage({ params }: { params: Promise<{ su
 
   const { data: submission } = await supabase
     .from('role_share_submissions')
-    .select('id, created_at, role_shares(role_title, project_title), role_share_submission_items(id, full_name, photo_url, age, height_cm, city, reel_url, proposed_fee, currency, agency_notes, gender, skills, languages, bio, notable_experience)')
+    .select('id, created_at, role_shares(role_title, project_title), role_share_submission_items(id, full_name, photo_url, age, height_cm, city, reel_url, proposed_fee, currency, agency_notes, gender, skills, languages, bio, notable_experience, weight_kg, hair_color, eye_color, education, selftape_drama_url, selftape_comedy_url, selftape_ad_url, voice_sample_url)')
     .eq('id', submissionId)
     .single()
 
@@ -24,6 +24,9 @@ export default async function OneriYazdirPage({ params }: { params: Promise<{ su
     proposed_fee: number | null; currency: string; agency_notes: string | null
     gender: string | null; skills: string[]; languages: string[]
     bio: string | null; notable_experience: string | null
+    weight_kg: number | null; hair_color: string | null; eye_color: string | null
+    education: string | null; selftape_drama_url: string | null
+    selftape_comedy_url: string | null; selftape_ad_url: string | null; voice_sample_url: string | null
   }[]
 
   return (
@@ -60,6 +63,9 @@ export default async function OneriYazdirPage({ params }: { params: Promise<{ su
                   {item.gender && <span>{item.gender}</span>}
                   {item.age && <span>{item.age} yaş</span>}
                   {item.height_cm && <span>{item.height_cm} cm</span>}
+                  {item.weight_kg && <span>{item.weight_kg} kg</span>}
+                  {item.hair_color && <span>{item.hair_color} saç</span>}
+                  {item.eye_color && <span>{item.eye_color} göz</span>}
                   {item.city && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{item.city}</span>}
                   {item.proposed_fee && <span className="flex items-center gap-1"><Banknote className="w-3 h-3" />{item.proposed_fee.toLocaleString('tr-TR')} {item.currency}</span>}
                 </div>
@@ -71,13 +77,36 @@ export default async function OneriYazdirPage({ params }: { params: Promise<{ su
                   </div>
                 )}
                 {item.languages.length > 0 && <p className="text-xs text-gray-500 mt-1.5">{item.languages.join(' · ')}</p>}
+                {item.education && <p className="text-xs text-gray-500 mt-1.5">Eğitim: {item.education}</p>}
                 {item.notable_experience && <p className="text-xs text-gray-700 mt-1.5">{item.notable_experience}</p>}
                 {item.bio && <p className="text-xs text-gray-500 mt-1.5 whitespace-pre-line">{item.bio}</p>}
-                {item.reel_url && (
-                  <a href={item.reel_url} target="_blank" rel="noopener noreferrer" className="no-print text-xs text-indigo-500 hover:text-indigo-700 mt-1.5 inline-block">
-                    {item.reel_url}
-                  </a>
-                )}
+                <div className="flex flex-wrap gap-3 mt-1.5">
+                  {item.reel_url && (
+                    <a href={item.reel_url} target="_blank" rel="noopener noreferrer" className="no-print text-xs text-indigo-500 hover:text-indigo-700 inline-block">
+                      Reel
+                    </a>
+                  )}
+                  {item.selftape_drama_url && (
+                    <a href={item.selftape_drama_url} target="_blank" rel="noopener noreferrer" className="no-print text-xs text-indigo-500 hover:text-indigo-700 inline-block">
+                      Self-tape (Drama)
+                    </a>
+                  )}
+                  {item.selftape_comedy_url && (
+                    <a href={item.selftape_comedy_url} target="_blank" rel="noopener noreferrer" className="no-print text-xs text-indigo-500 hover:text-indigo-700 inline-block">
+                      Self-tape (Komedi)
+                    </a>
+                  )}
+                  {item.selftape_ad_url && (
+                    <a href={item.selftape_ad_url} target="_blank" rel="noopener noreferrer" className="no-print text-xs text-indigo-500 hover:text-indigo-700 inline-block">
+                      Self-tape (Reklam)
+                    </a>
+                  )}
+                  {item.voice_sample_url && (
+                    <a href={item.voice_sample_url} target="_blank" rel="noopener noreferrer" className="no-print text-xs text-indigo-500 hover:text-indigo-700 inline-block">
+                      Ses Örneği
+                    </a>
+                  )}
+                </div>
                 {item.agency_notes && <p className="text-sm text-gray-600 mt-2">{item.agency_notes}</p>}
               </div>
             </div>
