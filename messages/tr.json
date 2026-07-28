@@ -517,7 +517,25 @@
     "publicOn": "Başvuru Açık",
     "publicOff": "Başvuru Kapalı",
     "copyLink": "Linki Kopyala",
-    "copied": "Kopyalandı"
+    "copied": "Kopyalandı",
+    "minHeightLabel": "Min Boy (cm)",
+    "maxHeightLabel": "Max Boy (cm)",
+    "cityLabel": "Şehir",
+    "requiredSkillsLabel": "Gereken Yetenekler",
+    "matching": {
+      "title": "Eşleşen Oyuncular",
+      "empty": "Rol kriterlerine uyan oyuncu bulunamadı.",
+      "resultCount": "{count} eşleşme",
+      "addCta": "Aday Ekle",
+      "added": "Eklendi",
+      "showAll": "{count} tane daha göster",
+      "reasonGender": "Cinsiyet uygun",
+      "reasonAge": "Yaş uygun",
+      "reasonHeight": "Boy uygun",
+      "reasonSkills": "{count} yetenek eşleşiyor",
+      "reasonCity": "Şehir uygun",
+      "reasonAvailable": "Müsait"
+    }
   },
   "auditions": {
     "status": {

@@ -517,7 +517,25 @@
     "publicOn": "Applications Open",
     "publicOff": "Applications Closed",
     "copyLink": "Copy Link",
-    "copied": "Copied"
+    "copied": "Copied",
+    "minHeightLabel": "Min Height (cm)",
+    "maxHeightLabel": "Max Height (cm)",
+    "cityLabel": "City",
+    "requiredSkillsLabel": "Required Skills",
+    "matching": {
+      "title": "Matching Talent",
+      "empty": "No talent matches this role's criteria.",
+      "resultCount": "{count} matches",
+      "addCta": "Add Candidate",
+      "added": "Added",
+      "showAll": "Show {count} more",
+      "reasonGender": "Gender match",
+      "reasonAge": "Age match",
+      "reasonHeight": "Height match",
+      "reasonSkills": "{count} skill match",
+      "reasonCity": "City match",
+      "reasonAvailable": "Available"
+    }
   },
   "auditions": {
     "status": {

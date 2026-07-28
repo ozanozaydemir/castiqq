@@ -9,6 +9,12 @@ import type { ActionState } from '@/app/actions/projects'
 import type { ProjectRole } from '@/types/database'
 import { useTranslations } from 'next-intl'
 
+const SKILLS = [
+  'Şarkı', 'Dans', 'At Binme', 'Motosiklet', 'Yüzme',
+  'Silah Kullanımı', 'Dövüş Koreografisi', 'Enstrüman', 'Spor',
+  'Akrobasi', 'Jimnastik', 'Seslendirme', 'Komedi', 'Doğaçlama',
+]
+
 interface RolModalProps {
   projectId: string
   editingRole?: ProjectRole | null
@@ -110,9 +116,14 @@ function ScriptUpload({
 export function RolModal({ projectId, editingRole, action, onClose }: RolModalProps) {
   const [state, formAction] = useActionState(action, null)
   const [scriptPath, setScriptPath] = useState<string | null>(editingRole?.script_url ?? null)
+  const [requiredSkills, setRequiredSkills] = useState<string[]>(editingRole?.required_skills ?? [])
   const orgId = useOrgId()
   const t = useTranslations('roles')
   const tc = useTranslations('common')
+
+  function toggleSkill(skill: string) {
+    setRequiredSkills(prev => prev.includes(skill) ? prev.filter(s => s !== skill) : [...prev, skill])
+  }
 
   const GENDERS = [
     { value: '', label: t('genderAny') },
@@ -184,6 +195,42 @@ export function RolModal({ projectId, editingRole, action, onClose }: RolModalPr
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-gray-700">{t('ageMaxLabel')}</label>
               <input type="number" name="age_max" defaultValue={editingRole?.age_max ?? ''} min={0} max={120} placeholder="40" className="sb-input" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3">
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-gray-700">{t('minHeightLabel')}</label>
+              <input type="number" name="min_height_cm" defaultValue={editingRole?.min_height_cm ?? ''} min={100} max={250} placeholder="165" className="sb-input" />
+            </div>
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-gray-700">{t('maxHeightLabel')}</label>
+              <input type="number" name="max_height_cm" defaultValue={editingRole?.max_height_cm ?? ''} min={100} max={250} placeholder="185" className="sb-input" />
+            </div>
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-gray-700">{t('cityLabel')}</label>
+              <input name="city" defaultValue={editingRole?.city ?? ''} placeholder="İstanbul" className="sb-input" />
+            </div>
+          </div>
+
+          <input type="hidden" name="required_skills_json" value={JSON.stringify(requiredSkills)} />
+          <div className="space-y-1.5">
+            <label className="block text-sm font-medium text-gray-700">{t('requiredSkillsLabel')}</label>
+            <div className="flex flex-wrap gap-2">
+              {SKILLS.map(skill => (
+                <button
+                  key={skill}
+                  type="button"
+                  onClick={() => toggleSkill(skill)}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
+                    requiredSkills.includes(skill)
+                      ? 'bg-indigo-500 text-white border-indigo-500'
+                      : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300 hover:text-indigo-600'
+                  }`}
+                >
+                  {skill}
+                </button>
+              ))}
             </div>
           </div>
 

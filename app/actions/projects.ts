@@ -90,6 +90,10 @@ export async function createRol(_: ActionState, formData: FormData): Promise<Act
     age_max: formData.get('age_max') ? Number(formData.get('age_max')) : null,
     notes: (formData.get('notes') as string) || null,
     script_url: (formData.get('script_url') as string) || null,
+    min_height_cm: formData.get('min_height_cm') ? Number(formData.get('min_height_cm')) : null,
+    max_height_cm: formData.get('max_height_cm') ? Number(formData.get('max_height_cm')) : null,
+    required_skills: JSON.parse((formData.get('required_skills_json') as string) || '[]'),
+    city: (formData.get('city') as string)?.trim() || null,
   })
 
   if (error) return { error: error.message }
@@ -112,6 +116,10 @@ export async function updateRol(id: string, _: ActionState, formData: FormData):
     age_max: formData.get('age_max') ? Number(formData.get('age_max')) : null,
     notes: (formData.get('notes') as string) || null,
     script_url: (formData.get('script_url') as string) || null,
+    min_height_cm: formData.get('min_height_cm') ? Number(formData.get('min_height_cm')) : null,
+    max_height_cm: formData.get('max_height_cm') ? Number(formData.get('max_height_cm')) : null,
+    required_skills: JSON.parse((formData.get('required_skills_json') as string) || '[]'),
+    city: (formData.get('city') as string)?.trim() || null,
   }).eq('id', id)
 
   if (error) return { error: error.message }

@@ -4,9 +4,11 @@ import { RolAuditions } from './RolAuditions'
 import { RolStatusSelect } from './RolStatusSelect'
 import { RolDuzenleButton } from './RolDuzenleButton'
 import { RolPublicToggle } from './RolPublicToggle'
+import { RoleMatches } from './RoleMatches'
 import { Link } from '@/i18n/navigation'
 import { ArrowLeft, User, Calendar, Users } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
+import { matchTalentToRole, type TalentCandidate } from '@/lib/roleMatching'
 
 export default async function RolDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -26,7 +28,7 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
       .single(),
     supabase
       .from('talent')
-      .select('id, full_name, phone, email')
+      .select('id, full_name, phone, email, gender, birth_year, playable_age_min, playable_age_max, height_cm, city, skills, availability, photos')
       .order('full_name'),
   ])
 
@@ -88,6 +90,23 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
     : role.age_min ? `${role.age_min}+` : role.age_max ? `≤${role.age_max}` : null
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+
+  const existingTalentIds = (auditions ?? [])
+    .map((a: { talent: { id: string } | null }) => a.talent?.id)
+    .filter((v: string | undefined): v is string => !!v)
+
+  const matches = matchTalentToRole(
+    {
+      gender: role.gender,
+      age_min: role.age_min,
+      age_max: role.age_max,
+      min_height_cm: role.min_height_cm,
+      max_height_cm: role.max_height_cm,
+      required_skills: role.required_skills ?? [],
+      city: role.city,
+    },
+    (talents ?? []) as TalentCandidate[],
+  ).filter(m => !existingTalentIds.includes(m.talent.id))
 
   return (
     <div>
@@ -157,6 +176,9 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
             <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{role.notes}</p>
           </div>
         )}
+
+        {/* Eşleşen Oyuncular — rol kriterlerine göre org'un talent havuzundan otomatik eşleştirme */}
+        <RoleMatches roleId={id} matches={matches} existingTalentIds={existingTalentIds} />
 
         {/* Auditions — client component (davet modal + status update) */}
         <RolAuditions

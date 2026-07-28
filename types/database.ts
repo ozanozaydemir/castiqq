@@ -62,6 +62,10 @@ export type Database = {
           notes: string | null
           status: 'open' | 'casting' | 'filled' | 'cancelled'
           script_url: string | null
+          min_height_cm: number | null
+          max_height_cm: number | null
+          required_skills: string[]
+          city: string | null
           created_at: string
           updated_at: string
         }
