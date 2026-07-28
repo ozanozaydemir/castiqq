@@ -142,6 +142,25 @@ export type Database = {
         Insert: Omit<Database['public']['Tables']['clients']['Row'], 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['clients']['Insert']>
       }
+      client_interactions: {
+        Row: {
+          id: string
+          organization_id: string
+          client_id: string
+          talent_id: string | null
+          interaction_type:
+            | 'tanisma' | 'telefon_gorusmesi' | 'toplanti' | 'oyuncu_onerisi'
+            | 'audition_talebi' | 'okuma_provasi' | 'kostum_provasi'
+            | 'deneme_cekimi' | 'sozlesme_gorusmesi' | 'diger'
+          interaction_date: string
+          notes: string | null
+          created_by: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['client_interactions']['Row'], 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Database['public']['Tables']['client_interactions']['Insert']>
+      }
       bookings: {
         Row: {
           id: string
@@ -337,6 +356,7 @@ export type TalentLanguage = Database['public']['Tables']['talent_languages']['R
 export type TalentExperience = Database['public']['Tables']['talent_experiences']['Row']
 export type TalentEducation = Database['public']['Tables']['talent_education']['Row']
 export type Client = Database['public']['Tables']['clients']['Row']
+export type ClientInteraction = Database['public']['Tables']['client_interactions']['Row']
 export type Booking = Database['public']['Tables']['bookings']['Row']
 export type TalentDocument = Database['public']['Tables']['talent_documents']['Row']
 export type RepresentationPeriod = Database['public']['Tables']['talent_representation_history']['Row']

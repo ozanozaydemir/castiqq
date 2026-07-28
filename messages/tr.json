@@ -1288,7 +1288,37 @@
     "deleteConfirm": "Bu müşteriyi silmek istediğinize emin misiniz?",
     "create": "Kaydet",
     "update": "Güncelle",
-    "saving": "Kaydediliyor..."
+    "saving": "Kaydediliyor...",
+    "bookingHistory": "İş Geçmişi",
+    "noBookings": "Henüz iş kaydı yok.",
+    "interactions": {
+      "sectionTitle": "Etkileşim Geçmişi",
+      "addInteraction": "Etkileşim Ekle",
+      "empty": "Henüz kayıtlı etkileşim yok.",
+      "newTitle": "Yeni Etkileşim",
+      "editTitle": "Etkileşimi Düzenle",
+      "type": "Etkileşim Türü",
+      "types": {
+        "tanisma": "Tanışma",
+        "telefon_gorusmesi": "Telefon Görüşmesi",
+        "toplanti": "Toplantı",
+        "oyuncu_onerisi": "Oyuncu Önerisi",
+        "audition_talebi": "Audition Talebi",
+        "okuma_provasi": "Okuma Provası",
+        "kostum_provasi": "Kostüm Provası",
+        "deneme_cekimi": "Deneme Çekimi",
+        "sozlesme_gorusmesi": "Sözleşme Görüşmesi",
+        "diger": "Diğer"
+      },
+      "date": "Tarih",
+      "relatedTalent": "İlgili Oyuncu",
+      "noTalent": "Yok",
+      "notes": "Notlar",
+      "notesPlaceholder": "Görüşmede konuşulanlar, sonraki adımlar...",
+      "create": "Kaydet",
+      "update": "Güncelle",
+      "saving": "Kaydediliyor..."
+    }
   },
   "calendar": {
     "title": "Takvim",

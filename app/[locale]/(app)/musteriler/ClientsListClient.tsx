@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { useRouter } from '@/i18n/navigation'
+import { useRouter, Link } from '@/i18n/navigation'
 import { Plus, Pencil, Trash2, Building2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { ClientModal } from './ClientModal'
@@ -64,7 +64,7 @@ export function ClientsListClient({ clients }: { clients: ClientWithStats[] }) {
               {clients.map(c => (
                 <tr key={c.id} className="hover:bg-gray-50 transition-colors">
                   <td>
-                    <p className="font-medium text-gray-900">{c.name}</p>
+                    <Link href={`/musteriler/${c.id}`} className="font-medium text-gray-900 hover:text-indigo-600">{c.name}</Link>
                     {c.contact_name && <p className="text-xs text-gray-400">{c.contact_name}</p>}
                   </td>
                   <td className="text-gray-500">{TYPE_LABELS[c.client_type] ?? c.client_type}</td>

@@ -1288,7 +1288,37 @@
     "deleteConfirm": "Are you sure you want to delete this client?",
     "create": "Save",
     "update": "Update",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "bookingHistory": "Booking History",
+    "noBookings": "No bookings recorded yet.",
+    "interactions": {
+      "sectionTitle": "Interaction History",
+      "addInteraction": "Add Interaction",
+      "empty": "No interactions recorded yet.",
+      "newTitle": "New Interaction",
+      "editTitle": "Edit Interaction",
+      "type": "Interaction Type",
+      "types": {
+        "tanisma": "Introduction",
+        "telefon_gorusmesi": "Phone Call",
+        "toplanti": "Meeting",
+        "oyuncu_onerisi": "Talent Proposal",
+        "audition_talebi": "Audition Request",
+        "okuma_provasi": "Table Read",
+        "kostum_provasi": "Costume Fitting",
+        "deneme_cekimi": "Screen Test",
+        "sozlesme_gorusmesi": "Contract Discussion",
+        "diger": "Other"
+      },
+      "date": "Date",
+      "relatedTalent": "Related Talent",
+      "noTalent": "None",
+      "notes": "Notes",
+      "notesPlaceholder": "What was discussed, next steps...",
+      "create": "Save",
+      "update": "Update",
+      "saving": "Saving..."
+    }
   },
   "calendar": {
     "title": "Calendar",
