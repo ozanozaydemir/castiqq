@@ -226,11 +226,11 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
         </div>
       )}
 
-      {/* Content grid */}
-      <div className="px-6 pb-8 grid grid-cols-1 lg:grid-cols-3 gap-4">
-
-        {/* Left column */}
-        <div className="lg:col-span-1 space-y-4">
+      {/* Content — dengeli masonry akışı: hangi kartların dolu olacağı
+          oyuncuya göre değiştiğinden sabit 1/3-2/3 sütun bölünmesi boş
+          sütunlara yol açıyordu (bkz. menajerlik oyuncuları). Bunun yerine
+          kartlar tek bir CSS multi-column akışında dengeleniyor. */}
+      <div className="px-6 pb-8 columns-1 md:columns-2 xl:columns-3 gap-4 [&>*]:mb-4 [&>*]:break-inside-avoid">
           {/* Fotoğraf galerisi */}
           {(talent.photos as string[] | null) && (talent.photos as string[]).length > 0 && (
             <div className="sb-card overflow-hidden">
@@ -368,10 +368,7 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
               )}
             </Section>
           )}
-        </div>
 
-        {/* Right column */}
-        <div className="lg:col-span-2 space-y-4">
           {/* İş Geçmişi / Booking Log (yalnızca menajerlik hesapları) */}
           {isAgency && <BookingsSection talentId={talent.id} bookings={bookings} clients={clients} birthYear={talent.birth_year} talentEmail={talent.email} />}
 
@@ -501,7 +498,6 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
               </div>
             </Section>
           )}
-        </div>
       </div>
     </div>
   )

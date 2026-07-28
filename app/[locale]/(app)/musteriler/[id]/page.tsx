@@ -54,35 +54,31 @@ export default async function MusteriDetailPage({ params }: { params: Promise<{ 
         {client.notes && <p className="text-sm text-gray-500 mt-3 whitespace-pre-line">{client.notes}</p>}
       </div>
 
-      <div className="px-6 pb-8 grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-1 space-y-4">
-          <div className="sb-card p-5">
-            <div className="flex items-center gap-2 mb-4">
-              <Briefcase className="w-4 h-4 text-gray-400" />
-              <h3 className="text-sm font-semibold text-gray-700">{t('bookingHistory')}</h3>
-            </div>
-            {bookingList.length === 0 ? (
-              <p className="text-sm text-gray-400 py-4 text-center">{t('noBookings')}</p>
-            ) : (
-              <div className="space-y-2">
-                {bookingList.map(b => (
-                  <div key={b.id} className="p-2.5 bg-gray-50 rounded-xl border border-gray-100">
-                    <Link href={`/oyuncular/${b.talent_id}`} className="text-sm font-medium text-gray-900 hover:text-indigo-600 truncate block">
-                      {b.talent?.full_name ?? '—'}
-                    </Link>
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      {new Date(b.work_date).toLocaleDateString('tr-TR')} · {b.gross_amount.toLocaleString('tr-TR')} {b.currency}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
+      <div className="px-6 pb-8 columns-1 lg:columns-2 gap-4 [&>*]:mb-4 [&>*]:break-inside-avoid">
+        <div className="sb-card p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Briefcase className="w-4 h-4 text-gray-400" />
+            <h3 className="text-sm font-semibold text-gray-700">{t('bookingHistory')}</h3>
           </div>
+          {bookingList.length === 0 ? (
+            <p className="text-sm text-gray-400 py-4 text-center">{t('noBookings')}</p>
+          ) : (
+            <div className="space-y-2">
+              {bookingList.map(b => (
+                <div key={b.id} className="p-2.5 bg-gray-50 rounded-xl border border-gray-100">
+                  <Link href={`/oyuncular/${b.talent_id}`} className="text-sm font-medium text-gray-900 hover:text-indigo-600 truncate block">
+                    {b.talent?.full_name ?? '—'}
+                  </Link>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {new Date(b.work_date).toLocaleDateString('tr-TR')} · {b.gross_amount.toLocaleString('tr-TR')} {b.currency}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        <div className="lg:col-span-2">
-          <InteractionsSection clientId={client.id} interactions={interactions} talents={talents ?? []} />
-        </div>
+        <InteractionsSection clientId={client.id} interactions={interactions} talents={talents ?? []} />
       </div>
     </div>
   )
