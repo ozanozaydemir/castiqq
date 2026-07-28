@@ -249,10 +249,12 @@ export function AgencyLedger({
                 </div>
                 <p className="text-[10px] text-gray-400 truncate">{j.client} · {j.date}</p>
               </div>
-              <div className="flex items-center gap-3 shrink-0">
-                <div className="text-right hidden sm:block">
-                  <p className="text-[11px] font-semibold text-gray-900 leading-none">{j.gross}</p>
-                  <p className="text-[9px] text-gray-400 mt-0.5">{labels.netLabel} {j.net}</p>
+              {/* Tutarlar her boyutta görünür: bu mockup'ın anlattığı şey
+                  brüt/net farkı, breakpoint arkasına saklanamaz. */}
+              <div className="flex items-center gap-2.5 shrink-0">
+                <div className="text-right">
+                  <p className="text-[11px] font-semibold text-gray-900 leading-none whitespace-nowrap">{j.gross}</p>
+                  <p className="text-[9px] text-gray-400 mt-0.5 whitespace-nowrap">{labels.netLabel} {j.net}</p>
                 </div>
                 <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full whitespace-nowrap ${PAY_TONES[j.tone]}`}>
                   {j.status}
