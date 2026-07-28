@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Badge } from '@/components/ui/Badge'
 import { Pagination } from '@/components/ui/Pagination'
+import { ClickableRow } from '@/components/ClickableRow'
 import { RollerFilters } from './RollerFilters'
 import { Link } from '@/i18n/navigation'
 import { UserSearch } from 'lucide-react'
@@ -44,41 +45,64 @@ async function RollerTable({ searchParams }: { searchParams: SearchParams }) {
     .in('status', ['active', 'draft'])
     .order('title')
 
-  let query = supabase
-    .from('project_roles')
-    .select('id, name, status, gender, age_min, age_max, project_id, projects(id, title)')
+  function buildQuery() {
+    let q = supabase
+      .from('project_roles')
+      .select('id, name, status, gender, age_min, age_max, project_id, projects(id, title)', { count: 'exact' })
 
-  if (searchParams.status)  query = query.eq('status', searchParams.status)
-  if (searchParams.gender)  query = query.eq('gender', searchParams.gender)
-  if (searchParams.project) query = query.eq('project_id', searchParams.project)
+    if (searchParams.status)  q = q.eq('status', searchParams.status)
+    if (searchParams.gender)  q = q.eq('gender', searchParams.gender)
+    if (searchParams.project) q = q.eq('project_id', searchParams.project)
 
-  const sort = searchParams.sort ?? 'newest'
-  if      (sort === 'oldest') query = query.order('created_at', { ascending: true })
-  else if (sort === 'az')     query = query.order('name', { ascending: true })
-  else if (sort === 'za')     query = query.order('name', { ascending: false })
-  else                        query = query.order('created_at', { ascending: false })
+    const sort = searchParams.sort ?? 'newest'
+    if      (sort === 'oldest') q = q.order('created_at', { ascending: true })
+    else if (sort === 'az')     q = q.order('name', { ascending: true })
+    else if (sort === 'za')     q = q.order('name', { ascending: false })
+    else                        q = q.order('created_at', { ascending: false })
 
-  const { data: roles } = await query as { data: Role[] | null }
-  let list = roles ?? []
-
-  // Client-side text search (rol adı veya proje adı)
-  if (searchParams.q) {
-    const q = searchParams.q.toLowerCase()
-    list = list.filter(r =>
-      r.name.toLowerCase().includes(q) ||
-      (r.projects?.title ?? '').toLowerCase().includes(q)
-    )
+    return q
   }
 
   const page = Math.max(1, Number(searchParams.page) || 1)
-  const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE))
-  const pageList = list.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+  let pageList: Role[]
+  let totalCount: number
+
+  if (searchParams.q) {
+    // Serbest metin arama rol adı + proje adı üzerinde JOIN'li çalışmadığı
+    // için DB-side sayfalama yapılamıyor — tüm eşleşen satırlar çekilip
+    // JS'de filtrelenip sayfalanıyor.
+    const { data: roles } = await buildQuery() as { data: Role[] | null; count: number | null }
+    const q = searchParams.q.toLowerCase()
+    const filtered = (roles ?? []).filter(r =>
+      r.name.toLowerCase().includes(q) ||
+      (r.projects?.title ?? '').toLowerCase().includes(q)
+    )
+    totalCount = filtered.length
+    pageList = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+  } else {
+    const { data: roles, count } = await buildQuery()
+      .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1) as { data: Role[] | null; count: number | null }
+    pageList = roles ?? []
+    totalCount = count ?? 0
+  }
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
+
+  const { data: auditionCounts } = await supabase
+    .from('auditions')
+    .select('role_id')
+    .in('role_id', pageList.map(r => r.id))
+
+  const applicationCountByRole = new Map<string, number>()
+  for (const a of auditionCounts ?? []) {
+    applicationCountByRole.set(a.role_id, (applicationCountByRole.get(a.role_id) ?? 0) + 1)
+  }
 
   return (
     <>
-      <RollerFilters total={list.length} projects={projects ?? []} />
+      <RollerFilters total={totalCount} projects={projects ?? []} />
 
-      {list.length === 0 ? (
+      {pageList.length === 0 ? (
         <div className="sb-card flex flex-col items-center justify-center py-16 text-center">
           <UserSearch className="w-10 h-10 text-gray-300 mb-3" />
           <p className="text-gray-500 font-medium">{t('notFound')}</p>
@@ -94,6 +118,7 @@ async function RollerTable({ searchParams }: { searchParams: SearchParams }) {
                 <th>{t('colStatus')}</th>
                 <th>{t('colGender')}</th>
                 <th>{t('colAgeRange')}</th>
+                <th>{t('colApplications')}</th>
               </tr>
             </thead>
             <tbody>
@@ -105,26 +130,20 @@ async function RollerTable({ searchParams }: { searchParams: SearchParams }) {
                   : r.age_max ? `≤${r.age_max}`
                   : '—'
                 return (
-                  <tr key={r.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="relative">
-                      <Link
-                        href={`/roller/${r.id}`}
-                        className="font-medium text-gray-900 hover:text-indigo-600 after:absolute after:inset-0"
-                      >
-                        {r.name}
-                      </Link>
-                    </td>
+                  <ClickableRow key={r.id} href={`/roller/${r.id}`} className="hover:bg-gray-50 transition-colors">
+                    <td className="font-medium text-gray-900">{r.name}</td>
                     <td>
-                      <Link href={`/projeler/${r.project_id}`} className="relative z-10 text-gray-500 hover:text-indigo-600">
+                      <Link href={`/projeler/${r.project_id}`} className="text-gray-500 hover:text-indigo-600">
                         {r.projects?.title ?? '—'}
                       </Link>
                     </td>
-                    <td className="relative z-10">
+                    <td>
                       <Badge variant={status.variant}>{status.label}</Badge>
                     </td>
                     <td className="text-gray-500">{GENDER_LABELS[r.gender ?? ''] ?? r.gender ?? '—'}</td>
                     <td className="text-gray-500">{age}</td>
-                  </tr>
+                    <td className="text-gray-500">{applicationCountByRole.get(r.id) ?? 0}</td>
+                  </ClickableRow>
                 )
               })}
             </tbody>

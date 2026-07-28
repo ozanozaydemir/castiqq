@@ -76,12 +76,6 @@ export function OnboardingCard({ hasProjects, hasTalent, hasAuditions }: Onboard
           ))}
         </ul>
       )}
-
-      <div className="mt-4 flex justify-end">
-        <button onClick={dismiss} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
-          {t('dismiss')}
-        </button>
-      </div>
     </div>
   )
 }

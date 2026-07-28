@@ -455,7 +455,9 @@
     "colType": "Type",
     "colStatus": "Status",
     "colDeadline": "Deadline",
-    "colCreated": "Created"
+    "colCreated": "Created",
+    "colActions": "Actions",
+    "quickStatusChange": "Quick Status"
   },
   "roles": {
     "title": "Roles",

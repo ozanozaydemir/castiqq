@@ -455,7 +455,9 @@
     "colType": "Tür",
     "colStatus": "Durum",
     "colDeadline": "Son Başvuru",
-    "colCreated": "Oluşturulma"
+    "colCreated": "Oluşturulma",
+    "colActions": "İşlem",
+    "quickStatusChange": "Hızlı Durum"
   },
   "roles": {
     "title": "Roller",

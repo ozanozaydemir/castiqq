@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Pagination } from '@/components/ui/Pagination'
-import { Link } from '@/i18n/navigation'
+import { ClickableRow } from '@/components/ClickableRow'
 import { Briefcase, Download } from 'lucide-react'
 import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
@@ -78,12 +78,8 @@ async function IslerTable({ searchParams }: { searchParams: SearchParams }) {
             const today = new Date().toISOString().split('T')[0]
             const overdue = b.payment_status !== 'paid' && b.payment_due_date !== null && b.payment_due_date < today
             return (
-              <tr key={b.id} className="hover:bg-gray-50 transition-colors">
-                <td className="relative">
-                  <Link href={`/oyuncular/${b.talent_id}`} className="font-medium text-gray-900 hover:text-indigo-600 after:absolute after:inset-0">
-                    {b.talent?.full_name ?? '—'}
-                  </Link>
-                </td>
+              <ClickableRow key={b.id} href={`/oyuncular/${b.talent_id}`} className="hover:bg-gray-50 transition-colors">
+                <td className="font-medium text-gray-900">{b.talent?.full_name ?? '—'}</td>
                 <td className="text-gray-600">{b.client_name}{b.title && <span className="text-gray-400"> · {b.title}</span>}</td>
                 <td className="text-gray-500">{t(JOB_TYPE_KEYS[b.job_type] ?? 'jobTypes.diger')}</td>
                 <td className="text-gray-500">
@@ -106,7 +102,7 @@ async function IslerTable({ searchParams }: { searchParams: SearchParams }) {
                 <td>
                   <IslerRowActions bookingId={b.id} talentId={b.talent_id} paymentStatus={b.payment_status} />
                 </td>
-              </tr>
+              </ClickableRow>
             )
           })}
         </tbody>

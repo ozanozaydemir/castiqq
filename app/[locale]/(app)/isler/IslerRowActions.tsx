@@ -26,7 +26,7 @@ export function IslerRowActions({ bookingId, talentId, paymentStatus }: { bookin
   }
 
   return (
-    <div className="flex items-center gap-2 justify-end relative z-10">
+    <div className="flex items-center gap-2 justify-end">
       <select
         value={paymentStatus}
         disabled={isPending}

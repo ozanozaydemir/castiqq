@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/Badge'
 import { ClickableRow } from '@/components/ClickableRow'
 import { Pagination } from '@/components/ui/Pagination'
 import { ProjelerFilters } from './ProjelerFilters'
+import { ProjeRowActions } from './ProjeRowActions'
 import { Link } from '@/i18n/navigation'
 import { Plus, Film } from 'lucide-react'
 import { Suspense } from 'react'
@@ -73,6 +74,7 @@ async function ProjelerTable({ searchParams }: { searchParams: SearchParams }) {
                 <th>{tp('colStatus')}</th>
                 <th>{tp('colDeadline')}</th>
                 <th>{tp('colCreated')}</th>
+                <th>{tp('colActions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -85,6 +87,7 @@ async function ProjelerTable({ searchParams }: { searchParams: SearchParams }) {
                     <td><Badge variant={status.variant}>{status.label}</Badge></td>
                     <td className="text-gray-500">{p.deadline ?? '—'}</td>
                     <td className="text-gray-500">{new Date(p.created_at).toLocaleDateString('tr-TR')}</td>
+                    <td><ProjeRowActions projectId={p.id} currentStatus={p.status} /></td>
                   </ClickableRow>
                 )
               })}
