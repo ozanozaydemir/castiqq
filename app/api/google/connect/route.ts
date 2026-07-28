@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { randomBytes } from 'crypto'
 import { requireOrg } from '@/lib/require-org'
-import { createGoogleOAuthClient, GOOGLE_SHEETS_SCOPES } from '@/lib/google'
+import { createGoogleOAuthClient, GOOGLE_SCOPES } from '@/lib/google'
 
 export async function GET() {
   await requireOrg()
@@ -12,7 +12,7 @@ export async function GET() {
   const url = oauth2Client.generateAuthUrl({
     access_type: 'offline',
     prompt: 'consent',
-    scope: GOOGLE_SHEETS_SCOPES,
+    scope: GOOGLE_SCOPES,
     state,
   })
 

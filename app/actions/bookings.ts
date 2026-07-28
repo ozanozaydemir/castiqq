@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { requireOrg } from '@/lib/require-org'
 import { findOrCreateClient } from '@/app/actions/clients'
+import { syncBookingToGoogleCalendar, deleteGoogleCalendarEvent } from '@/lib/googleCalendar'
 
 export type ActionState = { error?: string; success?: boolean } | null
 
@@ -44,7 +45,7 @@ export async function createBooking(talentId: string, _: ActionState, formData: 
 
   const { data: talent } = await supabase
     .from('talent')
-    .select('commission_rate, tax_status')
+    .select('full_name, commission_rate, tax_status')
     .eq('id', talentId)
     .single()
 
@@ -57,8 +58,9 @@ export async function createBooking(talentId: string, _: ActionState, formData: 
 
   const clientId = await findOrCreateClient(supabase, orgId, clientName)
   const isOngoing = formData.get('is_ongoing') === 'on'
+  const workDateEnd = isOngoing ? null : str(formData.get('work_date_end'))
 
-  const { error } = await supabase.from('bookings').insert({
+  const { data: inserted, error } = await supabase.from('bookings').insert({
     organization_id: orgId,
     talent_id: talentId,
     client_id: clientId,
@@ -66,7 +68,7 @@ export async function createBooking(talentId: string, _: ActionState, formData: 
     job_type: jobType,
     title: str(formData.get('title')),
     work_date: workDate,
-    work_date_end: isOngoing ? null : str(formData.get('work_date_end')),
+    work_date_end: workDateEnd,
     is_ongoing: isOngoing,
     gross_amount: grossAmount,
     currency: str(formData.get('currency')) ?? 'TRY',
@@ -84,10 +86,23 @@ export async function createBooking(talentId: string, _: ActionState, formData: 
     exclusivity_notes: jobType === 'reklam' ? str(formData.get('exclusivity_notes')) : null,
     notes: str(formData.get('notes')),
     created_by: userId,
-  })
+  }).select('id').single()
 
   if (error) return { error: error.message }
   revalidatePath(`/oyuncular/${talentId}`)
+
+  // Google Calendar senkronizasyonu bağlantı yoksa ya da başarısız olursa
+  // booking kaydını engellememeli — best-effort.
+  try {
+    const googleEventId = await syncBookingToGoogleCalendar(orgId, {
+      client_name: clientName, title: str(formData.get('title')), job_type: jobType,
+      work_date: workDate, work_date_end: workDateEnd, is_ongoing: isOngoing, google_event_id: null,
+    }, talent?.full_name ?? 'Oyuncu')
+    if (googleEventId) await supabase.from('bookings').update({ google_event_id: googleEventId }).eq('id', inserted.id)
+  } catch (err) {
+    console.error('[createBooking] google calendar sync error', (err as Error).message)
+  }
+
   return { success: true }
 }
 
@@ -105,13 +120,14 @@ export async function updateBooking(bookingId: string, talentId: string, _: Acti
 
   const { data: existing } = await supabase
     .from('bookings')
-    .select('commission_rate, talent:talent_id(tax_status)')
+    .select('commission_rate, google_event_id, talent:talent_id(full_name, tax_status)')
     .eq('id', bookingId)
     .single()
 
   const commissionRate = existing?.commission_rate ?? null
   const commissionAmount = commissionRate !== null ? Math.round(grossAmount * (commissionRate / 100) * 100) / 100 : null
-  const taxStatus = (existing?.talent as unknown as { tax_status: string } | null)?.tax_status ?? null
+  const talentInfo = existing?.talent as unknown as { full_name: string; tax_status: string } | null
+  const taxStatus = talentInfo?.tax_status ?? null
 
   const { withholdingRate, withholdingAmount, netAmount, amountPaid } = computeFinancials(
     grossAmount, num(formData.get('withholding_rate')), taxStatus, paymentStatus, num(formData.get('amount_paid')),
@@ -119,6 +135,7 @@ export async function updateBooking(bookingId: string, talentId: string, _: Acti
 
   const clientId = await findOrCreateClient(supabase, orgId, clientName)
   const isOngoing = formData.get('is_ongoing') === 'on'
+  const workDateEnd = isOngoing ? null : str(formData.get('work_date_end'))
 
   const { error } = await supabase.from('bookings').update({
     client_id: clientId,
@@ -126,7 +143,7 @@ export async function updateBooking(bookingId: string, talentId: string, _: Acti
     job_type: jobType,
     title: str(formData.get('title')),
     work_date: workDate,
-    work_date_end: isOngoing ? null : str(formData.get('work_date_end')),
+    work_date_end: workDateEnd,
     is_ongoing: isOngoing,
     gross_amount: grossAmount,
     currency: str(formData.get('currency')) ?? 'TRY',
@@ -147,13 +164,38 @@ export async function updateBooking(bookingId: string, talentId: string, _: Acti
 
   if (error) return { error: error.message }
   revalidatePath(`/oyuncular/${talentId}`)
+
+  try {
+    const googleEventId = await syncBookingToGoogleCalendar(orgId, {
+      client_name: clientName, title: str(formData.get('title')), job_type: jobType,
+      work_date: workDate, work_date_end: workDateEnd, is_ongoing: isOngoing,
+      google_event_id: existing?.google_event_id ?? null,
+    }, talentInfo?.full_name ?? 'Oyuncu')
+    if (googleEventId !== existing?.google_event_id) {
+      await supabase.from('bookings').update({ google_event_id: googleEventId }).eq('id', bookingId)
+    }
+  } catch (err) {
+    console.error('[updateBooking] google calendar sync error', (err as Error).message)
+  }
+
   return { success: true }
 }
 
 export async function deleteBooking(bookingId: string, talentId: string) {
-  const { supabase } = await requireOrg()
+  const { supabase, orgId } = await requireOrg()
+
+  const { data: booking } = await supabase.from('bookings').select('google_event_id').eq('id', bookingId).single()
+
   await supabase.from('bookings').delete().eq('id', bookingId)
   revalidatePath(`/oyuncular/${talentId}`)
+
+  if (booking?.google_event_id) {
+    try {
+      await deleteGoogleCalendarEvent(orgId, booking.google_event_id)
+    } catch (err) {
+      console.error('[deleteBooking] google calendar delete error', (err as Error).message)
+    }
+  }
 }
 
 export async function updateBookingPaymentStatus(bookingId: string, talentId: string, paymentStatus: string) {

@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from '@/i18n/navigation'
-import { Plus, Pencil, Trash2, Briefcase } from 'lucide-react'
+import { Plus, Pencil, Trash2, Briefcase, CalendarCheck } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { BookingModal } from './BookingModal'
 import { createBooking, updateBooking, deleteBooking, updateBookingPaymentStatus } from '@/app/actions/bookings'
@@ -78,6 +78,9 @@ export function BookingsSection({ talentId, bookings, clients = [], birthYear }:
                         {' · '}{formatDate(b.work_date)}
                         {b.is_ongoing && (
                           <span className="ml-1.5 text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-purple-50 text-purple-600">{t('ongoingBadge')}</span>
+                        )}
+                        {b.google_event_id && (
+                          <CalendarCheck className="w-3 h-3 text-indigo-400 inline-block ml-1.5 align-text-bottom" aria-label={t('syncedToGoogle')} />
                         )}
                       </p>
                     </div>

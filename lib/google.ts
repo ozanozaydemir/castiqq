@@ -1,9 +1,13 @@
 import { google } from 'googleapis'
 import { createAdminClient } from '@/lib/supabase/admin'
 
-export const GOOGLE_SHEETS_SCOPES = [
+export const GOOGLE_SCOPES = [
   'https://www.googleapis.com/auth/spreadsheets',
   'https://www.googleapis.com/auth/drive.file',
+  // Roster booking'lerini Google Calendar'a senkronize etmek için —
+  // tam takvim erişimi değil, sadece etkinlik oluşturma/güncelleme/silme
+  // (bağlı hesabın "primary" takviminde, [Castiqq] önekiyle).
+  'https://www.googleapis.com/auth/calendar.events',
   // Bağlı hesabın email'ini "Bağlı hesap: x@gmail.com" olarak göstermek için —
   // bu olmadan userinfo endpoint'i 401 döner ve tüm bağlantı iptal olurdu.
   'openid',

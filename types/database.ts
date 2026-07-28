@@ -164,6 +164,7 @@ export type Database = {
           payment_status: 'pending' | 'partial' | 'paid'
           payment_flow: 'client_to_agency' | 'client_to_talent'
           commission_collected: boolean
+          google_event_id: string | null
           notes: string | null
           created_by: string | null
           created_at: string

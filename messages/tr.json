@@ -912,7 +912,8 @@
       "paymentFlowHintAgency": "Yapım şirketi ödemeyi ajansa yapar, ajans komisyonunu keser ve net tutarı oyuncuya gönderir.",
       "paymentFlowHintTalent": "Yapım şirketi ödemeyi doğrudan oyuncuya yapar — ajansın komisyonunu ayrıca oyuncudan tahsil etmesi gerekir.",
       "commissionCollected": "Komisyon tahsil edildi",
-      "commissionNotCollected": "Komisyon henüz tahsil edilmedi"
+      "commissionNotCollected": "Komisyon henüz tahsil edilmedi",
+      "syncedToGoogle": "Google Calendar'a senkronize edildi"
     },
     "documents": {
       "sectionTitle": "Belgeler",
@@ -1107,8 +1108,8 @@
       "productIdMissing": "Ürün ID yapılandırılmamış."
     },
     "google": {
-      "description": "Oyuncu listenizi Google Sheets'e aktarın veya mevcut bir tablodan toplu içe aktarın.",
-      "connectCta": "Google Sheets'e Bağlan",
+      "description": "Oyuncu listenizi Google Sheets'e aktarın veya mevcut bir tablodan toplu içe aktarın. Menajerlik hesaplarında ayrıca roster işleri Google Calendar'a otomatik senkronize edilir.",
+      "connectCta": "Google'a Bağlan",
       "disconnectCta": "Bağlantıyı Kes",
       "connectedAs": "Bağlı hesap: {email}",
       "connectedSuccess": "Google Sheets bağlantısı başarılı.",

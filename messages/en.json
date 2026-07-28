@@ -912,7 +912,8 @@
       "paymentFlowHintAgency": "The client pays the agency, which deducts its commission and forwards the net amount to the talent.",
       "paymentFlowHintTalent": "The client pays the talent directly — the agency must separately collect its commission from the talent.",
       "commissionCollected": "Commission collected",
-      "commissionNotCollected": "Commission not yet collected"
+      "commissionNotCollected": "Commission not yet collected",
+      "syncedToGoogle": "Synced to Google Calendar"
     },
     "documents": {
       "sectionTitle": "Documents",
@@ -1107,8 +1108,8 @@
       "productIdMissing": "Product ID not configured."
     },
     "google": {
-      "description": "Export your talent list to Google Sheets or bulk import from an existing spreadsheet.",
-      "connectCta": "Connect Google Sheets",
+      "description": "Export your talent list to Google Sheets or bulk-import from an existing sheet. For agency accounts, roster bookings are also synced automatically to Google Calendar.",
+      "connectCta": "Connect Google",
       "disconnectCta": "Disconnect",
       "connectedAs": "Connected account: {email}",
       "connectedSuccess": "Google Sheets connected successfully.",
