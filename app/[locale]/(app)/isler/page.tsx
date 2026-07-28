@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Pagination } from '@/components/ui/Pagination'
 import { Link } from '@/i18n/navigation'
-import { Briefcase } from 'lucide-react'
+import { Briefcase, Download } from 'lucide-react'
 import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
 import { IslerFilters } from './IslerFilters'
@@ -97,7 +97,12 @@ async function IslerTable({ searchParams }: { searchParams: SearchParams }) {
                     <span className="text-gray-400"> ({b.amount_paid.toLocaleString('tr-TR')} {jt('paidShort')})</span>
                   )}
                 </td>
-                <td className="text-gray-500">{b.commission_amount !== null ? `${b.commission_amount.toLocaleString('tr-TR')} ${b.currency}` : '—'}</td>
+                <td className="text-gray-500">
+                  {b.commission_amount !== null ? `${b.commission_amount.toLocaleString('tr-TR')} ${b.currency}` : '—'}
+                  {b.payment_flow === 'client_to_talent' && !b.commission_collected && (
+                    <span className="ml-1.5 text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-600">{jt('commissionNotCollectedBadge')}</span>
+                  )}
+                </td>
                 <td>
                   <IslerRowActions bookingId={b.id} talentId={b.talent_id} paymentStatus={b.payment_status} />
                 </td>
@@ -127,7 +132,15 @@ export default async function IslerPage({
 
   return (
     <div>
-      <PageHeader title={t('title')} description={t('description')} />
+      <PageHeader
+        title={t('title')}
+        description={t('description')}
+        actions={
+          <a href="/api/export/bookings" className="sb-btn-secondary">
+            <Download className="w-4 h-4" /> {t('exportCsv')}
+          </a>
+        }
+      />
 
       <div className="p-6">
         <IslerFilters />

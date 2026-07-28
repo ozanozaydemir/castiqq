@@ -56,6 +56,7 @@ export function BookingModal({
   const [withholdingRate, setWithholdingRate] = useState(editingBooking?.withholding_rate?.toString() ?? '')
   const [paymentStatus, setPaymentStatus] = useState<string>(editingBooking?.payment_status ?? 'pending')
   const [amountPaid, setAmountPaid] = useState(editingBooking?.amount_paid?.toString() ?? '')
+  const [paymentFlow, setPaymentFlow] = useState<string>(editingBooking?.payment_flow ?? 'client_to_agency')
 
   const [dateConflicts, setDateConflicts] = useState<ExistingBookingRow[]>([])
   const [exclusivityConflicts, setExclusivityConflicts] = useState<ExistingBookingRow[]>([])
@@ -257,6 +258,27 @@ export function BookingModal({
               <label className="block text-sm font-medium text-gray-700">{t('netAmount')}</label>
               <div className="sb-input bg-gray-50 text-gray-600 flex items-center">{netAmount.toLocaleString('tr-TR')}</div>
             </div>
+
+            <div className="sm:col-span-2 space-y-1.5">
+              <label className="block text-sm font-medium text-gray-700">{t('paymentFlow')}</label>
+              <select name="payment_flow" value={paymentFlow} onChange={e => setPaymentFlow(e.target.value)} className="sb-input">
+                <option value="client_to_agency">{t('paymentFlows.clientToAgency')}</option>
+                <option value="client_to_talent">{t('paymentFlows.clientToTalent')}</option>
+              </select>
+              <p className="text-xs text-gray-400">{paymentFlow === 'client_to_agency' ? t('paymentFlowHintAgency') : t('paymentFlowHintTalent')}</p>
+            </div>
+
+            {paymentFlow === 'client_to_talent' && (
+              <label className="sm:col-span-2 flex items-center gap-2.5 text-sm text-gray-700 cursor-pointer w-fit">
+                <input
+                  type="checkbox"
+                  name="commission_collected"
+                  defaultChecked={editingBooking?.commission_collected ?? false}
+                  className="w-4 h-4 rounded border-gray-300 text-indigo-500 focus:ring-indigo-400"
+                />
+                {t('commissionCollected')}
+              </label>
+            )}
 
             {jobType === 'reklam' && (
               <>

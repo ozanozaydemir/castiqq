@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Link } from '@/i18n/navigation'
-import { Users, UserPlus, TriangleAlert, FileSignature, Banknote } from 'lucide-react'
+import { Users, UserPlus, TriangleAlert, FileSignature, Banknote, ListTodo } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import type { Booking } from '@/types/database'
 
@@ -30,6 +30,9 @@ export default async function GenelBakisPage() {
     { data: unpaidBookings },
     { data: expiringDocuments },
     { data: activeExclusivities },
+    { data: uncollectedCommissions },
+    { data: outstandingAdvances },
+    { data: overdueTasks },
   ] = await Promise.all([
     supabase.from('talent').select('*', { count: 'exact', head: true }).eq('organization_id', orgId!),
     supabase.from('talent').select('*', { count: 'exact', head: true }).eq('organization_id', orgId!).eq('availability', 'available'),
@@ -39,6 +42,9 @@ export default async function GenelBakisPage() {
     supabase.from('bookings').select('*, talent(full_name)').neq('payment_status', 'paid').order('payment_due_date') as Promise<{ data: (Booking & { talent: { full_name: string } | null })[] | null }>,
     supabase.from('talent_documents').select('id, talent_id, document_type, expiry_date, talent(full_name)').eq('organization_id', orgId!).not('expiry_date', 'is', null).lte('expiry_date', thirtyDaysLater).order('expiry_date') as Promise<{ data: { id: string; talent_id: string; document_type: string; expiry_date: string; talent: { full_name: string } | null }[] | null }>,
     supabase.from('bookings').select('id, talent_id, client_name, exclusivity_end_date, exclusivity_notes, talent(full_name)').gte('exclusivity_end_date', today).order('exclusivity_end_date') as Promise<{ data: { id: string; talent_id: string; client_name: string; exclusivity_end_date: string; exclusivity_notes: string | null; talent: { full_name: string } | null }[] | null }>,
+    supabase.from('bookings').select('id, talent_id, client_name, commission_amount, currency, talent(full_name)').eq('payment_flow', 'client_to_talent').eq('commission_collected', false).not('commission_amount', 'is', null) as Promise<{ data: { id: string; talent_id: string; client_name: string; commission_amount: number; currency: string; talent: { full_name: string } | null }[] | null }>,
+    supabase.from('talent_advances').select('amount, currency').eq('organization_id', orgId!).eq('is_settled', false) as Promise<{ data: { amount: number; currency: string }[] | null }>,
+    supabase.from('agency_tasks').select('id, title, due_date').eq('organization_id', orgId!).eq('is_done', false).not('due_date', 'is', null).lte('due_date', today) as Promise<{ data: { id: string; title: string; due_date: string }[] | null }>,
   ])
 
   const AVAIL: Record<string, string> = { available: 'bg-green-400', busy: 'bg-amber-400', unavailable: 'bg-gray-300' }
@@ -53,6 +59,13 @@ export default async function GenelBakisPage() {
   }
   const overdueBookings = unpaid.filter(b => b.payment_due_date && b.payment_due_date < today).slice(0, 5)
   const exclusivities = activeExclusivities ?? []
+  const uncollected = uncollectedCommissions ?? []
+  const advanceTotals: Record<string, number> = {}
+  for (const a of outstandingAdvances ?? []) {
+    advanceTotals[a.currency] = (advanceTotals[a.currency] ?? 0) + Number(a.amount)
+  }
+  const hasAdvances = Object.keys(advanceTotals).length > 0
+  const tasksDue = overdueTasks ?? []
 
   const contracts = expiringContracts ?? []
   const documents = expiringDocuments ?? []
@@ -138,8 +151,42 @@ export default async function GenelBakisPage() {
           </div>
         )}
 
+        {/* Tahsil edilmemiş komisyon uyarısı */}
+        {uncollected.length > 0 && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 flex items-start gap-3">
+            <Banknote className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-amber-800 mb-1">{t('uncollectedCommissionTitle', { count: uncollected.length })}</p>
+              <div className="flex flex-wrap gap-x-4 gap-y-0.5">
+                {uncollected.map(u => (
+                  <Link key={u.id} href={`/oyuncular/${u.talent_id}`} className="text-xs text-amber-700 hover:text-amber-900 hover:underline">
+                    {u.talent?.full_name ?? '—'} — {u.client_name} ({Number(u.commission_amount).toLocaleString('tr-TR')} {u.currency})
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Gecikmiş görev uyarısı */}
+        {tasksDue.length > 0 && (
+          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 flex items-start gap-3">
+            <ListTodo className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-red-800 mb-1">{t('tasksDueTitle', { count: tasksDue.length })}</p>
+              <div className="flex flex-wrap gap-x-4 gap-y-0.5">
+                {tasksDue.map(tk => (
+                  <Link key={tk.id} href="/gorevler" className="text-xs text-red-700 hover:text-red-900 hover:underline">
+                    {tk.title} — {new Date(tk.due_date).toLocaleDateString('tr-TR')}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
           <Link href="/oyuncular" className="sb-card p-5 hover:border-indigo-200 transition-colors group">
             <div className="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center mb-3">
               <Users className="w-4 h-4 text-indigo-500" />
@@ -171,6 +218,15 @@ export default async function GenelBakisPage() {
                 : Object.entries(totalsByCurrency).map(([cur, amt]) => `${amt.toLocaleString('tr-TR')} ${cur}`).join(' · ')}
             </div>
             <div className="text-sm text-gray-500 mt-0.5">{t('stats.pendingPayments')}</div>
+          </div>
+          <div className="sb-card p-5">
+            <div className="w-9 h-9 rounded-lg bg-purple-50 flex items-center justify-center mb-3">
+              <Banknote className="w-4 h-4 text-purple-500" />
+            </div>
+            <div className="text-lg font-bold text-gray-900 leading-tight">
+              {!hasAdvances ? '—' : Object.entries(advanceTotals).map(([cur, amt]) => `${amt.toLocaleString('tr-TR')} ${cur}`).join(' · ')}
+            </div>
+            <div className="text-sm text-gray-500 mt-0.5">{t('stats.outstandingAdvances')}</div>
           </div>
         </div>
 

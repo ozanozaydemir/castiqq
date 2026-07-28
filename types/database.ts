@@ -112,6 +112,7 @@ export type Database = {
           tax_status: 'belirtilmedi' | 'serbest_meslek' | 'sahis_sirketi' | 'sirket' | 'ucret_bordrosu'
           tax_id: string | null
           assigned_to: string | null
+          self_service_token: string
           union_member: boolean
           union_name: string | null
           union_id_number: string | null
@@ -161,6 +162,8 @@ export type Database = {
           exclusivity_notes: string | null
           payment_due_date: string | null
           payment_status: 'pending' | 'partial' | 'paid'
+          payment_flow: 'client_to_agency' | 'client_to_talent'
+          commission_collected: boolean
           notes: string | null
           created_by: string | null
           created_at: string
@@ -184,6 +187,40 @@ export type Database = {
         }
         Insert: Omit<Database['public']['Tables']['talent_documents']['Row'], 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['talent_documents']['Insert']>
+      }
+      agency_tasks: {
+        Row: {
+          id: string
+          organization_id: string
+          talent_id: string | null
+          title: string
+          due_date: string | null
+          is_done: boolean
+          created_by: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['agency_tasks']['Row'], 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Database['public']['Tables']['agency_tasks']['Insert']>
+      }
+      talent_advances: {
+        Row: {
+          id: string
+          organization_id: string
+          talent_id: string
+          booking_id: string | null
+          type: 'avans' | 'masraf'
+          amount: number
+          currency: string
+          date: string
+          description: string | null
+          is_settled: boolean
+          created_by: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['talent_advances']['Row'], 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Database['public']['Tables']['talent_advances']['Insert']>
       }
       talent_representation_history: {
         Row: {
@@ -298,6 +335,8 @@ export type Client = Database['public']['Tables']['clients']['Row']
 export type Booking = Database['public']['Tables']['bookings']['Row']
 export type TalentDocument = Database['public']['Tables']['talent_documents']['Row']
 export type RepresentationPeriod = Database['public']['Tables']['talent_representation_history']['Row']
+export type TalentAdvance = Database['public']['Tables']['talent_advances']['Row']
+export type AgencyTask = Database['public']['Tables']['agency_tasks']['Row']
 export type Audition = Database['public']['Tables']['auditions']['Row']
 export type Profile = Database['public']['Tables']['profiles']['Row']
 export type Organization = Database['public']['Tables']['organizations']['Row']

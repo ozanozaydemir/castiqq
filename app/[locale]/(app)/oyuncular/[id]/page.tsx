@@ -17,7 +17,9 @@ import { ContractDownloadButton } from './ContractDownloadButton'
 import { BookingsSection } from './BookingsSection'
 import { DocumentsSection } from './DocumentsSection'
 import { RepresentationHistorySection } from './RepresentationHistorySection'
-import type { Booking, TalentDocument, RepresentationPeriod } from '@/types/database'
+import { AdvancesSection } from './AdvancesSection'
+import { SelfServiceLinkCard } from './SelfServiceLinkCard'
+import type { Booking, TalentDocument, RepresentationPeriod, TalentAdvance } from '@/types/database'
 
 const LANG_LEVEL_LABELS: Record<string, string> = {
   native: 'Ana dil', C2: 'C2', C1: 'C1', B2: 'B2', B1: 'B1', A2: 'A2', A1: 'A1',
@@ -96,7 +98,7 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
     ? await supabase.from('profiles').select('full_name').eq('id', talent.assigned_to).single()
     : { data: null }
 
-  const [langRes, expRes, eduRes, audRes, colRes, bookingsRes, documentsRes, clientsRes, repHistoryRes] = await Promise.all([
+  const [langRes, expRes, eduRes, audRes, colRes, bookingsRes, documentsRes, clientsRes, repHistoryRes, advancesRes] = await Promise.all([
     supabase.from('talent_languages').select('*').eq('talent_id', id).order('sort_order'),
     supabase.from('talent_experiences').select('*').eq('talent_id', id).order('sort_order'),
     supabase.from('talent_education').select('*').eq('talent_id', id).order('sort_order'),
@@ -117,6 +119,9 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
     isAgency
       ? supabase.from('talent_representation_history').select('*').eq('talent_id', id).order('start_date', { ascending: false })
       : Promise.resolve({ data: [] as RepresentationPeriod[] }),
+    isAgency
+      ? supabase.from('talent_advances').select('*').eq('talent_id', id).order('date', { ascending: false })
+      : Promise.resolve({ data: [] as TalentAdvance[] }),
   ])
   const languages = (langRes.data ?? []) as TalentLanguage[]
   const experiences = (expRes.data ?? []) as TalentExperience[]
@@ -136,6 +141,7 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
   const documents = (documentsRes.data ?? []) as TalentDocument[]
   const clients = (clientsRes.data ?? []) as { id: string; name: string }[]
   const repHistory = (repHistoryRes.data ?? []) as RepresentationPeriod[]
+  const advances = (advancesRes.data ?? []) as TalentAdvance[]
   const totalAuditions = audList.length
   const callbackCount = audList.filter(a => a.status === 'shortlisted' || a.status === 'selected').length
   const callbackRate = totalAuditions > 0 ? Math.round((callbackCount / totalAuditions) * 100) : null
@@ -336,6 +342,12 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
 
           {/* Temsil Geçmişi (yalnızca menajerlik hesapları) */}
           {isAgency && <RepresentationHistorySection talentId={talent.id} periods={repHistory} />}
+
+          {/* Avans & Masraf (yalnızca menajerlik hesapları) */}
+          {isAgency && <AdvancesSection talentId={talent.id} advances={advances} />}
+
+          {/* Self-servis profil linki (yalnızca menajerlik hesapları) */}
+          {isAgency && <SelfServiceLinkCard token={talent.self_service_token} />}
 
           {/* Skills & Licenses */}
           {((talent.skills?.length ?? 0) > 0 || (talent.licenses?.length ?? 0) > 0) && (

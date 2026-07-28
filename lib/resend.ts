@@ -233,3 +233,43 @@ function videoNotifHtmlEN(
     <a class="btn" href="${dashboardUrl}">Watch Video →</a>
   `)
 }
+
+// ── Ajans Günlük Özet (Genel Bakış uyarıları) ────────────────────────
+export type AgencyDigestItem = { label: string; count: number }
+
+export async function sendAgencyDigestEmail(
+  to: string,
+  orgName: string,
+  items: AgencyDigestItem[],
+  locale: 'tr' | 'en' = 'tr',
+) {
+  const overviewUrl = `${SITE_URL}${locale === 'en' ? '/en' : ''}/genel-bakis`
+  return resend.emails.send({
+    from: FROM,
+    to,
+    subject: locale === 'en'
+      ? `${orgName} — daily summary: action needed`
+      : `${orgName} — günlük özet: dikkat edilmesi gerekenler`,
+    html: locale === 'en' ? agencyDigestHtmlEN(orgName, items, overviewUrl) : agencyDigestHtml(orgName, items, overviewUrl),
+  })
+}
+
+function agencyDigestHtml(orgName: string, items: AgencyDigestItem[], overviewUrl: string) {
+  const rows = items.map(i => `<li style="margin-bottom:6px;">${i.label}: <strong>${i.count}</strong></li>`).join('')
+  return baseHtml(`
+    <p class="h1">${orgName} için günlük özet</p>
+    <p class="p">Genel Bakış'ta dikkat gerektiren maddeler var:</p>
+    <ul class="p" style="padding-left:20px;">${rows}</ul>
+    <a class="btn" href="${overviewUrl}">Genel Bakış'ı Aç →</a>
+  `)
+}
+
+function agencyDigestHtmlEN(orgName: string, items: AgencyDigestItem[], overviewUrl: string) {
+  const rows = items.map(i => `<li style="margin-bottom:6px;">${i.label}: <strong>${i.count}</strong></li>`).join('')
+  return baseHtml(`
+    <p class="h1">Daily summary for ${orgName}</p>
+    <p class="p">There are items in your Overview that need attention:</p>
+    <ul class="p" style="padding-left:20px;">${rows}</ul>
+    <a class="btn" href="${overviewUrl}">Open Overview →</a>
+  `)
+}

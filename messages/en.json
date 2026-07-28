@@ -28,7 +28,8 @@
     "overview": "Overview",
     "jobs": "Jobs",
     "clients": "Clients",
-    "calendar": "Calendar"
+    "calendar": "Calendar",
+    "tasks": "Tasks"
   },
   "auth": {
     "login": "Log In",
@@ -902,7 +903,16 @@
       "ongoingEngagementsTitle": "This talent has an ongoing engagement:",
       "ongoingSince": "Ongoing since {date}",
       "minorReminder": "This talent is under 18. Make sure working hours and break requirements comply with applicable regulations.",
-      "minorNoPermitWarning": "This talent is under 18 and no valid work permit document was found. Check the Documents section before saving this booking."
+      "minorNoPermitWarning": "This talent is under 18 and no valid work permit document was found. Check the Documents section before saving this booking.",
+      "paymentFlow": "Payment Flow",
+      "paymentFlows": {
+        "clientToAgency": "Client → Agency",
+        "clientToTalent": "Client → Talent (direct)"
+      },
+      "paymentFlowHintAgency": "The client pays the agency, which deducts its commission and forwards the net amount to the talent.",
+      "paymentFlowHintTalent": "The client pays the talent directly — the agency must separately collect its commission from the talent.",
+      "commissionCollected": "Commission collected",
+      "commissionNotCollected": "Commission not yet collected"
     },
     "documents": {
       "sectionTitle": "Documents",
@@ -960,6 +970,37 @@
       "create": "Save",
       "update": "Update",
       "saving": "Saving..."
+    },
+    "advances": {
+      "sectionTitle": "Advances & Expenses",
+      "addAdvance": "Add Entry",
+      "outstandingTotal": "Outstanding total",
+      "empty": "No advances or expenses recorded yet.",
+      "types": {
+        "avans": "Advance",
+        "masraf": "Expense"
+      },
+      "settled": "Settled",
+      "markSettled": "Mark Settled",
+      "markUnsettled": "Mark Unsettled",
+      "newTitle": "New Entry",
+      "editTitle": "Edit Entry",
+      "type": "Type",
+      "amount": "Amount",
+      "currency": "Currency",
+      "date": "Date",
+      "description": "Description",
+      "descriptionPlaceholder": "e.g. Costume expense, advance before job...",
+      "isSettled": "Settled (deducted from / closed against a future payment)",
+      "create": "Save",
+      "update": "Update",
+      "saving": "Saving..."
+    },
+    "selfService": {
+      "title": "Self-Service Profile Link",
+      "description": "Share this link with the talent so they can update their own photo, contact info, and availability.",
+      "copy": "Copy",
+      "copied": "Copied"
     }
   },
   "collections": {
@@ -1171,7 +1212,8 @@
       "totalRoster": "Total Roster",
       "available": "Available",
       "busy": "Busy",
-      "pendingPayments": "Pending Payments"
+      "pendingPayments": "Pending Payments",
+      "outstandingAdvances": "Outstanding Advances"
     },
     "recentTalent": "Recently Added Talent",
     "seeAll": "See All",
@@ -1180,7 +1222,9 @@
     "addTalent": "Add Talent",
     "viewLists": "View Lists",
     "documentsExpiringTitle": "{count} document(s) expiring or expired within 30 days",
-    "exclusivityActiveTitle": "{count} talent(s) have an active exclusivity restriction"
+    "exclusivityActiveTitle": "{count} talent(s) have an active exclusivity restriction",
+    "uncollectedCommissionTitle": "{count} job(s) with uncollected commission",
+    "tasksDueTitle": "{count} task(s) due or overdue"
   },
   "jobs": {
     "title": "Jobs",
@@ -1189,7 +1233,9 @@
     "allStatuses": "All Statuses",
     "clearFilters": "Clear Filters",
     "overdueBadge": "Overdue",
-    "paidShort": "paid"
+    "paidShort": "paid",
+    "exportCsv": "Download CSV",
+    "commissionNotCollectedBadge": "Not collected"
   },
   "clients": {
     "title": "Clients",
@@ -1232,5 +1278,23 @@
     "legendPartial": "Partially paid",
     "legendPaid": "Paid",
     "legendOngoing": "Ongoing series"
+  },
+  "tasks": {
+    "title": "Tasks",
+    "description": "General reminders and to-dos",
+    "newTitle": "New Task",
+    "titlePlaceholder": "e.g. Renew Ayşe's contract",
+    "dueDate": "Due Date",
+    "linkedTalent": "Linked Talent",
+    "noTalent": "None",
+    "create": "Save",
+    "saving": "Saving...",
+    "addTask": "New Task",
+    "empty": "No tasks yet.",
+    "pendingSection": "Pending ({count})",
+    "noPending": "No pending tasks.",
+    "doneSection": "Done ({count})",
+    "overdue": "Overdue: {date}",
+    "titleField": "Title"
   }
 }

@@ -124,6 +124,9 @@ export function BookingsSection({ talentId, bookings, clients = [], birthYear }:
                   {b.exclusivity_end_date && b.exclusivity_end_date >= today && (
                     <p className="text-xs text-red-500 font-medium mt-1.5">{t('exclusivityUntil', { date: formatDate(b.exclusivity_end_date) ?? '' })}</p>
                   )}
+                  {b.payment_flow === 'client_to_talent' && !b.commission_collected && (
+                    <p className="text-xs text-amber-600 font-medium mt-1.5">{t('commissionNotCollected')}</p>
+                  )}
                 </div>
               )
             })}

@@ -28,7 +28,8 @@
     "overview": "Genel Bakış",
     "jobs": "İşler",
     "clients": "Müşteriler",
-    "calendar": "Takvim"
+    "calendar": "Takvim",
+    "tasks": "Görevler"
   },
   "auth": {
     "login": "Giriş Yap",
@@ -902,7 +903,16 @@
       "ongoingEngagementsTitle": "Bu oyuncunun devam eden anlaşması var:",
       "ongoingSince": "{date} tarihinden beri devam ediyor",
       "minorReminder": "Bu oyuncu 18 yaşından küçük. Çalışma saatleri ve mola sürelerinde ilgili mevzuata uyduğunuzdan emin olun.",
-      "minorNoPermitWarning": "Bu oyuncu 18 yaşından küçük ve geçerli bir çalışma izni belgesi bulunamadı. Booking'i kaydetmeden önce Belgeler bölümünden kontrol edin."
+      "minorNoPermitWarning": "Bu oyuncu 18 yaşından küçük ve geçerli bir çalışma izni belgesi bulunamadı. Booking'i kaydetmeden önce Belgeler bölümünden kontrol edin.",
+      "paymentFlow": "Ödeme Akışı",
+      "paymentFlows": {
+        "clientToAgency": "Yapım → Ajans",
+        "clientToTalent": "Yapım → Oyuncu (doğrudan)"
+      },
+      "paymentFlowHintAgency": "Yapım şirketi ödemeyi ajansa yapar, ajans komisyonunu keser ve net tutarı oyuncuya gönderir.",
+      "paymentFlowHintTalent": "Yapım şirketi ödemeyi doğrudan oyuncuya yapar — ajansın komisyonunu ayrıca oyuncudan tahsil etmesi gerekir.",
+      "commissionCollected": "Komisyon tahsil edildi",
+      "commissionNotCollected": "Komisyon henüz tahsil edilmedi"
     },
     "documents": {
       "sectionTitle": "Belgeler",
@@ -960,6 +970,37 @@
       "create": "Kaydet",
       "update": "Güncelle",
       "saving": "Kaydediliyor..."
+    },
+    "advances": {
+      "sectionTitle": "Avans & Masraf",
+      "addAdvance": "Kayıt Ekle",
+      "outstandingTotal": "Bekleyen toplam",
+      "empty": "Henüz avans/masraf kaydı yok.",
+      "types": {
+        "avans": "Avans",
+        "masraf": "Masraf"
+      },
+      "settled": "Mutabık",
+      "markSettled": "Mutabık İşaretle",
+      "markUnsettled": "Mutabakatı Kaldır",
+      "newTitle": "Yeni Kayıt",
+      "editTitle": "Kaydı Düzenle",
+      "type": "Tür",
+      "amount": "Tutar",
+      "currency": "Para Birimi",
+      "date": "Tarih",
+      "description": "Açıklama",
+      "descriptionPlaceholder": "Örn. Kostüm masrafı, iş öncesi avans...",
+      "isSettled": "Mutabık (sonraki ödemeden düşüldü/kapandı)",
+      "create": "Kaydet",
+      "update": "Güncelle",
+      "saving": "Kaydediliyor..."
+    },
+    "selfService": {
+      "title": "Self-Servis Profil Linki",
+      "description": "Bu linki oyuncuyla paylaşarak kendi fotoğraf, iletişim ve müsaitlik bilgisini güncellemesini sağlayabilirsin.",
+      "copy": "Kopyala",
+      "copied": "Kopyalandı"
     }
   },
   "collections": {
@@ -1171,7 +1212,8 @@
       "totalRoster": "Toplam Roster",
       "available": "Müsait",
       "busy": "Meşgul",
-      "pendingPayments": "Bekleyen Ödeme"
+      "pendingPayments": "Bekleyen Ödeme",
+      "outstandingAdvances": "Bekleyen Avans/Masraf"
     },
     "recentTalent": "Son Eklenen Oyuncular",
     "seeAll": "Tümünü Gör",
@@ -1180,7 +1222,9 @@
     "addTalent": "Oyuncu Ekle",
     "viewLists": "Listeleri Görüntüle",
     "documentsExpiringTitle": "{count} belgenin süresi 30 gün içinde doluyor/doldu",
-    "exclusivityActiveTitle": "{count} oyuncunun aktif reklam yasağı var"
+    "exclusivityActiveTitle": "{count} oyuncunun aktif reklam yasağı var",
+    "uncollectedCommissionTitle": "{count} işte komisyon henüz tahsil edilmedi",
+    "tasksDueTitle": "{count} görevin vadesi geldi/geçti"
   },
   "jobs": {
     "title": "İşler",
@@ -1189,7 +1233,9 @@
     "allStatuses": "Tüm Durumlar",
     "clearFilters": "Filtreleri Temizle",
     "overdueBadge": "Gecikti",
-    "paidShort": "ödendi"
+    "paidShort": "ödendi",
+    "exportCsv": "CSV İndir",
+    "commissionNotCollectedBadge": "Tahsil edilmedi"
   },
   "clients": {
     "title": "Müşteriler",
@@ -1232,5 +1278,23 @@
     "legendPartial": "Kısmi ödendi",
     "legendPaid": "Ödendi",
     "legendOngoing": "Devam eden dizi"
+  },
+  "tasks": {
+    "title": "Görevler",
+    "description": "Genel hatırlatıcılar ve yapılacaklar",
+    "newTitle": "Yeni Görev",
+    "titlePlaceholder": "Örn. Ayşe'nin sözleşmesini yenile",
+    "dueDate": "Vade Tarihi",
+    "linkedTalent": "İlgili Oyuncu",
+    "noTalent": "Yok",
+    "create": "Kaydet",
+    "saving": "Kaydediliyor...",
+    "addTask": "Yeni Görev",
+    "empty": "Henüz görev yok.",
+    "pendingSection": "Bekleyen ({count})",
+    "noPending": "Bekleyen görev yok.",
+    "doneSection": "Tamamlanan ({count})",
+    "overdue": "Vadesi geçti: {date}",
+    "titleField": "Başlık"
   }
 }
