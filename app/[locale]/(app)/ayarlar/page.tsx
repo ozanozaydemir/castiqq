@@ -1,7 +1,6 @@
 import { getTranslations, getLocale } from 'next-intl/server'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { PageHeader } from '@/components/layout/PageHeader'
 import { OrgForm } from './OrgForm'
 import { ProfilForm } from './ProfilForm'
 import { SifreForm } from './SifreForm'
@@ -70,10 +69,10 @@ export default async function AyarlarPage({
       ? GOOGLE_MESSAGE_KEYS[params.google_error] ?? 'errorExchangeFailed'
       : undefined
 
+  const isAgency = org?.org_type === 'agency'
+
   return (
     <div>
-      <PageHeader title={t('title')} description={t('description')} />
-
       <div className="p-6 space-y-5">
         <PlanCard
           plan={org?.subscription_plan ?? 'starter'}
@@ -99,13 +98,15 @@ export default async function AyarlarPage({
         <GoogleSheetsCard connectedEmail={googleConnection?.google_email ?? null} message={googleMessage} />
       </SettingsCard>
 
-      <SettingsCard title={t('share.sectionTitle')} icon={<Share2 className="w-4 h-4" />}>
-        <ShareSettingsForm
-          initialSlug={org?.public_slug ?? null}
-          initialAccepts={org?.accepts_external_shares ?? true}
-          siteUrl={siteUrl}
-        />
-      </SettingsCard>
+      {isAgency && (
+        <SettingsCard title={t('share.sectionTitle')} icon={<Share2 className="w-4 h-4" />}>
+          <ShareSettingsForm
+            initialSlug={org?.public_slug ?? null}
+            initialAccepts={org?.accepts_external_shares ?? true}
+            siteUrl={siteUrl}
+          />
+        </SettingsCard>
+      )}
 
       <SettingsCard title={t('sectionPassword')} icon={<Lock className="w-4 h-4" />}>
         <SifreForm />
