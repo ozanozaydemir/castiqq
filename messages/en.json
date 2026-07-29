@@ -1459,7 +1459,12 @@
       "erkek": "Male",
       "kadin": "Female",
       "diger": "Other"
-    }
+    },
+    "completeButton": "Complete Application",
+    "addMoreVideo": "Upload another video",
+    "completedTitle": "Application complete!",
+    "completedSubtitle": "Your video has been received. The casting team will review it and contact you if needed.",
+    "completedGoodLuck": "Good luck!"
   },
   "cookie": {
     "ariaLabel": "Cookie preferences",

@@ -1459,7 +1459,12 @@
       "erkek": "Erkek",
       "kadin": "Kadın",
       "diger": "Diğer"
-    }
+    },
+    "completeButton": "Başvuruyu Tamamla",
+    "addMoreVideo": "Ek video yükle",
+    "completedTitle": "Başvurunuz tamamlandı!",
+    "completedSubtitle": "Videonuz alındı. Casting ekibi inceleyecek ve gerekirse sizinle iletişime geçecek.",
+    "completedGoodLuck": "Başarılar dileriz!"
   },
   "cookie": {
     "ariaLabel": "Çerez tercihleri",

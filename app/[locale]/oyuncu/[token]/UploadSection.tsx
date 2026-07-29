@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { useTranslations } from 'next-intl'
-import { Upload, CheckCircle2, Loader2, Film, Clock, Plus } from 'lucide-react'
+import { Upload, CheckCircle2, Loader2, Film, Clock, Plus, PartyPopper } from 'lucide-react'
 
 const MAX_VIDEOS = 3
 
@@ -76,6 +76,7 @@ export function UploadSection({ token, initialVideos }: Props) {
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)
   const [error, setError]       = useState<string | null>(null)
+  const [done, setDone]         = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const atLimit = videos.length >= MAX_VIDEOS
@@ -142,6 +143,37 @@ export function UploadSection({ token, initialVideos }: Props) {
     if (inputRef.current) inputRef.current.value = ''
   }
 
+  // ── Tamamlandı ekranı ───────────────────────────────────────────
+  if (done) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center space-y-4">
+        <div className="w-16 h-16 bg-green-50 border border-green-100 rounded-2xl flex items-center justify-center mx-auto">
+          <PartyPopper className="w-8 h-8 text-green-500" />
+        </div>
+        <div>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">{t('completedTitle')}</h2>
+          <p className="text-sm text-gray-500 leading-relaxed">{t('completedSubtitle')}</p>
+        </div>
+        <div className="space-y-2">
+          {videos.map((v, i) => (
+            <div key={v.id} className="flex items-center gap-3 bg-green-50 border border-green-100 rounded-xl px-4 py-3">
+              <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
+              <span className="text-sm font-medium text-green-800 flex-1">{t('videoN', { n: i + 1 })}</span>
+              {v.duration_seconds && (
+                <span className="flex items-center gap-1 text-xs text-green-600">
+                  <Clock className="w-3 h-3" />
+                  {formatDuration(v.duration_seconds)}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+        <p className="text-sm font-semibold text-green-600">{t('completedGoodLuck')}</p>
+      </div>
+    )
+  }
+
+  // ── Normal yükleme ekranı ────────────────────────────────────────
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-5">
       <div className="flex items-center justify-between">
@@ -172,15 +204,13 @@ export function UploadSection({ token, initialVideos }: Props) {
 
       {/* Upload formu ya da limit mesajı */}
       {atLimit ? (
-        <div className="text-center py-4 text-sm text-gray-400">
+        <div className="text-center py-2 text-sm text-gray-400">
           {t('atLimit', { max: MAX_VIDEOS })}
         </div>
       ) : (
         <>
           {videos.length === 0 && (
-            <p className="text-sm text-gray-500">
-              {t('instructions')}
-            </p>
+            <p className="text-sm text-gray-500">{t('instructions')}</p>
           )}
 
           {/* Drop zone */}
@@ -248,6 +278,17 @@ export function UploadSection({ token, initialVideos }: Props) {
             )}
           </button>
         </>
+      )}
+
+      {/* Başvuruyu Tamamla — en az 1 video yüklendikten sonra görünür */}
+      {videos.length > 0 && (
+        <button
+          onClick={() => setDone(true)}
+          className="w-full flex items-center justify-center gap-2 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold text-sm rounded-xl transition-colors shadow-sm shadow-green-500/20"
+        >
+          <CheckCircle2 className="w-4 h-4" />
+          {t('completeButton')}
+        </button>
       )}
     </div>
   )
