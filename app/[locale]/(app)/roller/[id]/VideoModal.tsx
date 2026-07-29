@@ -564,6 +564,7 @@ export function VideoModal({ auditions, startIndex, roleId, siteUrl, onClose }: 
   const videoRef            = useRef<HTMLVideoElement>(null)
   const router              = useRouter()
   const [, startDelete]     = useTransition()
+  const [presignedUrls, setPresignedUrls] = useState<Record<string, string>>({})
 
   const audition  = auditions[idx]
   const video     = audition.audition_videos[vidIdx] ?? audition.audition_videos[0]
@@ -583,6 +584,15 @@ export function VideoModal({ auditions, startIndex, roleId, siteUrl, onClose }: 
   useEffect(() => {
     if (videoRef.current) videoRef.current.load()
   }, [idx, vidIdx])
+
+  useEffect(() => {
+    if (!video?.storage_path) return
+    if (presignedUrls[video.storage_path]) return
+    fetch(`/api/video-url?path=${encodeURIComponent(video.storage_path)}`)
+      .then(r => r.json())
+      .then(d => { if (d.url) setPresignedUrls(prev => ({ ...prev, [video.storage_path]: d.url })) })
+      .catch(() => {})
+  }, [video?.storage_path]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     function handler(e: KeyboardEvent) {
@@ -714,10 +724,16 @@ export function VideoModal({ auditions, startIndex, roleId, siteUrl, onClose }: 
         <div className="flex flex-1 min-h-0 overflow-hidden">
           {/* Video */}
           <div className="flex-1 bg-black flex items-center justify-center min-w-0">
-            {video?.public_url ? (
-              <video ref={videoRef} controls className="max-h-full max-w-full w-full" style={{ aspectRatio: '16/9' }}>
-                <source src={video.public_url} />
-              </video>
+            {video?.storage_path ? (
+              presignedUrls[video.storage_path] ? (
+                <video ref={videoRef} controls className="max-h-full max-w-full w-full" style={{ aspectRatio: '16/9' }}>
+                  <source src={presignedUrls[video.storage_path]} />
+                </video>
+              ) : (
+                <div className="text-white/30 text-sm flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                </div>
+              )
             ) : (
               <div className="text-white/30 text-sm">{t('videoNotFound')}</div>
             )}
