@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { NextIntlClientProvider, hasLocale } from 'next-intl'
 import { notFound } from 'next/navigation'
-import { getMessages } from 'next-intl/server'
+import { getMessages, getTranslations } from 'next-intl/server'
 import { routing } from '@/i18n/routing'
 import { PostHogProvider } from '@/components/PostHogProvider'
 
@@ -14,12 +14,17 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
+  const t = await getTranslations({ locale, namespace: 'seo' })
 
   const isTr = locale === 'tr'
   const canonical = isTr ? SITE_URL : `${SITE_URL}/en`
 
   return {
     metadataBase: new URL(SITE_URL),
+    // Ana sayfa markayı başta taşısın; alt sayfalar kök layout'taki
+    // "%s | Castiqq" şablonunu kullanmaya devam ediyor.
+    title: { absolute: t('homeTitle') },
+    description: t('homeDescription'),
     alternates: {
       canonical,
       languages: {
@@ -29,23 +34,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     },
     openGraph: {
+      title: t('homeTitle'),
+      description: t('homeDescription'),
+      url: canonical,
       locale: isTr ? 'tr_TR' : 'en_US',
       alternateLocale: isTr ? 'en_US' : 'tr_TR',
       siteName: 'Castiqq',
       type: 'website',
-      images: [
-        {
-          url: `${SITE_URL}/og-image.png`,
-          width: 1200,
-          height: 630,
-          alt: 'Castiqq — Casting Yönetim Platformu',
-        },
-      ],
+      // images bilerek verilmiyor: opengraph-image.tsx dosya konvansiyonu
+      // görseli zaten üretiyor. Burada elle /og-image.png verilmesi onu
+      // eziyordu ve o dosya hiç var olmadığı için tüm link önizlemeleri
+      // görselsiz kalıyordu.
     },
     twitter: {
       card: 'summary_large_image',
       site: '@castiqq',
-      images: [`${SITE_URL}/og-image.png`],
+      title: t('homeTitle'),
+      description: t('homeDescription'),
     },
   }
 }

@@ -12,8 +12,10 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castiqq.app'
 const SITE_NAME = 'Castiqq'
 const DEFAULT_TITLE = 'Castiqq — Casting Yönetim Platformu'
+// Yalnızca [locale] layout'unun devralmadığı rotalar için yedek açıklama;
+// ana sayfa kendi locale'li metnini generateMetadata'dan alıyor.
 const DEFAULT_DESCRIPTION =
-  'Yapım şirketleri, casting ajansları ve cast direktörleri için profesyonel casting yönetim platformu. Proje, rol ve oyuncu yönetimi tek sistemde.'
+  'Cast direktörleri ve menajerlik ajansları için casting yönetim platformu. Audition videoları, kadro yönetimi, iş ve tahsilat takibi tek sistemde.'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -34,8 +36,8 @@ export const viewport: Viewport = {
   themeColor: '#6366f1',
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  // Yakınlaştırma kısıtlanmıyor: maximumScale/userScalable ile zoom'u
+  // kapatmak erişilebilirlik ihlali ve Lighthouse SEO denetiminde hata.
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

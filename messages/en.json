@@ -534,6 +534,48 @@
       "privacy": "Privacy Policy",
       "terms": "Terms of Use",
       "rights": "All rights reserved."
+    },
+    "faq": {
+      "sectionLabel": "FAQ",
+      "title": "Common questions",
+      "items": [
+        {
+          "q": "What does Castiqq actually do?",
+          "a": "Castiqq is a casting management platform. Casting directors define projects and roles, collect audition videos from talent, and decide together with their team by reviewing and rating on one screen. Talent agencies manage their roster, contracts, jobs and receivables. Both sides work on the same platform, connected to each other."
+        },
+        {
+          "q": "Who uses it?",
+          "a": "Two user types: casting directors working at production companies or freelance, and talent agencies representing actors. You pick your side at signup and the interface adapts accordingly."
+        },
+        {
+          "q": "Do actors need to create an account?",
+          "a": "No. The casting director shares a passwordless application link; talent can submit an audition video and profile details through it without signing up."
+        },
+        {
+          "q": "How do casting directors and talent agencies connect?",
+          "a": "A casting director shares a role, including criteria and budget, with a talent agency. The agency sees it under Incoming Roles and pitches suitable talent from its roster with fees attached. The casting director reviews every pitch on one screen, marks favourites and can export to PDF. Neither organization accesses the other's data directly; every shared record travels as a snapshot."
+        },
+        {
+          "q": "What financial calculations does the agency side handle?",
+          "a": "For each job, withholding tax is deducted from the gross amount to derive the net figure and the agency commission automatically. A 20% withholding rate is applied by default for talent invoicing as self-employed, and can be adjusted. Partial payments, overdue receivables and uncollected commissions are tracked separately."
+        },
+        {
+          "q": "How does it prevent pitching an actor to competing brands?",
+          "a": "Commercial jobs record a brand category. When pitching an actor, the system warns you if an unexpired exclusivity exists in the same category. Sixteen brand categories are predefined and the warning clears itself once the exclusivity expires."
+        },
+        {
+          "q": "How is it priced?",
+          "a": "One plan per side: the Casting Director plan is 1,999 TRY per month and the Talent Agency plan is 4,999 TRY per month. There is no per-seat pricing. Both plans include a 14-day free trial."
+        },
+        {
+          "q": "Is my data secure?",
+          "a": "Each organization's data is separated at the database level using row-level security policies, so one organization cannot see another's records. The platform is designed to comply with KVKK and GDPR, and the sub-processors used are listed explicitly in the privacy policy."
+        },
+        {
+          "q": "Which languages does the interface support?",
+          "a": "Turkish and English. The language preference is stored per user, so teams working with international productions can operate in different languages within the same account."
+        }
+      ]
     }
   },
   "dashboard": {
@@ -1872,5 +1914,10 @@
     "title": "Notifications",
     "markAllRead": "Mark all as read",
     "empty": "No notifications yet."
+  },
+  "seo": {
+    "homeTitle": "Castiqq — Casting & Talent Management Platform",
+    "homeDescription": "One platform for casting directors and talent agencies. Review audition videos with your team on one screen, track your roster's jobs and receivables, and connect through role sharing. 14-day free trial.",
+    "ogAlt": "Castiqq — Casting management platform"
   }
 }

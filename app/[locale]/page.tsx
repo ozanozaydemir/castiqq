@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import { AnimationInit } from '@/components/AnimationInit'
 import { JsonLd } from '@/components/JsonLd'
+import { organizationSchema, websiteSchema, softwareApplicationSchema, faqSchema } from '@/lib/schema'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { CastiqqLogo, CastiqqMark } from '@/components/brand/Logo'
 import { ModuleShowcase, type ShowcaseTab } from '@/components/landing/ModuleShowcase'
@@ -23,28 +24,36 @@ type RawJob = { talent: string; client: string; date: string; gross: string; net
 type RawCard = { title: string; client: string; value: string; stage: string }
 type RawStep = { actor: string; action: string }
 type RawBenefit = { title: string; desc: string }
+type RawFaq = { q: string; a: string }
 type RawRow = { name: string; role: string; fee: string; decision: 'liked' | 'pending' }
 type RawHowStep = { title: string; desc: string }
 type RawStat = { label: string; value: string }
 
-export default async function HomePage() {
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (user) redirect(await resolveHomePath(supabase, user.id))
 
   const t = await getTranslations('landing')
 
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castiqq.app'
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: 'Castiqq',
-    applicationCategory: 'BusinessApplication',
-    operatingSystem: 'Web',
-    url: SITE_URL,
-    description: t('footer.tagline'),
-    offers: { '@type': 'Offer', price: '1999', priceCurrency: 'TRY' },
-  }
+  const tSeo = await getTranslations('seo')
+  const faqItems = t.raw('faq.items') as RawFaq[]
+
+  // Tek bir @graph yerine ayrı ayrı veriliyor: her biri kendi @id'siyle
+  // birbirine referans veriyor, doğrulayıcılarda daha okunaklı.
+  const schemas = [
+    organizationSchema(tSeo('homeDescription')),
+    websiteSchema(tSeo('homeTitle'), tSeo('homeDescription'), locale),
+    softwareApplicationSchema({
+      description: tSeo('homeDescription'),
+      plans: [
+        { name: t('pricing.plans.pro.name'), price: 1999 },
+        { name: t('pricing.plans.agency.name'), price: 4999 },
+      ],
+    }),
+    faqSchema(faqItems),
+  ]
 
   // ── Mockup verileri i18n'den geliyor: dil değişince ekranlar da değişiyor,
   //    ekran görüntüsü tazelemek gerekmiyor. ──
@@ -159,7 +168,7 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-white text-[#11181c] overflow-x-hidden">
-      <JsonLd data={jsonLd} />
+      {schemas.map((schema, i) => <JsonLd key={i} data={schema} />)}
       <AnimationInit />
 
       {/* ── NAV ─────────────────────────────────────── */}
@@ -551,6 +560,30 @@ export default async function HomePage() {
           <p className="mt-6 text-sm text-gray-500">
             {t('testimonial.author')} · <span className="text-gray-400">{t('testimonial.role')}</span>
           </p>
+        </div>
+      </section>
+
+      {/* ── SSS ─────────────────────────────────────────
+          İçerik açılır-kapanır değil, doğrudan DOM'da: hem arama motoru
+          hem de yapay zekâ asistanları gizlenmemiş metni güvenilir
+          okuyor. FAQPage şeması bu içerikle birebir aynı. ── */}
+      <section id="sss" className="py-24 px-6">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-14" data-animate>
+            <p className="text-[13px] font-semibold uppercase tracking-[0.05em] text-indigo-600 mb-3">
+              {t('faq.sectionLabel')}
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.03em]">{t('faq.title')}</h2>
+          </div>
+
+          <dl className="divide-y divide-gray-100 border-y border-gray-100">
+            {faqItems.map((item, i) => (
+              <div key={item.q} className="py-6" data-animate data-delay={String((i % 6) + 1)}>
+                <dt className="text-base font-bold text-gray-900 mb-2">{item.q}</dt>
+                <dd className="text-[15px] text-gray-600 leading-relaxed">{item.a}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 

@@ -534,6 +534,48 @@
       "privacy": "Gizlilik Politikası",
       "terms": "Kullanım Koşulları",
       "rights": "Tüm hakları saklıdır."
+    },
+    "faq": {
+      "sectionLabel": "Sık Sorulanlar",
+      "title": "Merak edilenler",
+      "items": [
+        {
+          "q": "Castiqq tam olarak ne yapıyor?",
+          "a": "Castiqq bir casting yönetim platformu. Cast direktörleri projelerini ve rollerini tanımlayıp oyunculardan audition videosu topluyor, ekiple aynı ekranda izleyip puanlayarak karar veriyor. Menajerlik ajansları ise temsil ettikleri oyuncuların kadro, sözleşme, iş ve tahsilat takibini yapıyor. İki taraf aynı platformda birbirine bağlı çalışıyor."
+        },
+        {
+          "q": "Kimler kullanıyor?",
+          "a": "İki kullanıcı tipi var: yapım şirketlerinde çalışan veya serbest çalışan cast direktörleri ile oyuncu temsil eden menajerlik ajansları. Kayıt olurken hangi tarafta olduğunuzu seçiyorsunuz ve arayüz buna göre şekilleniyor."
+        },
+        {
+          "q": "Oyuncuların hesap açması gerekiyor mu?",
+          "a": "Hayır. Cast direktörü şifresiz bir başvuru linki paylaşıyor; oyuncu bu linkten hesap açmadan audition videosunu ve profil bilgilerini gönderebiliyor."
+        },
+        {
+          "q": "Cast direktörüyle menajerlik ajansı nasıl bağlanıyor?",
+          "a": "Cast direktörü bir rolü kriterleri ve bütçesiyle birlikte menajerlik ajansıyla paylaşıyor. Ajans bunu Gelen Roller ekranında görüp kadrosundan uygun oyuncuları kaşeleriyle öneriyor. Cast direktörü önerileri tek ekranda değerlendirip beğendiklerini işaretliyor ve PDF olarak dışa aktarabiliyor. İki organizasyon birbirinin verisine doğrudan erişmiyor; paylaşılan her kayıt anlık kopya olarak taşınıyor."
+        },
+        {
+          "q": "Menajerlik tarafı hangi finansal hesapları yapıyor?",
+          "a": "Her iş kaydında brüt tutardan stopaj düşülerek net tutar ve ajans komisyonu otomatik hesaplanıyor. Serbest meslek makbuzu kesen oyuncularda %20 stopaj varsayılan olarak uygulanıyor, gerektiğinde değiştirilebiliyor. Kısmi ödemeler, vadesi geçen tahsilatlar ve tahsil edilmemiş komisyonlar ayrıca takip ediliyor."
+        },
+        {
+          "q": "Aynı oyuncuya rakip marka reklamı önerilmesi nasıl engelleniyor?",
+          "a": "Reklam işlerinde marka kategorisi kaydediliyor. Bir oyuncuya teklif verilirken aynı kategoride süresi dolmamış bir reklam yasağı varsa sistem uyarı gösteriyor. On altı marka kategorisi hazır tanımlı ve yasak süresi dolduğunda uyarı kendiliğinden kalkıyor."
+        },
+        {
+          "q": "Fiyatlandırma nasıl?",
+          "a": "Tarafınıza göre tek plan var: Cast Direktörü planı aylık 1.999 TL, Menajerlik Ajansı planı aylık 4.999 TL. Kullanıcı başına ek ücret yok. Her iki planda da 14 gün ücretsiz deneme sunuluyor."
+        },
+        {
+          "q": "Verilerim güvende mi?",
+          "a": "Her organizasyonun verisi veritabanı seviyesinde satır bazlı güvenlik politikalarıyla ayrıştırılıyor; bir organizasyon diğerinin kayıtlarını göremiyor. Platform KVKK ve GDPR uyumlu olacak şekilde tasarlandı; gizlilik politikasında kullanılan alt işleyiciler açıkça listeleniyor."
+        },
+        {
+          "q": "Arayüz hangi dillerde?",
+          "a": "Türkçe ve İngilizce. Dil tercihi kullanıcı bazında saklanıyor, böylece uluslararası yapımlarla çalışan ekipler aynı hesap üzerinden farklı dillerde çalışabiliyor."
+        }
+      ]
     }
   },
   "dashboard": {
@@ -1872,5 +1914,10 @@
     "title": "Bildirimler",
     "markAllRead": "Tümünü okundu işaretle",
     "empty": "Henüz bildirim yok."
+  },
+  "seo": {
+    "homeTitle": "Castiqq — Casting Yönetim ve Menajerlik Platformu",
+    "homeDescription": "Cast direktörleri ve menajerlik ajansları için tek platform. Audition videolarını ekiple tek ekranda izleyin, kadronuzun iş ve tahsilat takibini yapın, rol paylaşımıyla birbirinize bağlanın. 14 gün ücretsiz deneyin.",
+    "ogAlt": "Castiqq — Casting yönetim platformu"
   }
 }

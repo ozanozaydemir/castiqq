@@ -38,7 +38,13 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Match all paths except static files, images, and _next internals
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    // Uzantılı her dosyayı (robots.txt, sitemap.xml, görseller, manifest…)
+    // ve _next içeriklerini middleware'in tamamen dışında bırak.
+    //
+    // Eski desen yalnızca birkaç görsel uzantısını hariç tutuyordu; bu
+    // yüzden /robots.txt ve /sitemap.xml next-intl tarafından locale'li
+    // bir sayfa sanılıp 404 HTML olarak dönüyordu — yani arama motorları
+    // ne index kurallarını ne de sitemap'i okuyabiliyordu.
+    '/((?!_next/|.*\\..*).*)',
   ],
 }
