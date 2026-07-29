@@ -1,64 +1,125 @@
 'use client'
 
-import { useState } from 'react'
-import { Clapperboard, Check, Loader2 } from 'lucide-react'
+import { useState, useTransition } from 'react'
+import { Check, Loader2, Film, Users2 } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import { useLocale } from 'next-intl'
-import { logout } from '@/app/actions/auth'
+import { logout, selectPlan } from '@/app/actions/auth'
+import { CastiqqLogo } from '@/components/brand/Logo'
 
-const PLANS = {
-  production: {
-    name: { tr: 'Production Planı', en: 'Production Plan' },
+type Plan = {
+  key: 'production' | 'agency'
+  name: { tr: string; en: string }
+  tagline: { tr: string; en: string }
+  price: string
+  icon: React.ElementType
+  productIdEnv: 'NEXT_PUBLIC_POLAR_PRO_PRODUCT_ID' | 'NEXT_PUBLIC_POLAR_AGENCY_PRODUCT_ID'
+  features: { tr: string[]; en: string[] }
+}
+
+const PLANS: Plan[] = [
+  {
+    key: 'production',
+    name: { tr: 'Cast Direktörü', en: 'Casting Director' },
+    tagline: { tr: 'Yapım şirketleri ve serbest çalışan cast direktörleri için.', en: 'For production companies and freelance casting directors.' },
     price: '₺1.999',
+    icon: Film,
     productIdEnv: 'NEXT_PUBLIC_POLAR_PRO_PRODUCT_ID',
-    desc: { tr: 'Cast direktörleri ve yapım şirketleri için.', en: 'For casting directors and production companies.' },
     features: {
-      tr: ['3 kullanıcı', '200 GB video depolama', 'Ekip işbirliği', '5 yıldız puanlama', 'Etiket & koleksiyonlar', 'Zaman damgalı notlar', 'WhatsApp entegrasyonu', 'Sürükle-bırak sıralama'],
-      en: ['3 users', '200 GB video storage', 'Team collaboration', '5-star rating', 'Tags & collections', 'Timestamp notes', 'WhatsApp integration', 'Drag & drop sorting'],
+      tr: ['3 kullanıcı', '200 GB video depolama', 'Sınırsız proje & rol', 'Audition video toplama', '5 yıldız puanlama', 'Etiket & koleksiyonlar', 'Zaman damgalı notlar', 'WhatsApp entegrasyonu'],
+      en: ['3 users', '200 GB video storage', 'Unlimited projects & roles', 'Audition video collection', '5-star rating', 'Tags & collections', 'Timestamp notes', 'WhatsApp integration'],
     },
   },
-  agency: {
-    name: { tr: 'Menajerlik Planı', en: 'Agency Plan' },
-    price: '₺3.999',
+  {
+    key: 'agency',
+    name: { tr: 'Menajerlik Ajansı', en: 'Talent Agency' },
+    tagline: { tr: 'Oyuncu temsil eden menajerlik ajansları için.', en: 'For talent agencies managing their roster.' },
+    price: '₺4.999',
+    icon: Users2,
     productIdEnv: 'NEXT_PUBLIC_POLAR_AGENCY_PRODUCT_ID',
-    desc: { tr: 'Menajerlik şirketleri ve oyuncu roster yönetimi için.', en: 'For talent agencies managing their roster.' },
     features: {
-      tr: ['5 kullanıcı', '250 oyuncu roster kapasitesi', '50 GB depolama', 'Google Sheets entegrasyonu', 'Paylaşılabilir oyuncu listeleri', 'Sözleşme & komisyon takibi'],
-      en: ['5 users', '250-talent roster capacity', '50 GB storage', 'Google Sheets integration', 'Shareable talent lists', 'Contract & commission tracking'],
+      tr: ['5 kullanıcı', '100 GB depolama', '250 oyuncu kadrosu', 'Sözleşme & komisyon takibi', 'Müşteri CRM\'i', 'Teklif pipeline\'ı', 'Çakışma kontrolü', 'Google Takvim entegrasyonu'],
+      en: ['5 users', '100 GB storage', '250-talent roster', 'Contract & commission tracking', 'Client CRM', 'Offer pipeline', 'Conflict detection', 'Google Calendar integration'],
     },
   },
-} as const
+]
 
-export function PlanSecClient({ orgType }: { orgType: 'production' | 'agency' }) {
+function PlanCard({ plan, onSelect, loading }: { plan: Plan; onSelect: () => void; loading: boolean }) {
   const locale = useLocale()
   const isTr = locale === 'tr'
-  const [loading, setLoading] = useState(false)
+  const Icon = plan.icon
 
-  const plan = PLANS[orgType]
+  return (
+    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden flex flex-col transition-shadow hover:shadow-md hover:border-indigo-200">
+      <div className="p-6 flex-1 flex flex-col">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center flex-shrink-0">
+            <Icon className="w-5 h-5 text-indigo-500" />
+          </div>
+          <div>
+            <h2 className="font-bold text-gray-900 text-base leading-tight">
+              {isTr ? plan.name.tr : plan.name.en}
+            </h2>
+          </div>
+        </div>
 
-  function goToCheckout() {
-    const productId = orgType === 'production'
-      ? process.env.NEXT_PUBLIC_POLAR_PRO_PRODUCT_ID
-      : process.env.NEXT_PUBLIC_POLAR_AGENCY_PRODUCT_ID
+        <p className="text-xs text-gray-500 mb-5 leading-relaxed">
+          {isTr ? plan.tagline.tr : plan.tagline.en}
+        </p>
+
+        <div className="flex items-baseline gap-1 mb-5">
+          <span className="text-3xl font-black text-gray-900">{plan.price}</span>
+          <span className="text-sm text-gray-400">{isTr ? '/ay' : '/mo'}</span>
+        </div>
+
+        <ul className="space-y-2 mb-6 flex-1">
+          {(isTr ? plan.features.tr : plan.features.en).map(f => (
+            <li key={f} className="flex items-center gap-2 text-sm text-gray-700">
+              <Check className="w-4 h-4 text-indigo-500 flex-shrink-0" />
+              {f}
+            </li>
+          ))}
+        </ul>
+
+        <button
+          onClick={onSelect}
+          disabled={loading}
+          className="w-full flex items-center justify-center gap-2 py-2.5 bg-indigo-500 hover:bg-indigo-600 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition-colors shadow-sm shadow-indigo-500/20"
+        >
+          {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+          {isTr ? '14 Gün Ücretsiz Dene' : 'Try Free for 14 Days'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+export function PlanSecClient() {
+  const locale = useLocale()
+  const isTr = locale === 'tr'
+  const [pendingKey, setPendingKey] = useState<'production' | 'agency' | null>(null)
+  const [isPending, startTransition] = useTransition()
+
+  function handleSelect(plan: Plan) {
+    const productId = process.env[plan.productIdEnv]
     if (!productId) return
-    setLoading(true)
-    window.location.href = `/api/checkout?products=${productId}`
+    setPendingKey(plan.key)
+    startTransition(async () => {
+      await selectPlan(plan.key, productId)
+    })
   }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-12">
       {/* Logo */}
-      <Link href="/" className="flex items-center gap-2.5 mb-8">
-        <div className="w-9 h-9 bg-indigo-500 rounded-xl flex items-center justify-center shadow-sm shadow-indigo-500/30">
-          <Clapperboard className="w-4 h-4 text-white" />
-        </div>
-        <span className="font-bold text-gray-900 text-xl tracking-tight">Castiqq</span>
+      <Link href="/" className="mb-10">
+        <CastiqqLogo tone="light" size={28} />
       </Link>
 
       {/* Header */}
-      <div className="text-center mb-10 max-w-md">
+      <div className="text-center mb-10 max-w-lg">
         <h1 className="text-3xl font-black text-gray-900 tracking-tight mb-2">
-          {isTr ? 'Devam etmek için planınızı başlatın' : 'Start your plan to continue'}
+          {isTr ? 'Hesap türünüzü seçin' : 'Choose your account type'}
         </h1>
         <p className="text-sm text-gray-500">
           {isTr
@@ -67,34 +128,16 @@ export function PlanSecClient({ orgType }: { orgType: 'production' | 'agency' })
         </p>
       </div>
 
-      {/* Plan card */}
-      <div className="w-full max-w-sm">
-        <div className="relative bg-white border-2 border-indigo-500 rounded-2xl shadow-sm overflow-hidden">
-          <div className="pt-6 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-0.5">{isTr ? plan.name.tr : plan.name.en}</h2>
-            <p className="text-xs text-gray-500 mb-4">{isTr ? plan.desc.tr : plan.desc.en}</p>
-            <div className="flex items-baseline gap-1 mb-5">
-              <span className="text-4xl font-black text-gray-900">{plan.price}</span>
-              <span className="text-sm text-gray-400">{isTr ? '/ay' : '/mo'}</span>
-            </div>
-            <ul className="space-y-2 mb-6">
-              {(isTr ? plan.features.tr : plan.features.en).map(f => (
-                <li key={f} className="flex items-center gap-2 text-sm text-gray-700">
-                  <Check className="w-4 h-4 text-indigo-500 flex-shrink-0" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <button
-              onClick={goToCheckout}
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-2 py-2.5 bg-indigo-500 hover:bg-indigo-600 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl transition-colors shadow-sm shadow-indigo-500/20"
-            >
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-              {isTr ? '14 Gün Ücretsiz Dene' : 'Try Free for 14 Days'}
-            </button>
-          </div>
-        </div>
+      {/* Plan cards */}
+      <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-5">
+        {PLANS.map(plan => (
+          <PlanCard
+            key={plan.key}
+            plan={plan}
+            onSelect={() => handleSelect(plan)}
+            loading={isPending && pendingKey === plan.key}
+          />
+        ))}
       </div>
 
       <p className="text-center text-xs text-gray-400 mt-8">

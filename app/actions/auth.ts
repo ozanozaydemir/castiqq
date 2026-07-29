@@ -56,8 +56,6 @@ export async function register(_: AuthActionState, formData: FormData): Promise<
   const password = formData.get('password') as string
   const confirm = formData.get('confirm') as string
   const locale = (formData.get('locale') as string) || 'tr'
-  const org_type = formData.get('org_type') === 'agency' ? 'agency' : 'production'
-
   if (!org_name || !full_name || !email || !password) return { error: t('allFieldsRequired') }
   if (password !== confirm) return { error: t('passwordMismatch') }
   if (password.length < 6) return { error: t('passwordTooShort') }
@@ -65,15 +63,37 @@ export async function register(_: AuthActionState, formData: FormData): Promise<
   const supabase = await createClient()
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
 
+  // org_type plan seçiminde belirleneceği için varsayılan 'production' kullanılır
   const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       emailRedirectTo: `${siteUrl}/auth/callback?locale=${locale}`,
-      data: { full_name, org_name, org_type },
+      data: { full_name, org_name, org_type: 'production' },
     },
   })
 
   if (error) return { error: error.message }
   return { success: true }
+}
+
+export async function selectPlan(orgType: 'production' | 'agency', productId: string): Promise<never> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/giris')
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('organization_id')
+    .eq('id', user.id)
+    .single()
+
+  if (profile?.organization_id) {
+    await supabase
+      .from('organizations')
+      .update({ org_type: orgType })
+      .eq('id', profile.organization_id)
+  }
+
+  redirect(`/api/checkout?products=${productId}`)
 }
