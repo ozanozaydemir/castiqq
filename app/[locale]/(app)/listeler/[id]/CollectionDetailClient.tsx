@@ -5,6 +5,7 @@ import { removeFromCollection, updateCollection } from '@/app/actions/collection
 import { useRouter, Link } from '@/i18n/navigation'
 import { UserMinus, MapPin, Phone, Mail, Share2, Copy, Check, Pencil, X, Loader2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import { TalentSlideshowButton, type SlideshowTalent, type SlideshowProject } from '@/app/[locale]/(app)/oyuncular/TalentSlideshow'
 
 type Member = {
   talent_id: string
@@ -17,6 +18,14 @@ type Member = {
     phone: string | null
     email: string | null
     availability: string
+    avatar_url: string | null
+    photos: string[] | null
+    skills: string[] | null
+    height_cm: number | null
+    gender: string | null
+    playable_age_min: number | null
+    playable_age_max: number | null
+    agency_name: string | null
   } | null
 }
 
@@ -26,6 +35,7 @@ interface Props {
   collectionDescription: string | null
   members: Member[]
   shareToken: string
+  projects: SlideshowProject[]
 }
 
 function EditCollectionModal({ collectionId, initialName, initialDescription, onClose }: {
@@ -142,7 +152,23 @@ function MemberRow({ member, collectionId }: { member: Member; collectionId: str
   )
 }
 
-export function CollectionDetailClient({ collectionId, collectionName, collectionDescription, members, shareToken }: Props) {
+export function CollectionDetailClient({ collectionId, collectionName, collectionDescription, members, shareToken, projects }: Props) {
+  const slideshowTalents: SlideshowTalent[] = members
+    .filter(m => m.talent)
+    .map(m => ({
+      id: m.talent!.id,
+      full_name: m.talent!.full_name,
+      city: m.talent!.city,
+      gender: m.talent!.gender,
+      playable_age_min: m.talent!.playable_age_min,
+      playable_age_max: m.talent!.playable_age_max,
+      height_cm: m.talent!.height_cm,
+      agency_name: m.talent!.agency_name,
+      availability: m.talent!.availability,
+      skills: m.talent!.skills,
+      avatar_url: m.talent!.avatar_url,
+      photos: m.talent!.photos,
+    }))
   const tc = useTranslations('collections')
   const [copied, setCopied] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
@@ -212,8 +238,9 @@ export function CollectionDetailClient({ collectionId, collectionName, collectio
     <>
       {shareSection}
       <div className="sb-card overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-100">
+        <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between gap-3">
           <p className="text-sm font-semibold text-gray-800">{tc('talentCount', { count: members.length })}</p>
+          <TalentSlideshowButton talents={slideshowTalents} projects={projects} />
         </div>
         <div className="px-5">
           {members.map(m => (

@@ -23,6 +23,7 @@ import {
 import { Link } from '@/i18n/navigation'
 import { VideoModal, type VideoAudition, type TagEntry } from './VideoModal'
 import { KarsilastirModal } from './KarsilastirModal'
+import { TalentSlideshowButton, type SlideshowTalent, type SlideshowProject } from '@/app/[locale]/(app)/oyuncular/TalentSlideshow'
 import { useTranslations } from 'next-intl'
 
 // ── Types ────────────────────────────────────────────────────────
@@ -32,7 +33,20 @@ const STATUS_ORDER: Record<string, number> = {
 }
 
 type SortKey = 'manual' | 'name' | 'status' | 'date' | 'rating'
-type TalentRef = { id: string; full_name: string } | null
+type TalentRef = {
+  id: string
+  full_name: string
+  city: string | null
+  gender: string | null
+  playable_age_min: number | null
+  playable_age_max: number | null
+  height_cm: number | null
+  agency_name: string | null
+  availability: string
+  skills: string[] | null
+  avatar_url: string | null
+  photos: string[] | null
+} | null
 
 type VideoEntry = {
   id: string
@@ -72,6 +86,7 @@ interface Props {
   auditions: Audition[]
   talents: Talent[]
   siteUrl: string
+  slideshowProjects: SlideshowProject[]
 }
 
 // ── Copy link button ─────────────────────────────────────────────
@@ -416,7 +431,23 @@ function SortableRow({ audition, roleId, siteUrl, isDragMode, isSelected, onTogg
 
 // ── Main component ───────────────────────────────────────────────
 
-export function RolAuditions({ roleId, roleName, auditions: initial, talents, siteUrl }: Props) {
+export function RolAuditions({ roleId, roleName, auditions: initial, talents, siteUrl, slideshowProjects }: Props) {
+  const slideshowTalents: SlideshowTalent[] = initial
+    .filter(a => a.talent)
+    .map(a => ({
+      id: a.talent!.id,
+      full_name: a.talent!.full_name,
+      city: a.talent!.city,
+      gender: a.talent!.gender,
+      playable_age_min: a.talent!.playable_age_min,
+      playable_age_max: a.talent!.playable_age_max,
+      height_cm: a.talent!.height_cm,
+      agency_name: a.talent!.agency_name,
+      availability: a.talent!.availability,
+      skills: a.talent!.skills,
+      avatar_url: a.talent!.avatar_url,
+      photos: a.talent!.photos,
+    }))
   const t = useTranslations('auditions')
   const [showAdayModal, setShowAdayModal] = useState(false)
   const [requestingAudition, setRequestingAudition] = useState<RequestState | null>(null)
@@ -542,6 +573,7 @@ export function RolAuditions({ roleId, roleName, auditions: initial, talents, si
         </div>
 
         <div className="flex items-center gap-2 ml-auto">
+          <TalentSlideshowButton talents={slideshowTalents} projects={slideshowProjects} />
           <div className="relative inline-flex items-center gap-1.5 text-xs text-gray-500 border border-gray-200 rounded-lg px-2.5 py-1.5 bg-white hover:border-gray-300 cursor-pointer">
             <ArrowUpDown className="w-3 h-3" />
             <span>{sortLabels[sortKey]}</span>

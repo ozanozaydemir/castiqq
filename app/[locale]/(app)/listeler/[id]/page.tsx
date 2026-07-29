@@ -23,19 +23,32 @@ export default async function CollectionDetailPage({
 
   if (!collection) notFound()
 
-  const { data: rawItems } = await supabase
-    .from('collection_items')
-    .select('talent_id, added_at, note, talent(id, full_name, city, phone, email, availability)')
-    .eq('collection_id', id)
-    .order('added_at', { ascending: false })
+  const [{ data: rawItems }, { data: projectsRaw }] = await Promise.all([
+    supabase
+      .from('collection_items')
+      .select('talent_id, added_at, note, talent(id, full_name, city, phone, email, availability, avatar_url, photos, skills, height_cm, gender, playable_age_min, playable_age_max, agency_name)')
+      .eq('collection_id', id)
+      .order('added_at', { ascending: false }),
+    supabase
+      .from('projects')
+      .select('id, title, project_roles(id, name)')
+      .eq('status', 'active')
+      .order('title'),
+  ])
 
   type ItemRow = {
     talent_id: string
     added_at: string
     note: string | null
-    talent: { id: string; full_name: string; city: string | null; phone: string | null; email: string | null; availability: string } | null
+    talent: {
+      id: string; full_name: string; city: string | null; phone: string | null; email: string | null; availability: string
+      avatar_url: string | null; photos: string[] | null; skills: string[] | null
+      height_cm: number | null; gender: string | null; playable_age_min: number | null; playable_age_max: number | null; agency_name: string | null
+    } | null
   }
   const members = (rawItems ?? []) as ItemRow[]
+  const projects = ((projectsRaw ?? []) as { id: string; title: string; project_roles: { id: string; name: string }[] }[])
+    .filter(p => p.project_roles.length > 0)
 
   type CollectionRow = { id: string; name: string; description: string | null; share_token: string }
   const col = collection as CollectionRow
@@ -54,6 +67,7 @@ export default async function CollectionDetailPage({
           collectionDescription={col.description ?? null}
           members={members}
           shareToken={col.share_token}
+          projects={projects}
         />
       </div>
     </div>

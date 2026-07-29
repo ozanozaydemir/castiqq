@@ -6,15 +6,46 @@ export type PublicApplyResult =
   | { success: true; uploadToken: string; isExisting?: boolean }
   | { error: string }
 
+export type LangRow = { language: string; level: string }
+export type ExpRow = {
+  project_name: string
+  year: string
+  role_name: string
+  role_type: string
+  production_type: string
+  director: string
+  production_company: string
+}
+
+export type PublicApplyData = {
+  full_name: string
+  email: string | null
+  phone: string | null
+  birth_year?: number | null
+  gender?: string | null
+  city?: string | null
+  height_cm?: number | null
+  weight_kg?: number | null
+  hair_color?: string | null
+  hair_length?: string | null
+  eye_color?: string | null
+  skills?: string[]
+  languages?: LangRow[]
+  experiences?: ExpRow[]
+  avatar_url?: string | null
+  fee_type?: string | null
+  fee_amount?: number | null
+  fee_currency?: string | null
+}
+
 export async function submitPublicApplication(
   rolePublicToken: string,
-  data: { full_name: string; email: string | null; phone: string | null },
+  data: PublicApplyData,
 ): Promise<PublicApplyResult> {
   if (!data.full_name.trim()) return { error: 'İsim zorunludur.' }
 
   const admin = createAdminClient()
 
-  // Find role by public_token — check is_public AND status
   const { data: role } = await admin
     .from('project_roles')
     .select('id, name, organization_id, status, is_public')
@@ -27,30 +58,33 @@ export async function submitPublicApplication(
     return { error: 'Bu rol için başvuru kapalı.' }
   }
 
-  // Duplicate detection — same email for same role returns existing token
+  // Duplicate detection — same email for same role returns existing token and updates talent
   if (data.email) {
     const { data: existing } = await admin
       .from('auditions')
-      .select('token')
+      .select('token, talent_id')
       .eq('role_id', role.id)
       .eq('talent_email', data.email.trim())
       .maybeSingle()
 
     if (existing?.token) {
+      if (existing.talent_id) {
+        await admin
+          .from('talent')
+          .update(buildTalentPayload(data))
+          .eq('id', existing.talent_id)
+      }
       return { success: true, uploadToken: existing.token, isExisting: true }
     }
   }
 
-  // Create talent record
   const { data: talent, error: talentError } = await admin
     .from('talent')
     .insert({
       organization_id: role.organization_id,
-      full_name: data.full_name.trim(),
-      email: data.email?.trim() || null,
-      phone: data.phone?.trim() || null,
       availability: 'available',
       visibility: 'private',
+      ...buildTalentPayload(data),
     })
     .select('id')
     .single()
@@ -60,7 +94,6 @@ export async function submitPublicApplication(
     return { error: 'Başvuru oluşturulamadı.' }
   }
 
-  // Create audition
   const { data: audition, error: auditionError } = await admin
     .from('auditions')
     .insert({
@@ -81,4 +114,27 @@ export async function submitPublicApplication(
   }
 
   return { success: true, uploadToken: audition.token }
+}
+
+function buildTalentPayload(data: PublicApplyData) {
+  return {
+    full_name: data.full_name.trim(),
+    email: data.email?.trim() || null,
+    phone: data.phone?.trim() || null,
+    birth_year: data.birth_year || null,
+    gender: data.gender || null,
+    city: data.city?.trim() || null,
+    height_cm: data.height_cm || null,
+    weight_kg: data.weight_kg || null,
+    hair_color: data.hair_color || null,
+    hair_length: data.hair_length || null,
+    eye_color: data.eye_color || null,
+    skills: data.skills?.length ? data.skills : null,
+    languages: data.languages?.length ? data.languages : null,
+    experiences: data.experiences?.length ? data.experiences : null,
+    avatar_url: data.avatar_url || null,
+    fee_type: data.fee_type || null,
+    fee_amount: data.fee_amount || null,
+    fee_currency: data.fee_currency || null,
+  }
 }

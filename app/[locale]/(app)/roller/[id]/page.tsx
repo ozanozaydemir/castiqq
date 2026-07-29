@@ -24,7 +24,7 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
     erkek: tr('gender.erkek'), kadin: tr('gender.kadin'), diger: tr('gender.diger'),
   }
 
-  const [{ data: role }, { data: talents }] = await Promise.all([
+  const [{ data: role }, { data: talents }, { data: projectsRaw }] = await Promise.all([
     supabase
       .from('project_roles')
       .select('*, projects(id, title, type, status)')
@@ -34,12 +34,19 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
       .from('talent')
       .select('id, full_name, phone, email, gender, birth_year, playable_age_min, playable_age_max, height_cm, city, skills, availability, photos')
       .order('full_name'),
+    supabase
+      .from('projects')
+      .select('id, title, project_roles(id, name)')
+      .eq('status', 'active')
+      .order('title'),
   ])
+  const slideshowProjects = ((projectsRaw ?? []) as { id: string; title: string; project_roles: { id: string; name: string }[] }[])
+    .filter(p => p.project_roles.length > 0)
 
   // Auditions: tam sorgu (migration 015 gerektirir — notes_updated_by, profiles FK)
   let { data: auditions, error: auditionsError } = await supabase
     .from('auditions')
-    .select('id, status, notes, rating, notes_updated_by, notes_updated_at, submitted_at, talent_name, talent_email, invite_phone, token, sort_order, talent(id, full_name), audition_videos(id, public_url, storage_path, uploaded_at, duration_seconds), profiles!auditions_notes_author_fkey(full_name)')
+    .select('id, status, notes, rating, notes_updated_by, notes_updated_at, submitted_at, talent_name, talent_email, invite_phone, token, sort_order, talent(id, full_name, city, gender, playable_age_min, playable_age_max, height_cm, agency_name, availability, skills, avatar_url, photos), audition_videos(id, public_url, storage_path, uploaded_at, duration_seconds), profiles!auditions_notes_author_fkey(full_name)')
     .eq('role_id', id)
     .order('sort_order', { ascending: true })
 
@@ -49,7 +56,7 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
     // Fallback — migration 015 olmadan çalışan basit sorgu
     const fallback = await supabase
       .from('auditions')
-      .select('id, status, notes, rating, submitted_at, talent_name, talent_email, invite_phone, token, sort_order, talent(id, full_name), audition_videos(id, public_url, storage_path, uploaded_at, duration_seconds)')
+      .select('id, status, notes, rating, submitted_at, talent_name, talent_email, invite_phone, token, sort_order, talent(id, full_name, city, gender, playable_age_min, playable_age_max, height_cm, agency_name, availability, skills, avatar_url, photos), audition_videos(id, public_url, storage_path, uploaded_at, duration_seconds)')
       .eq('role_id', id)
       .order('sort_order', { ascending: true })
 
@@ -202,6 +209,7 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
           auditions={auditionsWithTags as any[]}
           talents={(talents ?? []) as any[]}
           siteUrl={siteUrl}
+          slideshowProjects={slideshowProjects}
         />
       </div>
     </div>
