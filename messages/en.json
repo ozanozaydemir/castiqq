@@ -127,7 +127,8 @@
       "features": "Features",
       "howItWorks": "How It Works",
       "pricing": "Pricing",
-      "login": "Log In"
+      "login": "Log In",
+      "castingDirectors": "Casting Directors"
     },
     "hero": {
       "badge": "For casting directors and talent agencies",
@@ -1919,5 +1920,146 @@
     "homeTitle": "Castiqq — Casting & Talent Management Platform",
     "homeDescription": "One platform for casting directors and talent agencies. Review audition videos with your team on one screen, track your roster's jobs and receivables, and connect through role sharing. 14-day free trial.",
     "ogAlt": "Castiqq — Casting management platform"
+  },
+  "castingDirectors": {
+    "seo": {
+      "title": "Casting Management Software for Casting Directors",
+      "description": "Run the entire casting process on one platform, from role definition to final selection. Collect audition videos, rate them with your team, receive talent pitches from agencies. 14-day free trial."
+    },
+    "breadcrumb": "Casting Directors",
+    "hero": {
+      "label": "For Casting Directors",
+      "title": "The whole casting process on one platform",
+      "subtitle": "Define the role, invite talent, review incoming audition videos with your team on one screen and decide together. No chasing files, no version confusion, no asking who liked which tape.",
+      "cta": "Start 14-Day Free Trial",
+      "ctaSecondary": "How It Works"
+    },
+    "problem": {
+      "label": "Sound Familiar",
+      "title": "The hard part of casting isn't finding talent — it's holding the process together",
+      "intro": "Casting usually ends up scattered across three tools: videos in WhatsApp or Drive, the candidate list in Excel, decisions buried in an email thread. That gap is where Castiqq came from.",
+      "items": [
+        {
+          "title": "Videos everywhere",
+          "desc": "Forty tapes from forty actors — some on WhatsApp, some behind a Drive link, some on an expired WeTransfer. Remembering which tape belongs to which role is on you."
+        },
+        {
+          "title": "Decisions evaporate",
+          "desc": "The director likes one actor, the producer another. Two weeks later nobody remembers who said what, and you rewatch the same tape from scratch."
+        },
+        {
+          "title": "The list goes stale",
+          "desc": "Three versions of the same spreadsheet circulate. Who was cut and who was called back depends on which file you opened."
+        },
+        {
+          "title": "Agency traffic is tiring",
+          "desc": "Every agency pitches in a different format: a PDF here, a WhatsApp message there, sometimes just a list of names. You assemble them by hand to compare."
+        }
+      ]
+    },
+    "workflow": {
+      "label": "How It Works",
+      "title": "From role definition to final selection",
+      "steps": [
+        {
+          "title": "Define the project and its roles",
+          "desc": "Roles live under each project. You set the age range, gender, height, required skills and city. You can attach a script excerpt and track the role's status — open, casting, filled."
+        },
+        {
+          "title": "Invite talent",
+          "desc": "You share a passwordless application link. Talent submits an audition video and profile details without creating an account. You can also invite directly from your existing talent pool."
+        },
+        {
+          "title": "Review with your team",
+          "desc": "Every video collects into one list per role. While watching you rate out of five stars, tag, and pin a note to the exact moment. Everyone sees the same screen and every comment is attributed."
+        },
+        {
+          "title": "Share the shortlist and decide",
+          "desc": "Reorder candidates by drag and drop, update their status — shortlisted, callback, selected — and send your shortlist to the producer with a shareable link."
+        }
+      ]
+    },
+    "matching": {
+      "label": "The Time Saver",
+      "title": "Matching talent surfaces from your pool automatically",
+      "desc": "Instead of searching a pool of hundreds by hand, entering the role's criteria surfaces the people who fit. Gender and age act as hard filters; skills, city and availability feed a score. Each match shows badges explaining why it fits, and you add candidates in one click.",
+      "points": [
+        "Age, height, gender, skills and city criteria",
+        "Badges explaining each match",
+        "One-click add to the candidate list"
+      ]
+    },
+    "bridge": {
+      "label": "The Agency Link",
+      "title": "Agency pitches arrive in one format",
+      "desc": "You can share a role directly with a talent agency — criteria, budget and script excerpt included. The agency pitches suitable talent from its roster with fees attached. Every pitch lands on the same screen in the same format: photos, physical attributes, experience, self-tape links and the asking fee side by side. Mark your favourites, print as a presentation or export to PDF.",
+      "note": "Neither organization accesses the other's data. Every shared record travels as a snapshot — the agency can't see your projects, and you can't see the agency's roster financials."
+    },
+    "features": {
+      "label": "Details",
+      "title": "The things that shorten the day",
+      "items": [
+        {
+          "title": "Timestamped notes",
+          "desc": "Pin \"the tone drops here\" to 1:24 of the tape; anyone clicking the note jumps straight to that second."
+        },
+        {
+          "title": "Tagging",
+          "desc": "Build your own vocabulary: strong performance, takes direction, callback, wardrobe fit."
+        },
+        {
+          "title": "Team permissions",
+          "desc": "Add teammates by invite. Admins see everything, members see only their own work."
+        },
+        {
+          "title": "Lists",
+          "desc": "Build talent lists independent of projects and keep them for future work."
+        },
+        {
+          "title": "Request a retake",
+          "desc": "Ask a candidate for a new tape with extra direction and send it over WhatsApp in one click."
+        },
+        {
+          "title": "Turkish and English",
+          "desc": "The interface speaks both, so teams on international productions can work in different languages within one account."
+        }
+      ]
+    },
+    "faq": {
+      "label": "FAQ",
+      "title": "What casting directors ask",
+      "items": [
+        {
+          "q": "Do actors need an account?",
+          "a": "No. Through the passwordless application link you share, they submit a video and profile without signing up. On open calls this noticeably increases participation."
+        },
+        {
+          "q": "Is there an upload limit?",
+          "a": "The Casting Director plan has no limit on projects, roles or audition videos. Videos are stored on Cloudflare R2 and there is no extra charge for playback traffic."
+        },
+        {
+          "q": "Can the rest of my team see the videos?",
+          "a": "Yes. You invite teammates by email; everyone sees the same candidate list and videos and adds their own rating and notes. Every comment is attributed by name and date."
+        },
+        {
+          "q": "How do I work with talent agencies?",
+          "a": "You share the role with the agency and its pitches collect on one screen in one format. The agency needs to be on Castiqq. If it isn't, you can still direct its talent through the regular application link."
+        },
+        {
+          "q": "Can I bring my existing talent list?",
+          "a": "Yes. Import from Google Sheets is supported; move your Excel file into Sheets and connect it."
+        },
+        {
+          "q": "How is it priced?",
+          "a": "The Casting Director plan is 1,999 TRY per month with no per-seat charge — your whole team is included. A 14-day free trial is offered and no credit card is required."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Start your next project in order",
+      "desc": "No setup, no training. Create your account and define your first role today.",
+      "primary": "Start Free",
+      "secondary": "See all features"
+    }
   }
 }

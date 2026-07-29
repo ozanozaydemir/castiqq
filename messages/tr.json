@@ -127,7 +127,8 @@
       "features": "Özellikler",
       "howItWorks": "Nasıl Çalışır",
       "pricing": "Fiyatlar",
-      "login": "Giriş Yap"
+      "login": "Giriş Yap",
+      "castingDirectors": "Cast Direktörleri"
     },
     "hero": {
       "badge": "Cast direktörleri ve menajerlik ajansları için",
@@ -1919,5 +1920,146 @@
     "homeTitle": "Castiqq — Casting Yönetim ve Menajerlik Platformu",
     "homeDescription": "Cast direktörleri ve menajerlik ajansları için tek platform. Audition videolarını ekiple tek ekranda izleyin, kadronuzun iş ve tahsilat takibini yapın, rol paylaşımıyla birbirinize bağlanın. 14 gün ücretsiz deneyin.",
     "ogAlt": "Castiqq — Casting yönetim platformu"
+  },
+  "castingDirectors": {
+    "seo": {
+      "title": "Cast Direktörleri İçin Casting Yönetim Yazılımı",
+      "description": "Rol tanımından final seçime kadar tüm casting sürecini tek platformda yönetin. Audition videolarını toplayın, ekiple puanlayın, menajerlik ajanslarından oyuncu önerisi alın. 14 gün ücretsiz."
+    },
+    "breadcrumb": "Cast Direktörleri",
+    "hero": {
+      "label": "Cast Direktörleri İçin",
+      "title": "Casting sürecinin tamamı tek platformda",
+      "subtitle": "Rolü tanımlayın, oyuncuları davet edin, gelen audition videolarını ekiple aynı ekranda izleyip karar verin. Dosya kovalamak, sürüm karıştırmak ve \"hangi videoyu kim beğenmişti\" diye sormak yok.",
+      "cta": "14 Gün Ücretsiz Dene",
+      "ctaSecondary": "Nasıl Çalışır"
+    },
+    "problem": {
+      "label": "Tanıdık Gelecek",
+      "title": "Casting'in asıl zorluğu oyuncu bulmak değil, süreci toparlamak",
+      "intro": "Türkiye'de casting süreci çoğunlukla üç aracın arasında dağılmış durumda: videolar WhatsApp'ta veya Drive'da, aday listesi Excel'de, kararlar ise e-posta zincirinde. Ürün olarak Castiqq'i buradan doğurduk.",
+      "items": [
+        {
+          "title": "Videolar dağınık",
+          "desc": "Kırk oyuncudan gelen video; kimi WhatsApp'ta, kimi Drive linkinde, kimi WeTransfer'da süresi dolmuş. Hangi videonun hangi role ait olduğunu hatırlamak sizde kalıyor."
+        },
+        {
+          "title": "Kararlar kayboluyor",
+          "desc": "Yönetmen bir oyuncuyu beğeniyor, yapımcı başka birini. İki hafta sonra kimin ne dediğini kimse hatırlamıyor ve aynı videoyu baştan izliyorsunuz."
+        },
+        {
+          "title": "Aday listesi eskiyor",
+          "desc": "Excel dosyasının üç farklı sürümü dolaşıma giriyor. Kimin elendiği, kimin geri çağrıldığı dosyaya göre değişiyor."
+        },
+        {
+          "title": "Menajerlikle trafik yorucu",
+          "desc": "Her ajanstan farklı formatta öneri geliyor: kimi PDF, kimi WhatsApp mesajı, kimi sadece isim listesi. Karşılaştırmak için hepsini elle bir araya getiriyorsunuz."
+        }
+      ]
+    },
+    "workflow": {
+      "label": "Nasıl Çalışır",
+      "title": "Rol tanımından final seçime",
+      "steps": [
+        {
+          "title": "Projeyi ve rolleri tanımlayın",
+          "desc": "Her proje altında roller ayrı ayrı durur. Rolün yaş aralığı, cinsiyet, boy, aranan yetenekler ve şehir gibi kriterlerini girersiniz. Senaryo parçası ekleyebilir, rolün durumunu (açık, casting'de, dolduruldu) takip edebilirsiniz."
+        },
+        {
+          "title": "Oyuncuları davet edin",
+          "desc": "Şifresiz bir başvuru linki paylaşırsınız. Oyuncu hesap açmadan, tek linkten audition videosunu ve profil bilgilerini gönderir. Mevcut oyuncu havuzunuzdan doğrudan davet de gönderebilirsiniz."
+        },
+        {
+          "title": "Gelen videoları ekiple izleyin",
+          "desc": "Tüm videolar role bağlı tek listede toplanır. İzlerken beş yıldız üzerinden puanlarsınız, etiketlersiniz ve videonun tam o anına not düşersiniz. Ekipteki herkes aynı ekranı görür, kimin ne dediği kayıt altındadır."
+        },
+        {
+          "title": "Kısa listeyi paylaşın ve karar verin",
+          "desc": "Adayları sürükle-bırak ile sıralar, durumlarını (ön elemede, geri çağrıldı, seçildi) günceller ve seçim listenizi paylaşılabilir bir linkle yapımcıya gönderirsiniz."
+        }
+      ]
+    },
+    "matching": {
+      "label": "Zaman Kazandıran Kısım",
+      "title": "Role uyan oyuncular havuzdan otomatik çıkar",
+      "desc": "Yüzlerce kişilik bir oyuncu havuzunda tek tek arama yapmak yerine, rolün kriterlerini girdiğinizde sistem uyanları öne çıkarır. Cinsiyet ve yaş aralığı sert filtre olarak uygulanır; yetenek, şehir ve müsaitlik ise puanlamaya girer. Her eşleşmede neden uyduğunu gösteren rozetler bulunur, tek tıkla aday olarak eklersiniz.",
+      "points": [
+        "Yaş, boy, cinsiyet, yetenek ve şehir kriterleri",
+        "Neden eşleştiğini gösteren gerekçe rozetleri",
+        "Tek tıkla aday listesine ekleme"
+      ]
+    },
+    "bridge": {
+      "label": "Menajerliklerle Bağlantı",
+      "title": "Ajanslardan gelen öneriler tek formatta",
+      "desc": "Bir rolü doğrudan menajerlik ajansıyla paylaşabilirsiniz — kriterler, bütçe ve senaryo parçası dahil. Ajans kendi kadrosundan uygun oyuncuları önerdiği kaşeyle birlikte geri gönderir. Tüm öneriler aynı ekranda, aynı formatta birikir: fotoğraf, fiziksel özellikler, deneyim, self-tape linkleri ve istenen kaşe yan yana. Beğendiklerinizi işaretler, sunum olarak yazdırır veya PDF'e aktarırsınız.",
+      "note": "İki organizasyon birbirinin verisine erişmez. Paylaşılan her kayıt anlık kopya olarak taşınır; ajans sizin projelerinizi, siz ajansın kadro finansallarını göremezsiniz."
+    },
+    "features": {
+      "label": "Detaylar",
+      "title": "Günlük işi kısaltan şeyler",
+      "items": [
+        {
+          "title": "Zaman damgalı not",
+          "desc": "Videonun 1:24'üne \"burada tonu düştü\" notu düşersiniz; nota tıklayan kişi videoyu tam o saniyeden izler."
+        },
+        {
+          "title": "Etiketleme",
+          "desc": "Kendi etiket sözlüğünüzü kurarsınız: güçlü performans, yönlendirmeye açık, callback, kostüm uyumlu."
+        },
+        {
+          "title": "Ekip yetkileri",
+          "desc": "Ekip üyelerini davetle eklersiniz. Yönetici her şeyi, üye yalnızca kendi işini görür."
+        },
+        {
+          "title": "Listeler",
+          "desc": "Projeden bağımsız oyuncu listeleri oluşturur, ileriki projeler için saklarsınız."
+        },
+        {
+          "title": "Yeniden audition isteme",
+          "desc": "Bir adaydan ek talimatla yeni video isteyip WhatsApp üzerinden tek tıkla gönderirsiniz."
+        },
+        {
+          "title": "Türkçe ve İngilizce",
+          "desc": "Arayüz iki dilde; uluslararası yapımlarla çalışırken ekip aynı hesapta farklı dillerde çalışabilir."
+        }
+      ]
+    },
+    "faq": {
+      "label": "Sık Sorulanlar",
+      "title": "Cast direktörlerinin sorduğu şeyler",
+      "items": [
+        {
+          "q": "Oyuncuların hesap açması gerekiyor mu?",
+          "a": "Hayır. Paylaştığınız şifresiz başvuru linkinden, hesap açmadan videosunu ve profil bilgilerini gönderebilirler. Bu, özellikle geniş çağrılarda katılımı belirgin şekilde artırır."
+        },
+        {
+          "q": "Video yükleme sınırı var mı?",
+          "a": "Cast Direktörü planında proje, rol ve audition videosu sayısında sınır yoktur. Videolar Cloudflare R2 üzerinde saklanır ve izleme trafiği için ek ücret alınmaz."
+        },
+        {
+          "q": "Ekipteki diğer kişiler videoları görebilir mi?",
+          "a": "Evet. Ekip üyelerini e-posta ile davet edersiniz; herkes aynı aday listesini ve videoları görür, kendi puanını ve notunu ekler. Kimin ne yazdığı isim ve tarihle kayıt altındadır."
+        },
+        {
+          "q": "Menajerlik ajanslarıyla nasıl çalışıyorum?",
+          "a": "Rolü ajansla paylaşırsınız; ajans kendi kadrosundan oyuncu önerir ve öneriler tek ekranda, tek formatta birikir. Ajansın Castiqq kullanıyor olması gerekir. Kullanmıyorsa oyuncuları normal başvuru linkiyle de yönlendirebilirsiniz."
+        },
+        {
+          "q": "Mevcut oyuncu listemi taşıyabilir miyim?",
+          "a": "Evet. Google Sheets üzerinden içe aktarım desteklenir; Excel dosyanızı Sheets'e aktarıp bağlayabilirsiniz."
+        },
+        {
+          "q": "Fiyatlandırma nasıl?",
+          "a": "Cast Direktörü planı aylık 1.999 TL'dir ve kullanıcı başına ek ücret yoktur; ekibinizin tamamı dahildir. 14 gün ücretsiz deneme sunulur, kredi kartı istenmez."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Bir sonraki projenize düzenle başlayın",
+      "desc": "Kurulum yok, eğitim gerekmez. Hesabınızı açın, ilk rolünüzü bugün tanımlayın.",
+      "primary": "Ücretsiz Başla",
+      "secondary": "Tüm özellikleri gör"
+    }
   }
 }

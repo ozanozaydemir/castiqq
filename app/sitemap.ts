@@ -19,6 +19,7 @@ type PublicRoute = {
 
 const ROUTES: PublicRoute[] = [
   { path: '',                    priority: 1.0, changeFrequency: 'weekly' },
+  { path: '/cast-direktorleri',  priority: 0.9, changeFrequency: 'monthly' },
   { path: '/gizlilik',           priority: 0.3, changeFrequency: 'yearly' },
   { path: '/kullanim-kosullari', priority: 0.3, changeFrequency: 'yearly' },
 ]

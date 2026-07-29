@@ -159,6 +159,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   ]
 
   const navLinks = [
+    { label: t('nav.castingDirectors'), href: '/cast-direktorleri', internal: true },
     { label: t('nav.modules'),     href: '#kimler-icin' },
     { label: t('nav.bridge'),      href: '#baglanti' },
     { label: t('nav.features'),    href: '#ozellikler' },
@@ -179,15 +180,25 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">
-            {navLinks.map(({ label, href }) => (
-              <a
-                key={label}
-                href={href}
-                className="px-3.5 py-2 text-sm font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                {label}
-              </a>
-            ))}
+            {navLinks.map(({ label, href, internal }) =>
+              internal ? (
+                <Link
+                  key={label}
+                  href={href}
+                  className="px-3.5 py-2 text-sm font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  {label}
+                </Link>
+              ) : (
+                <a
+                  key={label}
+                  href={href}
+                  className="px-3.5 py-2 text-sm font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  {label}
+                </a>
+              ),
+            )}
           </nav>
 
           <div className="flex items-center gap-2">
@@ -635,9 +646,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 <ul className="space-y-2">
                   {navLinks.map(l => (
                     <li key={l.label}>
-                      <a href={l.href} className="text-sm text-white/50 hover:text-white/80 transition-colors">
-                        {l.label}
-                      </a>
+                      {l.internal ? (
+                        <Link href={l.href} className="text-sm text-white/50 hover:text-white/80 transition-colors">
+                          {l.label}
+                        </Link>
+                      ) : (
+                        <a href={l.href} className="text-sm text-white/50 hover:text-white/80 transition-colors">
+                          {l.label}
+                        </a>
+                      )}
                     </li>
                   ))}
                 </ul>
