@@ -21,6 +21,7 @@ const SKILLS = [
   'Akrobasi', 'Jimnastik', 'Seslendirme', 'Komedi', 'Doğaçlama',
   'Ehliyet', 'Pasaport',
 ]
+const LICENSE_SET = new Set(['Ehliyet', 'Pasaport', 'Vize'])
 
 const LANG_LEVELS = [
   { value: 'native', label: 'Ana dil' },
@@ -237,7 +238,8 @@ export function ApplyForm({ rolePublicToken, locale }: ApplyFormProps) {
         hair_color: hairColor || null,
         hair_length: hairLength || null,
         eye_color: eyeColor || null,
-        skills: skills.length ? skills : undefined,
+        skills: skills.filter(s => !LICENSE_SET.has(s)),
+        licenses: skills.filter(s => LICENSE_SET.has(s)),
         languages: languages.filter(l => l.language.trim()),
         experiences: experiences.filter(e => e.project_name.trim()),
         avatar_url: avatarUrl,

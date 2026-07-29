@@ -30,6 +30,7 @@ export type PublicApplyData = {
   hair_length?: string | null
   eye_color?: string | null
   skills?: string[]
+  licenses?: string[]
   languages?: LangRow[]
   experiences?: ExpRow[]
   avatar_url?: string | null
@@ -73,6 +74,7 @@ export async function submitPublicApplication(
           .from('talent')
           .update(buildTalentPayload(data))
           .eq('id', existing.talent_id)
+        await upsertRelated(admin, existing.talent_id, role.organization_id, data)
       }
       return { success: true, uploadToken: existing.token, isExisting: true }
     }
@@ -90,9 +92,11 @@ export async function submitPublicApplication(
     .single()
 
   if (talentError) {
-    console.error('Public apply talent error:', talentError.message, talentError.code)
+    console.error('Public apply talent error:', talentError.message, talentError.code, talentError.hint)
     return { error: 'Başvuru oluşturulamadı.' }
   }
+
+  await upsertRelated(admin, talent.id, role.organization_id, data)
 
   const { data: audition, error: auditionError } = await admin
     .from('auditions')
@@ -109,13 +113,14 @@ export async function submitPublicApplication(
     .single()
 
   if (auditionError) {
-    console.error('Public apply audition error:', auditionError.message, auditionError.code)
+    console.error('Public apply audition error:', auditionError.message, auditionError.code, auditionError.hint)
     return { error: 'Başvuru oluşturulamadı.' }
   }
 
   return { success: true, uploadToken: audition.token }
 }
 
+// Builds the payload for the `talent` table only — languages/experiences go to separate tables
 function buildTalentPayload(data: PublicApplyData) {
   return {
     full_name: data.full_name.trim(),
@@ -130,11 +135,34 @@ function buildTalentPayload(data: PublicApplyData) {
     hair_length: data.hair_length || null,
     eye_color: data.eye_color || null,
     skills: data.skills?.length ? data.skills : null,
-    languages: data.languages?.length ? data.languages : null,
-    experiences: data.experiences?.length ? data.experiences : null,
+    licenses: data.licenses?.length ? data.licenses : null,
     avatar_url: data.avatar_url || null,
     fee_type: data.fee_type || null,
     fee_amount: data.fee_amount || null,
-    fee_currency: data.fee_currency || null,
+    fee_currency: data.fee_currency || 'TRY',
+  }
+}
+
+async function upsertRelated(
+  admin: ReturnType<typeof createAdminClient>,
+  talentId: string,
+  orgId: string,
+  data: PublicApplyData,
+) {
+  await admin.from('talent_languages').delete().eq('talent_id', talentId)
+  await admin.from('talent_experiences').delete().eq('talent_id', talentId)
+
+  const langs = (data.languages ?? []).filter(l => l.language.trim())
+  if (langs.length > 0) {
+    await admin.from('talent_languages').insert(
+      langs.map((l, i) => ({ language: l.language, level: l.level, accents: '', talent_id: talentId, organization_id: orgId, sort_order: i }))
+    )
+  }
+
+  const exps = (data.experiences ?? []).filter(e => e.project_name.trim())
+  if (exps.length > 0) {
+    await admin.from('talent_experiences').insert(
+      exps.map((e, i) => ({ ...e, talent_id: talentId, organization_id: orgId, sort_order: i }))
+    )
   }
 }
