@@ -481,7 +481,6 @@
       "subtitle": "No hidden tiers, no per-seat pricing. Fourteen days free.",
       "perMonth": "/mo",
       "trialCta": "Start 14-Day Free Trial",
-      "popular": "Most chosen",
       "plans": {
         "pro": {
           "name": "Casting Director",
@@ -494,10 +493,6 @@
             "Passwordless application links",
             "Team members and permissions",
             "Role sharing with talent agencies"
-          ],
-          "exclude": [
-            "Roster financial management",
-            "Pitch pipeline"
           ]
         },
         "agency": {
@@ -512,8 +507,7 @@
             "Competitor exclusivity checks",
             "Document expiry tracking and alerts",
             "Pitching talent to incoming roles from casting directors"
-          ],
-          "exclude": []
+          ]
         }
       }
     },

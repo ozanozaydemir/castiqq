@@ -102,11 +102,6 @@ body {
 .animate-float-slow  { animation: float 4s   ease-in-out infinite; }
 .animate-float-delay { animation: float 3.5s ease-in-out 1.1s infinite; }
 
-/* ── Gradient border helper ──────────────────── */
-.pricing-popular-ring {
-  box-shadow: 0 0 0 2px #6366f1, 0 20px 60px -12px rgba(99,102,241,0.5);
-}
-
 /* ── Landing mockup girişleri ────────────────── */
 @keyframes mockRise {
   from { opacity: 0; transform: translateY(10px); }

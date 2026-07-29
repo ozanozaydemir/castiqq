@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Link } from '@/i18n/navigation'
 import {
-  ArrowRight, Check, X, Star, Play, Sparkles, Users2, Building2,
+  ArrowRight, Check, Star, Play, Sparkles, Users2, Building2,
   Video, Wand2, Link2, Calculator, Contact, GitBranch, FileCheck2,
   CalendarCheck, Shield, Languages, FileSpreadsheet, UserCog, Share2,
 } from 'lucide-react'
@@ -154,8 +154,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   ]
 
   const PLANS = [
-    { key: 'pro' as const,    price: '₺1.999', icon: Building2, popular: false },
-    { key: 'agency' as const, price: '₺4.999', icon: Users2,    popular: true },
+    { key: 'pro' as const,    price: '₺1.999', icon: Building2 },
+    { key: 'agency' as const, price: '₺4.999', icon: Users2 },
   ]
 
   const navLinks = [
@@ -497,22 +497,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            {PLANS.map(({ key, price, icon: Icon, popular }, i) => {
+            {PLANS.map(({ key, price, icon: Icon }, i) => {
               const include = t.raw(`pricing.plans.${key}.include`) as string[]
-              const exclude = t.raw(`pricing.plans.${key}.exclude`) as string[]
               return (
                 <div
                   key={key}
-                  className={`relative rounded-3xl p-7 bg-white ${popular ? 'pricing-popular-ring' : 'border border-gray-200'}`}
+                  className="relative rounded-3xl p-7 bg-white border border-gray-200 hover:border-indigo-200 transition-colors"
                   data-animate
                   data-delay={String(i + 1)}
                 >
-                  {popular && (
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-indigo-500 text-white text-[11px] font-semibold rounded-full whitespace-nowrap">
-                      {t('pricing.popular')}
-                    </span>
-                  )}
-
                   <div className="flex items-center gap-2.5 mb-4">
                     <span className="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
                       <Icon className="w-4 h-4 text-indigo-500" />
@@ -530,11 +523,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
                   <Link
                     href="/kayit"
-                    className={`flex items-center justify-center gap-2 w-full py-3 rounded-2xl font-semibold text-sm transition-all ${
-                      popular
-                        ? 'bg-indigo-500 hover:bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
-                        : 'border border-gray-200 hover:border-gray-300 text-gray-700'
-                    }`}
+                    className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl font-semibold text-sm transition-all bg-indigo-500 hover:bg-indigo-600 text-white shadow-lg shadow-indigo-500/25"
                   >
                     {t('pricing.trialCta')}
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -545,12 +534,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                       <li key={f} className="flex items-start gap-2.5">
                         <Check className="w-4 h-4 text-indigo-500 shrink-0 mt-0.5" />
                         <span className="text-sm text-gray-600">{f}</span>
-                      </li>
-                    ))}
-                    {exclude.map(f => (
-                      <li key={f} className="flex items-start gap-2.5">
-                        <X className="w-4 h-4 text-gray-300 shrink-0 mt-0.5" />
-                        <span className="text-sm text-gray-400">{f}</span>
                       </li>
                     ))}
                   </ul>

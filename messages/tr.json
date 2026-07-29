@@ -481,7 +481,6 @@
       "subtitle": "Gizli paket yok, kullanıcı başına ücret yok. 14 gün ücretsiz deneme.",
       "perMonth": "/ay",
       "trialCta": "14 Gün Ücretsiz Dene",
-      "popular": "En çok tercih edilen",
       "plans": {
         "pro": {
           "name": "Cast Direktörü",
@@ -494,10 +493,6 @@
             "Şifresiz başvuru linkleri",
             "Ekip üyeleri ve yetki yönetimi",
             "Menajerlik ajanslarıyla rol paylaşımı"
-          ],
-          "exclude": [
-            "Kadro finans yönetimi",
-            "Teklif pipeline'ı"
           ]
         },
         "agency": {
@@ -512,8 +507,7 @@
             "Reklam yasağı çakışma kontrolü",
             "Belge süre takibi ve uyarılar",
             "Cast direktörlerinden gelen rollere öneri gönderme"
-          ],
-          "exclude": []
+          ]
         }
       }
     },
