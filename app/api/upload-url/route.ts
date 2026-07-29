@@ -37,10 +37,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Geçersiz token' }, { status: 404 })
   }
 
-  if (audition.submitted_at) {
-    return NextResponse.json({ error: 'Bu audition zaten tamamlandı' }, { status: 409 })
-  }
-
   const { count: videoCount } = await admin
     .from('audition_videos')
     .select('*', { count: 'exact', head: true })
