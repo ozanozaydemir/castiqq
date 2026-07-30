@@ -7,7 +7,7 @@ import {
 } from 'lucide-react'
 import { AnimationInit } from '@/components/AnimationInit'
 import { JsonLd } from '@/components/JsonLd'
-import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+
 import { CastiqqLogo, CastiqqMark } from '@/components/brand/Logo'
 import { BrowserFrame, ProductionBoard, SubmissionPreview } from '@/components/landing/Mockups'
 import { faqSchema } from '@/lib/schema'
@@ -106,7 +106,6 @@ export default async function CastDirektorleriPage({ params }: Props) {
             <CastiqqLogo size={26} tone="light" />
           </Link>
           <div className="flex items-center gap-2">
-            <LanguageSwitcher />
             <Link href="/giris" className="hidden sm:block px-3.5 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
               {tl('nav.login')}
             </Link>

@@ -16,35 +16,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'seo' })
 
-  const isTr = locale === 'tr'
-  const canonical = isTr ? SITE_URL : `${SITE_URL}/en`
-
   return {
     metadataBase: new URL(SITE_URL),
-    // Ana sayfa markayı başta taşısın; alt sayfalar kök layout'taki
-    // "%s | Castiqq" şablonunu kullanmaya devam ediyor.
     title: { absolute: t('homeTitle') },
     description: t('homeDescription'),
     alternates: {
-      canonical,
-      languages: {
-        'tr': SITE_URL,
-        'en': `${SITE_URL}/en`,
-        'x-default': SITE_URL,
-      },
+      canonical: SITE_URL,
     },
     openGraph: {
       title: t('homeTitle'),
       description: t('homeDescription'),
-      url: canonical,
-      locale: isTr ? 'tr_TR' : 'en_US',
-      alternateLocale: isTr ? 'en_US' : 'tr_TR',
+      url: SITE_URL,
+      locale: 'tr_TR',
       siteName: 'Castiqq',
       type: 'website',
-      // images bilerek verilmiyor: opengraph-image.tsx dosya konvansiyonu
-      // görseli zaten üretiyor. Burada elle /og-image.png verilmesi onu
-      // eziyordu ve o dosya hiç var olmadığı için tüm link önizlemeleri
-      // görselsiz kalıyordu.
     },
     twitter: {
       card: 'summary_large_image',
@@ -57,10 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params
-
-  if (!hasLocale(routing.locales, locale)) {
-    notFound()
-  }
+  if (!hasLocale(routing.locales, locale)) notFound()
 
   const messages = await getMessages()
 

@@ -2,7 +2,7 @@
 
 import { Link, usePathname } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
-import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+
 import { NotificationBell } from '@/components/layout/NotificationBell'
 import {
   LayoutDashboard, Film, Users, UserSearch, Settings, LogOut, Clapperboard, BookMarked, Compass, Briefcase, Building2, CalendarDays, ListTodo, Target, Inbox,
@@ -82,7 +82,6 @@ export function AppSidebar({ orgName = 'Castiqq', orgType = 'production', isOpen
       <div className="px-3 py-4 border-t border-gray-200 space-y-1">
         <div className="flex items-center justify-center gap-2 py-1">
           <NotificationBell />
-          <LanguageSwitcher />
         </div>
         <form action={logout}>
           <button
