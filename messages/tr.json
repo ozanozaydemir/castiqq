@@ -2002,7 +2002,7 @@
     "bridge": {
       "label": "Menajerliklerle Bağlantı",
       "title": "Ajanslardan gelen öneriler tek formatta",
-      "desc": "Bir rolü doğrudan menajerlik ajansıyla paylaşabilirsiniz — kriterler, bütçe ve senaryo parçası dahil. Ajans kendi kadrosundan uygun oyuncuları önerdiği kaşeyle birlikte geri gönderir. Tüm öneriler aynı ekranda, aynı formatta birikir: fotoğraf, fiziksel özellikler, deneyim, self-tape linkleri ve istenen kaşe yan yana. Beğendiklerinizi işaretler, sunum olarak yazdırır veya PDF'e aktarırsınız.",
+      "desc": "Bir rolü doğrudan menajerlik ajansıyla paylaşabilirsiniz — kriterler, bütçe ve senaryo parçası dahil. Ajans kendi kadrosundan uygun oyuncuları önerdiği kaşeyle birlikte geri gönderir. Tüm öneriler aynı ekranda, aynı formatta birikir: fotoğraf, fiziksel özellikler, deneyim, audition videoları ve istenen kaşe yan yana. Beğendiklerinizi işaretler, sunum olarak yazdırır veya PDF'e aktarırsınız.",
       "note": "İki organizasyon birbirinin verisine erişmez. Paylaşılan her kayıt anlık kopya olarak taşınır; ajans sizin projelerinizi, siz ajansın kadro finansallarını göremezsiniz."
     },
     "features": {
@@ -2045,7 +2045,7 @@
         },
         {
           "q": "Video yükleme sınırı var mı?",
-          "a": "Cast Direktörü planında proje, rol ve audition videosu sayısında sınır yoktur. Videolar Cloudflare R2 üzerinde saklanır ve izleme trafiği için ek ücret alınmaz."
+          "a": "Cast Direktörü planında proje, rol ve audition videosu sayısında sınır yoktur; yalnızca toplam depolama alanınız (1 TB) sınırlıdır. Videolar Cloudflare R2 üzerinde saklanır ve izleme trafiği için ek ücret alınmaz."
         },
         {
           "q": "Ekipteki diğer kişiler videoları görebilir mi?",
@@ -2061,7 +2061,7 @@
         },
         {
           "q": "Fiyatlandırma nasıl?",
-          "a": "Cast Direktörü planı aylık 1.999 TL'dir ve kullanıcı başına ek ücret yoktur; ekibinizin tamamı dahildir. 14 gün ücretsiz deneme sunulur, kredi kartı istenmez."
+          "a": "Cast Direktörü planı aylık 1.999 TL'dir ve kullanıcı başına ek ücret yoktur; ekibinizin tamamı dahildir. 14 gün ücretsiz deneme sunulur."
         }
       ]
     },
