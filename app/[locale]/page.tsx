@@ -2,32 +2,26 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Link } from '@/i18n/navigation'
 import {
-  ArrowRight, Check, Star, Play, Sparkles, Users2, Building2,
-  Video, Wand2, Link2, Calculator, Contact, GitBranch, FileCheck2,
-  CalendarCheck, Shield, Languages, FileSpreadsheet, UserCog, Share2,
+  ArrowRight, Check, Star, Play, Sparkles, Building2,
+  Video, Wand2, Link2, FileSpreadsheet, UserCog, Share2, Shield,
 } from 'lucide-react'
 import { AnimationInit } from '@/components/AnimationInit'
 import { JsonLd } from '@/components/JsonLd'
 import { organizationSchema, websiteSchema, softwareApplicationSchema, faqSchema } from '@/lib/schema'
 
 import { CastiqqLogo, CastiqqMark } from '@/components/brand/Logo'
-import { ModuleShowcase, type ShowcaseTab } from '@/components/landing/ModuleShowcase'
 import {
-  BrowserFrame, ProductionBoard, AgencyLedger, PitchPipeline,
-  ConflictCard, BridgeFlow, SubmissionPreview,
+  BrowserFrame, ProductionBoard, BridgeFlow, SubmissionPreview,
 } from '@/components/landing/Mockups'
 import { getTranslations } from 'next-intl/server'
 import { resolveHomePath } from '@/lib/home-path'
 
 type RawCandidate = { name: string; meta: string; status: string; tags?: string[]; note?: string }
-type RawJob = { talent: string; client: string; date: string; gross: string; net: string; status: string; tone: 'paid' | 'partial' | 'pending' | 'overdue' }
-type RawCard = { title: string; client: string; value: string; stage: string }
 type RawStep = { actor: string; action: string }
 type RawBenefit = { title: string; desc: string }
 type RawFaq = { q: string; a: string }
 type RawRow = { name: string; role: string; fee: string; decision: 'liked' | 'pending' }
 type RawHowStep = { title: string; desc: string }
-type RawStat = { label: string; value: string }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
@@ -40,8 +34,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const tSeo = await getTranslations('seo')
   const faqItems = t.raw('faq.items') as RawFaq[]
 
-  // Tek bir @graph yerine ayrı ayrı veriliyor: her biri kendi @id'siyle
-  // birbirine referans veriyor, doğrulayıcılarda daha okunaklı.
   const schemas = [
     organizationSchema(tSeo('homeDescription')),
     websiteSchema(tSeo('homeTitle'), tSeo('homeDescription'), locale),
@@ -55,8 +47,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     faqSchema(faqItems),
   ]
 
-  // ── Mockup verileri i18n'den geliyor: dil değişince ekranlar da değişiyor,
-  //    ekran görüntüsü tazelemek gerekmiyor. ──
   const candidates = (t.raw('mockup.candidates') as RawCandidate[]).map((c, i) => ({
     ...c,
     rating: [5, 3, 0][i] ?? 0,
@@ -64,104 +54,24 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     videos: [2, 1, 1][i],
   }))
 
-  const ledger = t.raw('mockup.ledger') as {
-    title: string; subtitle: string; grossLabel: string; netLabel: string
-    stats: RawStat[]; jobs: RawJob[]
-  }
-
-  const pipelineCards = t.raw('mockup.pipeline.cards') as RawCard[]
-  const STAGE_TONES: Record<string, string> = {
-    brief: 'bg-gray-100 text-gray-600',
-    pitched: 'bg-blue-50 text-blue-600',
-    option: 'bg-purple-50 text-purple-600',
-    contract: 'bg-indigo-50 text-indigo-600',
-  }
-  const pipelineColumns = (['brief', 'pitched', 'option', 'contract'] as const).map(stage => ({
-    stage: t(`mockup.pipeline.stages.${stage}`),
-    tone: STAGE_TONES[stage],
-    cards: pipelineCards
-      .filter(c => c.stage === stage)
-      .map(c => ({ title: c.title, client: c.client, value: c.value })),
-  }))
-
   const prodNav = ['dashboard', 'projects', 'roles', 'talent', 'lists'].map(k => t(`mockup.nav.${k}`))
-  const agencyNav = ['overview', 'roster', 'jobs', 'clients', 'pitches'].map(k => t(`mockup.nav.${k}`))
-
-  const productionBoard = (
-    <ProductionBoard
-      labels={{
-        nav: prodNav,
-        activeNav: t('mockup.nav.roles'),
-        roleTitle: t('mockup.roleTitle'),
-        roleSubtitle: t('mockup.roleSubtitle'),
-        noteAuthor: t('mockup.noteAuthor'),
-        timestampNote: t('mockup.timestampLabel'),
-      }}
-      candidates={candidates}
-    />
-  )
-
-  const showcaseTabs: ShowcaseTab[] = [
-    {
-      key: 'production',
-      label: t('modules.production.label'),
-      sublabel: t('modules.production.sublabel'),
-      headline: t('modules.production.headline'),
-      description: t('modules.production.description'),
-      features: t.raw('modules.production.features') as string[],
-      panel: <BrowserFrame url="castiqq.app/roller/kirik-kanatlar">{productionBoard}</BrowserFrame>,
-    },
-    {
-      key: 'agency',
-      label: t('modules.agency.label'),
-      sublabel: t('modules.agency.sublabel'),
-      headline: t('modules.agency.headline'),
-      description: t('modules.agency.description'),
-      features: t.raw('modules.agency.features') as string[],
-      panel: (
-        <BrowserFrame url="castiqq.app/isler">
-          <AgencyLedger
-            labels={{
-              nav: agencyNav,
-              activeNav: t('mockup.nav.jobs'),
-              title: ledger.title,
-              subtitle: ledger.subtitle,
-              grossLabel: ledger.grossLabel,
-              netLabel: ledger.netLabel,
-            }}
-            stats={ledger.stats.map((s, i) => ({ ...s, tone: i === 2 ? ('warn' as const) : undefined }))}
-            jobs={ledger.jobs}
-          />
-        </BrowserFrame>
-      ),
-    },
-  ]
 
   const FEATURES = [
     { key: 'videoReview', icon: Video,           tone: 'bg-indigo-50 text-indigo-500' },
     { key: 'matching',    icon: Wand2,           tone: 'bg-violet-50 text-violet-500' },
     { key: 'publicApply', icon: Link2,           tone: 'bg-blue-50 text-blue-500' },
-    { key: 'financials',  icon: Calculator,      tone: 'bg-emerald-50 text-emerald-600' },
-    { key: 'crm',         icon: Contact,         tone: 'bg-amber-50 text-amber-600' },
     { key: 'roleShare',   icon: Share2,          tone: 'bg-indigo-50 text-indigo-500' },
-    { key: 'pipeline',    icon: GitBranch,       tone: 'bg-purple-50 text-purple-500' },
-    { key: 'documents',   icon: FileCheck2,      tone: 'bg-rose-50 text-rose-500' },
-    { key: 'calendar',    icon: CalendarCheck,   tone: 'bg-sky-50 text-sky-500' },
     { key: 'team',        icon: UserCog,         tone: 'bg-teal-50 text-teal-500' },
-    { key: 'i18n',        icon: Languages,       tone: 'bg-cyan-50 text-cyan-500' },
     { key: 'export',      icon: FileSpreadsheet, tone: 'bg-lime-50 text-lime-600' },
     { key: 'security',    icon: Shield,          tone: 'bg-gray-100 text-gray-500' },
   ]
 
   const PLANS = [
-    { key: 'pro' as const,    price: '₺1.999', icon: Building2 },
-    { key: 'agency' as const, price: '₺4.999', icon: Users2 },
+    { key: 'pro' as const, price: '₺1.999', icon: Building2 },
   ]
 
   const navLinks = [
-    { label: t('nav.castingDirectors'), href: '/cast-direktorleri', internal: true },
-    { label: t('nav.modules'),     href: '#kimler-icin' },
-    { label: t('nav.bridge'),      href: '#baglanti' },
+    { label: t('nav.agencies'),    href: '/menajerlik-ajanslari', internal: true },
     { label: t('nav.features'),    href: '#ozellikler' },
     { label: t('nav.howItWorks'),  href: '#nasil-calisir' },
     { label: t('nav.pricing'),     href: '#fiyatlar' },
@@ -278,31 +188,28 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
 
           <div className="hidden lg:flex absolute -left-4 bottom-16 z-20 items-center gap-3 bg-white rounded-2xl px-4 py-2.5 shadow-xl shadow-gray-200/80 border border-gray-100 animate-float-slow">
-            <div className="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0">
-              <Calculator className="w-4 h-4 text-indigo-500" />
+            <div className="w-9 h-9 bg-violet-50 rounded-xl flex items-center justify-center shrink-0">
+              <Wand2 className="w-4 h-4 text-violet-500" />
             </div>
             <div>
-              <p className="text-[11px] font-semibold text-gray-900 leading-tight">{t('floatingBadge.inviteLabel')}</p>
-              <p className="text-[9px] text-gray-400 mt-0.5">{t('floatingBadge.inviteSub')}</p>
+              <p className="text-[11px] font-semibold text-gray-900 leading-tight">{t('floatingBadge.matchLabel')}</p>
+              <p className="text-[9px] text-gray-400 mt-0.5">{t('floatingBadge.matchSub')}</p>
             </div>
           </div>
 
-          <BrowserFrame url="castiqq.app/roller/kirik-kanatlar">{productionBoard}</BrowserFrame>
-        </div>
-      </section>
-
-      {/* ── MODÜLLER ────────────────────────────────── */}
-      <section id="kimler-icin" className="py-24 px-6 bg-[#f8f8f8] border-y border-gray-100">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12" data-animate>
-            <p className="text-[13px] font-semibold uppercase tracking-[0.05em] text-indigo-600 mb-3">
-              {t('modules.sectionLabel')}
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] mb-4">{t('modules.title')}</h2>
-            <p className="text-gray-500 leading-relaxed">{t('modules.subtitle')}</p>
-          </div>
-
-          <ModuleShowcase tabs={showcaseTabs} />
+          <BrowserFrame url="castiqq.app/roller/kirik-kanatlar">
+            <ProductionBoard
+              labels={{
+                nav: prodNav,
+                activeNav: t('mockup.nav.roles'),
+                roleTitle: t('mockup.roleTitle'),
+                roleSubtitle: t('mockup.roleSubtitle'),
+                noteAuthor: t('mockup.noteAuthor'),
+                timestampNote: t('mockup.timestampLabel'),
+              }}
+              candidates={candidates}
+            />
+          </BrowserFrame>
         </div>
       </section>
 
@@ -357,75 +264,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 rows={t.raw('bridge.submission.rows') as RawRow[]}
               />
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── TEKLİF PIPELINE'I ───────────────────────── */}
-      <section className="py-24 px-6">
-        <div className="max-w-6xl mx-auto grid lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] gap-12 items-center">
-          <div data-animate>
-            <p className="text-[13px] font-semibold uppercase tracking-[0.05em] text-indigo-600 mb-3">
-              {t('features.items.pipeline.title')}
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] leading-tight mb-4">
-              {t('modules.agency.headline')}
-            </h2>
-            <p className="text-gray-500 leading-relaxed">{t('features.items.pipeline.desc')}</p>
-
-            <div className="mt-8 grid sm:grid-cols-2 gap-3">
-              {['crm', 'financials'].map((k, i) => (
-                <div key={k} className="rounded-2xl border border-gray-200 p-4" data-animate data-delay={String(i + 1)}>
-                  <p className="text-sm font-semibold text-gray-900">{t(`features.items.${k}.title`)}</p>
-                  <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">{t(`features.items.${k}.desc`)}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="min-w-0" data-animate data-delay="1">
-            <div className="rounded-2xl border border-gray-200/80 shadow-xl shadow-gray-300/20 overflow-hidden bg-white">
-              <PitchPipeline columns={pipelineColumns} />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── ÇAKIŞMA MOTORU ──────────────────────────── */}
-      <section className="py-24 px-6 bg-[#f8f8f8] border-y border-gray-100 relative overflow-hidden">
-        <div
-          className="absolute -top-40 -left-32 w-[520px] h-[520px] rounded-full opacity-10 blur-2xl"
-          style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6,#a78bfa)' }}
-        />
-        <div className="max-w-6xl mx-auto relative grid lg:grid-cols-2 gap-14 items-center">
-          <div data-animate>
-            <p className="text-[13px] font-semibold uppercase tracking-[0.05em] text-indigo-600 mb-3">
-              {t('conflict.sectionLabel')}
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] leading-tight mb-5">
-              {t('conflict.title')}
-            </h2>
-            <p className="text-gray-500 leading-relaxed mb-8">{t('conflict.subtitle')}</p>
-
-            <ul className="space-y-3">
-              {(t.raw('conflict.points') as string[]).map((p, i) => (
-                <li key={p} className="flex items-start gap-2.5" data-animate data-delay={String(i + 1)}>
-                  <span className="w-5 h-5 rounded-full bg-indigo-50 flex items-center justify-center shrink-0 mt-0.5">
-                    <Check className="w-3 h-3 text-indigo-600" />
-                  </span>
-                  <span className="text-sm text-gray-600">{p}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="flex justify-center lg:justify-end" data-animate data-delay="2">
-            <ConflictCard
-              talent={t('conflict.cardTalent')}
-              role={t('conflict.cardRole')}
-              title={t('conflict.cardTitle')}
-              detail={t('conflict.cardDetail')}
-            />
           </div>
         </div>
       </section>
@@ -495,15 +333,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <p className="text-gray-500 leading-relaxed">{t('pricing.subtitle')}</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {PLANS.map(({ key, price, icon: Icon }, i) => {
+          <div className="max-w-md mx-auto">
+            {PLANS.map(({ key, price, icon: Icon }) => {
               const include = t.raw(`pricing.plans.${key}.include`) as string[]
               return (
                 <div
                   key={key}
                   className="relative rounded-3xl p-7 bg-white border border-gray-200 hover:border-indigo-200 transition-colors"
                   data-animate
-                  data-delay={String(i + 1)}
                 >
                   <div className="flex items-center gap-2.5 mb-4">
                     <span className="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
@@ -540,6 +377,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               )
             })}
           </div>
+
+          <p className="text-center text-sm text-gray-400 mt-8">
+            {t('pricing.agencyNote')}{' '}
+            <Link href="/menajerlik-ajanslari" className="text-indigo-500 hover:underline font-medium">
+              {t('pricing.agencyLink')}
+            </Link>
+          </p>
         </div>
       </section>
 

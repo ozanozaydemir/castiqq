@@ -138,13 +138,14 @@
       "howItWorks": "Nasıl Çalışır",
       "pricing": "Fiyatlar",
       "login": "Giriş Yap",
-      "castingDirectors": "Cast Direktörleri"
+      "castingDirectors": "Cast Direktörleri",
+      "agencies": "Menajerlik Ajansları"
     },
     "hero": {
-      "badge": "Cast direktörleri ve menajerlik ajansları için",
+      "badge": "Yapım şirketleri ve serbest cast direktörleri için",
       "title": "Casting yönetiminde",
       "titleGradient": "dağınıklığa son.",
-      "subtitle": "Audition videoları WhatsApp'ta, kadro Excel'de, kaşe pazarlığı e-postada kaybolmasın. Castiqq cast direktörüyle menajerlik ajansını aynı platformda birbirine bağlar.",
+      "subtitle": "Audition videoları WhatsApp'ta, kararlar dağınık dosyalarda kaybolmasın. Rolü tanımla, oyuncuları davet et, ekiple birlikte değerlendir — tek platformda.",
       "ctaPrimary": "14 Gün Ücretsiz Dene",
       "ctaSecondary": "Nasıl Çalışır",
       "disclaimer": "Kredi kartı gerekmez · İstediğin an iptal et",
@@ -156,7 +157,9 @@
       "uploadedLabel": "Audition geldi",
       "uploadedSub": "Yeni video yüklendi",
       "inviteLabel": "Ödeme tahsil edildi",
-      "inviteSub": "Komisyon işlendi"
+      "inviteSub": "Komisyon işlendi",
+      "matchLabel": "Oyuncu eşleşti",
+      "matchSub": "3 kriter tam uyuyor"
     },
     "stats": {
       "activeProductions": "Aktif Proje",
@@ -487,10 +490,12 @@
     },
     "pricing": {
       "sectionLabel": "Fiyatlandırma",
-      "title": "Tarafına göre tek plan",
+      "title": "Cast direktörleri için tek plan",
       "subtitle": "Gizli paket yok, kullanıcı başına ücret yok. 14 gün ücretsiz deneme.",
       "perMonth": "/ay",
       "trialCta": "14 Gün Ücretsiz Dene",
+      "agencyNote": "Menajerlik ajansı mısınız?",
+      "agencyLink": "Ajans planını inceleyin →",
       "plans": {
         "pro": {
           "name": "Cast Direktörü",
@@ -583,6 +588,110 @@
           "a": "Türkçe ve İngilizce. Dil tercihi kullanıcı bazında saklanıyor, böylece uluslararası yapımlarla çalışan ekipler aynı hesap üzerinden farklı dillerde çalışabiliyor."
         }
       ]
+    }
+  },
+  "agencyLanding": {
+    "seo": {
+      "title": "Menajerlik Ajansları için Casting Yönetimi — Castiqq",
+      "description": "Kadro takibi, iş ve kaşe yönetimi, teklif pipeline'ı, reklam yasağı kontrolü — menajerlik ajansınız için tek platform."
+    },
+    "breadcrumb": "Menajerlik Ajansları",
+    "hero": {
+      "label": "Menajerlik Ajansları",
+      "title": "Kadronuzu, işlerinizi ve tahsilatınızı tek platformda yönetin.",
+      "subtitle": "Kadrodan kaşeye, teklif pipeline'ından reklam yasağı kontrolüne — menajerlik işinin her adımı artık tek yerde.",
+      "cta": "14 Gün Ücretsiz Dene",
+      "ctaSecondary": "Nasıl Çalışır"
+    },
+    "problem": {
+      "label": "Sorun",
+      "title": "Menajerlik bu kadar karmaşık olmak zorunda değil.",
+      "intro": "Oyuncu sayısı arttıkça iş yükü katlanıyor. Tablolar yetersiz, e-posta zincirleri takip edilemiyor, kaşe hesabı giderek zorlaşıyor.",
+      "items": [
+        {
+          "title": "Kadro takibi dağınık",
+          "desc": "Kimin hangi projede, müsaaitliğinin ne durumda ve belgelerinin ne zaman dolacağını tek yerden göremiyorsunuz."
+        },
+        {
+          "title": "Kaşe ve tahsilat elle yönetiliyor",
+          "desc": "Brüt/net hesabı, stopaj ve komisyon ayrı tablolarda; muhasebe zamanı her seferinde yeniden sayılıyor."
+        },
+        {
+          "title": "Teklif gönderimi verimsiz",
+          "desc": "Her cast direktörüne ayrı e-posta, ayrı format. Hangi teklifin nerede durduğunu takip etmek giderek zorlaşıyor."
+        },
+        {
+          "title": "Reklam yasağı çakışmaları",
+          "desc": "Aynı sektörde birden fazla teklif geldiğinde çakışmayı manuel kontrol etmek hem zaman alıyor hem riskli."
+        }
+      ]
+    },
+    "workflow": {
+      "label": "İş Akışı",
+      "title": "Ajanstan cast direktörüne, kesintisiz.",
+      "steps": [
+        {
+          "title": "Kadronuzu oluşturun",
+          "desc": "Oyuncu profillerini ekleyin; fiziksel özellikler, diller, deneyim, ücret bilgisi ve belgeler tek yerde."
+        },
+        {
+          "title": "Gelen rolü değerlendirin",
+          "desc": "Cast direktörü Castiqq üzerinden rolü paylaşırsa bildirim alırsınız. Kadronuzdan uygun oyuncuları kaşesiyle önerin."
+        },
+        {
+          "title": "İşi ve ödemeyi takip edin",
+          "desc": "Onaylanan iş sisteme girer; stopaj, net tutar ve komisyon otomatik hesaplanır. Gecikmiş ödemeler öne çıkar."
+        },
+        {
+          "title": "Bütün geçmişe bakın",
+          "desc": "Oyuncu bazında tüm işler, tahsilatlar ve belgeler tek ekranda — muhasebeciye tek tıkla aktarın."
+        }
+      ]
+    },
+    "bridge": {
+      "label": "Entegrasyon",
+      "title": "Cast direktörleriyle tek platformda çalışın.",
+      "desc": "Cast direktörü rolü Castiqq üzerinden paylaşırsa doğrudan bildirim alırsınız. Kadronuzdan istenen kaşeyle öneri gönderin; direktör hepsini aynı formatta görür.",
+      "note": "Ajansın Castiqq'i önceden kullanması gerekmez — direktör sizi sisteme davet eder, siz katılırsınız."
+    },
+    "pricing": {
+      "sectionLabel": "Fiyatlandırma",
+      "title": "Menajerlik ajansları için tek plan",
+      "subtitle": "Kullanıcı başına ek ücret yok. 14 gün ücretsiz deneme.",
+      "directorNote": "Cast direktörü müsünüz?",
+      "directorLink": "Direktör planını inceleyin →"
+    },
+    "faq": {
+      "label": "Sık Sorulanlar",
+      "title": "Aklınızdaki sorular",
+      "items": [
+        {
+          "q": "Kaç oyuncu ekleyebilirim?",
+          "a": "Sınırsız. Kadro büyüklüğünüze göre fiyatlandırma değişmez."
+        },
+        {
+          "q": "Cast direktörü Castiqq kullanmıyorsa ne olur?",
+          "a": "Yine de birlikte çalışabilirsiniz. Direktör sizi sisteme davet edebilir ya da siz kendi hesabınız üzerinden oyuncularınızı yönetebilirsiniz. Direktör platform dışındaysa oyuncularınızı şifresiz başvuru linki üzerinden yönlendirebilirsiniz."
+        },
+        {
+          "q": "Stopaj ve komisyon hesabı nasıl çalışır?",
+          "a": "İş kaydına brüt kaşeyi girin; stopaj oranını ve komisyon yüzdenizi seçin. Net tutar, menajer komisyonu ve stopaj kesintisi otomatik hesaplanır. CSV olarak dışa aktarabilirsiniz."
+        },
+        {
+          "q": "Fiyatlandırma nasıl?",
+          "a": "Menajerlik Ajansı planı aylık 4.999 TL'dir, kullanıcı başına ek ücret yoktur. 14 gün ücretsiz deneme sunuluyor."
+        },
+        {
+          "q": "Verilerim güvende mi?",
+          "a": "Her organizasyonun verisi veritabanı seviyesinde satır bazlı güvenlik politikalarıyla ayrıştırılıyor; bir organizasyon diğerinin kayıtlarını göremiyor. Platform KVKK ve GDPR uyumlu."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Ajansınızı dijitale taşıyın.",
+      "desc": "Kurulum yok, eğitim gerekmez. Hesabınızı açın, kadronuzu ekleyin.",
+      "primary": "14 Gün Ücretsiz Dene",
+      "secondary": "Cast direktörü müsünüz?"
     }
   },
   "dashboard": {
