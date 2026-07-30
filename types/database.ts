@@ -31,8 +31,13 @@ export type Database = {
           id: string
           name: string
           logo_url: string | null
+          org_type: 'production' | 'agency' | null
           subscription_plan: 'pro' | 'agency' | null
-          subscription_status: 'active' | 'trialing' | 'canceled' | 'past_due' | 'unpaid' | 'incomplete' | 'incomplete_expired'
+          subscription_status: 'active' | 'trialing' | 'canceled' | 'past_due' | 'unpaid' | 'incomplete' | 'incomplete_expired' | null
+          subscription_ends_at: string | null
+          polar_customer_id: string | null
+          polar_subscription_id: string | null
+          storage_used_bytes: number
           public_slug: string | null
           accepts_external_shares: boolean
           created_at: string

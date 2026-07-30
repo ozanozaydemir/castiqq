@@ -1378,6 +1378,7 @@
     "sectionAccount": "Account",
     "sectionPassword": "Change Password",
     "sectionGoogle": "Google Sheets",
+    "sectionStorage": "Storage",
     "description": "Organization and account settings",
     "form": {
       "orgName": "Organization Name",

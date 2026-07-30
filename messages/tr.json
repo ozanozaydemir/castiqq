@@ -1504,6 +1504,7 @@
     "sectionAccount": "Hesap",
     "sectionPassword": "Şifre Değiştir",
     "sectionGoogle": "Google Sheets",
+    "sectionStorage": "Depolama Alanı",
     "description": "Organizasyon ve hesap ayarları",
     "form": {
       "orgName": "Organizasyon Adı",

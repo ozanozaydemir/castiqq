@@ -7,7 +7,9 @@ import { SifreForm } from './SifreForm'
 import { PlanCard } from './PlanCard'
 import { GoogleSheetsCard } from './GoogleSheetsCard'
 import { ShareSettingsForm } from './ShareSettingsForm'
-import { Building2, User, Lock, FileSpreadsheet, Share2 } from 'lucide-react'
+import { StorageCard } from './StorageCard'
+import { Building2, User, Lock, FileSpreadsheet, Share2, HardDrive } from 'lucide-react'
+import { getActivePlan, PLAN_LIMITS } from '@/lib/plan'
 
 const GOOGLE_MESSAGE_KEYS: Record<string, string> = {
   invalid_state: 'errorInvalidState',
@@ -49,11 +51,46 @@ export default async function AyarlarPage({
 
   const { data: org } = await supabase
     .from('organizations')
-    .select('name, subscription_plan, subscription_status, subscription_ends_at, polar_customer_id, org_type, public_slug, accepts_external_shares')
+    .select('name, subscription_plan, subscription_status, subscription_ends_at, polar_customer_id, org_type, public_slug, accepts_external_shares, storage_used_bytes')
     .eq('id', profile?.organization_id ?? '')
     .single()
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castiqq.app'
+  const isAgency = org?.org_type === 'agency'
+
+  // Per-project storage breakdown (production orgs only)
+  let projectStorage: { id: string; name: string; totalBytes: number; videoCount: number }[] = []
+  if (!isAgency) {
+    const { data: storageData } = await supabase
+      .from('projects')
+      .select(`id, name, project_roles ( auditions ( audition_videos ( file_size_bytes ) ) )`)
+      .order('name')
+    type StorageRow = {
+      id: string
+      name: string
+      project_roles?: { auditions?: { audition_videos?: { file_size_bytes?: number | null }[] }[] }[]
+    }
+    projectStorage = ((storageData ?? []) as StorageRow[]).map(project => {
+      let totalBytes = 0
+      let videoCount = 0
+      for (const role of project.project_roles ?? []) {
+        for (const aud of role.auditions ?? []) {
+          for (const vid of aud.audition_videos ?? []) {
+            totalBytes += vid.file_size_bytes ?? 0
+            videoCount++
+          }
+        }
+      }
+      return { id: project.id, name: project.name, totalBytes, videoCount }
+    }).filter(p => p.videoCount > 0).sort((a, b) => b.totalBytes - a.totalBytes)
+  }
+
+  const activePlan = getActivePlan(
+    org?.subscription_plan ?? null,
+    org?.subscription_status ?? null,
+    isAgency ? 'agency' : 'production'
+  )
+  const limitBytes = PLAN_LIMITS[activePlan].storageGB * 1024 * 1024 * 1024
 
   const { data: googleConnection } = await supabase
     .from('google_connections')
@@ -66,8 +103,6 @@ export default async function AyarlarPage({
     : params.google_error
       ? GOOGLE_MESSAGE_KEYS[params.google_error] ?? 'errorExchangeFailed'
       : undefined
-
-  const isAgency = org?.org_type === 'agency'
 
   return (
     <div>
@@ -95,6 +130,16 @@ export default async function AyarlarPage({
       <SettingsCard title={t('sectionGoogle')} icon={<FileSpreadsheet className="w-4 h-4" />}>
         <GoogleSheetsCard connectedEmail={googleConnection?.google_email ?? null} message={googleMessage} />
       </SettingsCard>
+
+      {!isAgency && (
+        <SettingsCard title={t('sectionStorage')} icon={<HardDrive className="w-4 h-4" />}>
+          <StorageCard
+            usedBytes={org?.storage_used_bytes ?? 0}
+            limitBytes={limitBytes}
+            projects={projectStorage}
+          />
+        </SettingsCard>
+      )}
 
       {isAgency && (
         <SettingsCard title={t('share.sectionTitle')} icon={<Share2 className="w-4 h-4" />}>
