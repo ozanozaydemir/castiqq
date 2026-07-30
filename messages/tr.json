@@ -586,6 +586,27 @@
       ]
     }
   },
+  "gateway": {
+    "hero": {
+      "badge": "Casting yönetim platformu",
+      "title": "İki taraf, bir platform.",
+      "subtitle": "Cast direktörü müsünüz, yoksa menajerlik ajansı mı? İkisi için de ayrı bir deneyim hazır."
+    },
+    "cards": {
+      "director": {
+        "label": "Cast Direktörü",
+        "sublabel": "Yapım şirketleri & serbest direktörler",
+        "desc": "Proje ve rol yönetimi, audition videosu toplama, ekiple değerlendirme — casting sürecinin tamamı tek ekranda.",
+        "cta": "Cast direktörü sayfasına git"
+      },
+      "agency": {
+        "label": "Menajerlik Ajansı",
+        "sublabel": "Oyuncu menajerlikleri",
+        "desc": "Kadro takibi, iş ve kaşe yönetimi, teklif pipeline'ı, reklam yasağı kontrolü — menajerlik işinin her adımı.",
+        "cta": "Menajerlik ajansı sayfasına git"
+      }
+    }
+  },
   "agencyLanding": {
     "seo": {
       "title": "Menajerlik Ajansları için Casting Yönetimi — Castiqq",
