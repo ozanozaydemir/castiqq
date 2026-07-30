@@ -1,4 +1,4 @@
-import { getTranslations, getLocale } from 'next-intl/server'
+import { getTranslations } from 'next-intl/server'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { OrgForm } from './OrgForm'
@@ -7,8 +7,7 @@ import { SifreForm } from './SifreForm'
 import { PlanCard } from './PlanCard'
 import { GoogleSheetsCard } from './GoogleSheetsCard'
 import { ShareSettingsForm } from './ShareSettingsForm'
-import { Building2, User, Lock, Globe, FileSpreadsheet, Share2 } from 'lucide-react'
-import { LanguageForm } from './LanguageForm'
+import { Building2, User, Lock, FileSpreadsheet, Share2 } from 'lucide-react'
 
 const GOOGLE_MESSAGE_KEYS: Record<string, string> = {
   invalid_state: 'errorInvalidState',
@@ -37,7 +36,6 @@ export default async function AyarlarPage({
   searchParams: Promise<{ google_connected?: string; google_error?: string }>
 }) {
   const t = await getTranslations('settings')
-  const locale = await getLocale()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/giris')
@@ -112,9 +110,6 @@ export default async function AyarlarPage({
         <SifreForm />
       </SettingsCard>
 
-        <SettingsCard title={t('language.title')} icon={<Globe className="w-4 h-4" />}>
-          <LanguageForm currentLocale={locale} />
-        </SettingsCard>
       </div>
     </div>
   )
