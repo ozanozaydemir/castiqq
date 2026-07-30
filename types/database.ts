@@ -31,9 +31,8 @@ export type Database = {
           id: string
           name: string
           logo_url: string | null
-          subscription_plan: 'trial' | 'pro'
-          subscription_status: 'active' | 'cancelled' | 'past_due' | 'trial'
-          trial_ends_at: string | null
+          subscription_plan: 'pro' | 'agency' | null
+          subscription_status: 'active' | 'trialing' | 'canceled' | 'past_due' | 'unpaid' | 'incomplete' | 'incomplete_expired'
           public_slug: string | null
           accepts_external_shares: boolean
           created_at: string

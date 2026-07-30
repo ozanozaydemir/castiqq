@@ -1,22 +1,22 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { PLAN_LIMITS, getPlanLabel, getPlanFromProductId, getProductIdForPlan } from '../../lib/plan'
+import {
+  PLAN_LIMITS, getPlanLabel, getPlanFromProductId, getProductIdForPlan,
+  getActivePlan, isSubscriptionActive, formatStorage,
+} from '../../lib/plan'
 
 describe('PLAN_LIMITS', () => {
-  it('starter planı tanımlı', () => {
-    expect(PLAN_LIMITS.starter.maxUsers).toBe(1)
-    expect(PLAN_LIMITS.starter.storageGB).toBe(10)
-    expect(PLAN_LIMITS.starter.maxTalent).toBeUndefined()
-  })
-
   it('pro planı tanımlı', () => {
     expect(PLAN_LIMITS.pro.maxUsers).toBe(3)
-    expect(PLAN_LIMITS.pro.storageGB).toBe(200)
-    expect(PLAN_LIMITS.pro.maxTalent).toBeUndefined()
+    expect(PLAN_LIMITS.pro.storageGB).toBe(1000)
   })
 
   it('agency planı tanımlı', () => {
     expect(PLAN_LIMITS.agency.maxUsers).toBe(5)
-    expect(PLAN_LIMITS.agency.storageGB).toBe(50)
+    expect(PLAN_LIMITS.agency.storageGB).toBe(200)
+  })
+
+  it('starter planı yok', () => {
+    expect((PLAN_LIMITS as Record<string, unknown>)['starter']).toBeUndefined()
   })
 
   it('tüm planların storage limiti > 0', () => {
@@ -25,16 +25,77 @@ describe('PLAN_LIMITS', () => {
     }
   })
 
-  it('her planın label\'ı var', () => {
+  it("her planın label'ı var", () => {
     for (const plan of Object.values(PLAN_LIMITS)) {
       expect(plan.label).toBeTruthy()
     }
   })
 })
 
+describe('formatStorage', () => {
+  it('1000 GB → 1 TB', () => {
+    expect(formatStorage(1000)).toBe('1 TB')
+  })
+
+  it('200 GB → 200 GB', () => {
+    expect(formatStorage(200)).toBe('200 GB')
+  })
+
+  it('10 GB → 10 GB', () => {
+    expect(formatStorage(10)).toBe('10 GB')
+  })
+})
+
+describe('getActivePlan', () => {
+  it("'pro' planı doğrudan döner", () => {
+    expect(getActivePlan('pro', 'active', 'production')).toBe('pro')
+  })
+
+  it("'agency' planı doğrudan döner", () => {
+    expect(getActivePlan('agency', 'trialing', 'agency')).toBe('agency')
+  })
+
+  it('null plan + production org_type → pro', () => {
+    expect(getActivePlan(null, 'trialing', 'production')).toBe('pro')
+  })
+
+  it('null plan + agency org_type → agency', () => {
+    expect(getActivePlan(null, 'active', 'agency')).toBe('agency')
+  })
+
+  it("'starter' (legacy) + production org → pro", () => {
+    expect(getActivePlan('starter', 'active', 'production')).toBe('pro')
+  })
+
+  it('null org_type → pro varsayılan', () => {
+    expect(getActivePlan(null, 'active', null)).toBe('pro')
+  })
+})
+
+describe('isSubscriptionActive', () => {
+  it("'active' durumu aktif sayılır", () => {
+    expect(isSubscriptionActive('active')).toBe(true)
+  })
+
+  it("'trialing' durumu aktif sayılır", () => {
+    expect(isSubscriptionActive('trialing')).toBe(true)
+  })
+
+  it("'canceled' durumu aktif değil", () => {
+    expect(isSubscriptionActive('canceled')).toBe(false)
+  })
+
+  it("'past_due' durumu aktif değil", () => {
+    expect(isSubscriptionActive('past_due')).toBe(false)
+  })
+
+  it('null durumu aktif değil', () => {
+    expect(isSubscriptionActive(null)).toBe(false)
+  })
+})
+
 describe('getPlanLabel', () => {
   it('geçerli plan adı döner', () => {
-    expect(getPlanLabel('starter')).toBe('Başlangıç')
     expect(getPlanLabel('pro')).toContain('Production')
     expect(getPlanLabel('agency')).toContain('Menajerlik')
   })
@@ -58,12 +119,12 @@ describe('getPlanFromProductId', () => {
     expect(getPlanFromProductId('prod_agency_456')).toBe('agency')
   })
 
-  it('bilinmeyen product id → starter', () => {
-    expect(getPlanFromProductId('prod_unknown')).toBe('starter')
+  it('bilinmeyen product id → pro (varsayılan)', () => {
+    expect(getPlanFromProductId('prod_unknown')).toBe('pro')
   })
 
-  it('boş string → starter', () => {
-    expect(getPlanFromProductId('')).toBe('starter')
+  it('boş string → pro (varsayılan)', () => {
+    expect(getPlanFromProductId('')).toBe('pro')
   })
 })
 

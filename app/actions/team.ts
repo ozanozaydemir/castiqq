@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { requireOrg } from '@/lib/require-org'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { PLAN_LIMITS, type Plan } from '@/lib/plan'
+import { PLAN_LIMITS, getActivePlan, isSubscriptionActive } from '@/lib/plan'
 import { sendTeamInviteEmail } from '@/lib/resend'
 import { getLocale } from 'next-intl/server'
 
@@ -14,21 +14,20 @@ export async function inviteTeamMember(_: ActionState, formData: FormData): Prom
 
   const [{ data: profile }, { data: org }, { count: memberCount }] = await Promise.all([
     supabase.from('profiles').select('role').eq('id', userId).single(),
-    supabase.from('organizations').select('name, subscription_plan, subscription_status').eq('id', orgId).single(),
+    supabase.from('organizations').select('name, subscription_plan, subscription_status, org_type').eq('id', orgId).single(),
     supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('organization_id', orgId),
   ])
 
   if (profile?.role !== 'admin') return { error: 'Sadece yöneticiler üye davet edebilir.' }
 
   // Plan üye limitini kontrol et
-  const rawPlan = org?.subscription_plan
-  const isActive = org?.subscription_status === 'active' || org?.subscription_status === 'trialing'
-  const effectivePlan: Plan = (isActive && rawPlan && rawPlan in PLAN_LIMITS)
-    ? (rawPlan as Plan)
-    : 'starter'
+  if (!isSubscriptionActive(org?.subscription_status)) {
+    return { error: 'Aktif aboneliğiniz yok. Daha fazla üye eklemek için aboneliğinizi yenileyin.' }
+  }
+  const effectivePlan = getActivePlan(org?.subscription_plan, org?.subscription_status, org?.org_type)
   const maxUsers = PLAN_LIMITS[effectivePlan].maxUsers
 
-  if (maxUsers !== Infinity && (memberCount ?? 0) >= maxUsers) {
+  if ((memberCount ?? 0) >= maxUsers) {
     return {
       error: `${PLAN_LIMITS[effectivePlan].label} planınız en fazla ${maxUsers} kullanıcıya izin veriyor. Daha fazla üye eklemek için planınızı yükseltin.`
     }

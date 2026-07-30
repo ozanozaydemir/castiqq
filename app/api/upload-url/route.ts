@@ -3,7 +3,7 @@ import { PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { r2, R2_BUCKET } from '@/lib/r2'
-import { PLAN_LIMITS, type Plan } from '@/lib/plan'
+import { PLAN_LIMITS, getActivePlan, isSubscriptionActive } from '@/lib/plan'
 import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(req: NextRequest) {
@@ -52,12 +52,18 @@ export async function POST(req: NextRequest) {
   if (fileSize) {
     const { data: org } = await admin
       .from('organizations')
-      .select('storage_used_bytes, subscription_plan')
+      .select('storage_used_bytes, subscription_plan, subscription_status, org_type')
       .eq('id', audition.organization_id)
       .single()
 
     if (org) {
-      const plan = (org.subscription_plan ?? 'starter') as Plan
+      if (!isSubscriptionActive(org.subscription_status)) {
+        return NextResponse.json(
+          { error: 'Aktif aboneliğiniz yok. Video yüklemek için aboneliğinizi yenileyin.' },
+          { status: 403 }
+        )
+      }
+      const plan = getActivePlan(org.subscription_plan, org.subscription_status, org.org_type)
       const limitBytes = PLAN_LIMITS[plan].storageGB * 1024 ** 3
       if ((org.storage_used_bytes ?? 0) + fileSize > limitBytes) {
         return NextResponse.json(

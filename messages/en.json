@@ -496,6 +496,7 @@
           "name": "Casting Director",
           "desc": "For production companies and freelance casting directors",
           "include": [
+            "1 TB video storage",
             "Unlimited projects and roles",
             "Unlimited audition videos",
             "Video review, rating and tagging",
@@ -509,6 +510,7 @@
           "name": "Talent Agency",
           "desc": "For artist management and talent agencies",
           "include": [
+            "200 GB video storage",
             "Unlimited roster",
             "Job, fee and receivable tracking",
             "Withholding, net and commission calculation",
@@ -1394,13 +1396,12 @@
     },
     "plan": {
       "title": "Plan & Subscription",
-      "storage": "GB storage",
-      "unlimited": "Unlimited",
+      "storage": "storage",
       "users": "users",
-      "agency": "Agency",
+      "trial": "Free Trial",
+      "noActivePlan": "No active subscription",
       "cancelledUntil": "Cancelled — active until {date}.",
       "manageSubscription": "Manage Subscription",
-      "upgradeTo": "Upgrade your plan:",
       "perMonth": "/mo",
       "productIdMissing": "Product ID not configured."
     },

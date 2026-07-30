@@ -75,7 +75,7 @@ export default async function AyarlarPage({
     <div>
       <div className="p-6 space-y-5">
         <PlanCard
-          plan={org?.subscription_plan ?? 'starter'}
+          plan={org?.subscription_plan ?? null}
           status={org?.subscription_status ?? 'active'}
           endsAt={org?.subscription_ends_at ?? null}
           hasPortal={!!org?.polar_customer_id}

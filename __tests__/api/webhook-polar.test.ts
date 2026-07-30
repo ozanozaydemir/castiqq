@@ -88,10 +88,10 @@ describe('syncSubscription', () => {
     )
   })
 
-  it('bilinmeyen productId → starter plan', async () => {
+  it('bilinmeyen productId → pro plan (varsayılan)', async () => {
     await syncSubscription({ ...MOCK_SUB, productId: 'prod_unknown' })
     expect(mockUpdate).toHaveBeenCalledWith(
-      expect.objectContaining({ subscription_plan: 'starter' }),
+      expect.objectContaining({ subscription_plan: 'pro' }),
     )
   })
 

@@ -107,7 +107,7 @@ app/
 
 ### DB Tabloları
 - `organizations` — tenant root
-  - `subscription_plan` TEXT CHECK: `starter|pro|agency|trial`
+  - `subscription_plan` TEXT CHECK: `pro|agency` — NULL = henüz abone olunmamış (deneme/ilk kayıt)
   - `subscription_status` TEXT CHECK: `active|canceled|past_due|incomplete`
   - `polar_customer_id` TEXT — Polar müşteri ID'si
   - `polar_subscription_id` TEXT — aktif abonelik ID'si
@@ -157,6 +157,7 @@ app/
 21. `supabase/migrations/019_audition_rating.sql` — auditions.rating (1–5 yıldız)
 22. `supabase/migrations/020_polar_billing.sql` — Polar kolonları + subscription plan/status CHECK güncelleme
 23. `supabase/migrations/021_storage_tracking.sql` — file_size_bytes + storage_used_bytes + increment_storage()
+24. `supabase/migrations/052_remove_starter_plan.sql` — 'starter' plan kaldırıldı; CHECK: pro|agency, DEFAULT NULL
 
 **Kritik:** Migration'lar sırayla uygulanmalı. 015 olmadan roller/[id] sayfası `profiles!auditions_notes_author_fkey` join'i nedeniyle tüm auditions sorgusunu kırıyor.
 
@@ -250,11 +251,14 @@ NEXT_PUBLIC_POLAR_AGENCY_PRODUCT_ID
 
 ### Billing (Polar)
 - `lib/polar.ts` — Polar SDK singleton (`POLAR_ACCESS_TOKEN` + `POLAR_SERVER`)
-- `lib/plan.ts` — `Plan` type, `PLAN_LIMITS` (maxUsers, storageGB, label), product ID helpers
+- `lib/plan.ts` — `Plan` type (`'pro' | 'agency'`), `PLAN_LIMITS` (maxUsers, storageGB, label), `getActivePlan()`, `isSubscriptionActive()`, `formatStorage()`, product ID helpers
 - `/api/checkout` — Polar checkout, `customerExternalId=orgId`, success → `/dashboard?upgraded=1`
 - `/api/portal` — `polar.customerSessions.create()` → customer portal URL'e redirect
 - `/api/webhook/polar` — `subscription.created/updated/canceled/revoked` eventlerini işler, organizations tablosunu günceller
-- Planlar: `starter` (ücretsiz, 10GB, 1 kullanıcı), `pro` ($39/ay, 200GB, 3 kullanıcı), `agency` ($99/ay, 1TB, sınırsız)
+- Planlar: `pro` (₺1.999/ay, 1 TB, 3 kullanıcı — cast direktörleri), `agency` (₺4.999/ay, 200 GB, 5 kullanıcı — menajerlik ajansları)
+- Ücretsiz tier yoktur. Yeni kullanıcılar 14 gün deneme sonrası `pro` veya `agency` planına abone olur.
+- `subscription_plan = NULL` → abonelik yok (deneme veya ön-kayıt); `getActivePlan()` bu durumda `org_type`'a bakarak doğru limitleri döner.
+- Subscription revoke → `subscription_plan = NULL, subscription_status = 'canceled'`
 
 ### Email (Resend)
 - `lib/resend.ts` — 3 branded HTML şablonu:

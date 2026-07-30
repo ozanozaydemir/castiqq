@@ -5,7 +5,7 @@ import { Link } from '@/i18n/navigation'
 import { format } from 'date-fns'
 import { tr, enUS } from 'date-fns/locale'
 import { getTranslations, getLocale } from 'next-intl/server'
-import { PLAN_LIMITS, type Plan } from '@/lib/plan'
+import { PLAN_LIMITS, getActivePlan, formatStorage } from '@/lib/plan'
 import { OnboardingCard } from './OnboardingCard'
 
 export default async function DashboardPage() {
@@ -55,7 +55,7 @@ export default async function DashboardPage() {
       .gte('deadline', today)
       .lte('deadline', sevenDaysLater)
       .order('deadline') as Promise<{ data: { id: string; title: string; deadline: string }[] | null }>,
-    supabase.from('organizations').select('subscription_plan, storage_used_bytes').eq('id', orgId!).single() as Promise<{ data: { subscription_plan: string; storage_used_bytes: number } | null }>,
+    supabase.from('organizations').select('subscription_plan, subscription_status, org_type, storage_used_bytes').eq('id', orgId!).single() as Promise<{ data: { subscription_plan: string; subscription_status: string; org_type: string; storage_used_bytes: number } | null }>,
     supabase.from('talent').select('*', { count: 'exact', head: true }).eq('organization_id', orgId!).gte('created_at', oneWeekAgo),
     supabase.from('projects').select('*', { count: 'exact', head: true }).eq('organization_id', orgId!).gte('created_at', oneWeekAgo),
     supabase.from('auditions').select('*', { count: 'exact', head: true }).eq('organization_id', orgId!).gte('created_at', oneWeekAgo),
@@ -124,8 +124,8 @@ export default async function DashboardPage() {
 
         {/* Storage sayacı */}
         {orgData && (() => {
-          const plan = (orgData.subscription_plan ?? 'starter') as Plan
-          const limitGB = PLAN_LIMITS[plan]?.storageGB ?? 10
+          const plan = getActivePlan(orgData.subscription_plan, orgData.subscription_status, orgData.org_type)
+          const limitGB = PLAN_LIMITS[plan].storageGB
           const usedGB = (orgData.storage_used_bytes ?? 0) / (1024 ** 3)
           const pct = Math.min(100, Math.round((usedGB / limitGB) * 100))
           const critical = pct >= 90
@@ -138,7 +138,7 @@ export default async function DashboardPage() {
                     {t('storageLabel')}
                   </span>
                   <span className={`text-xs ${critical ? 'text-red-600' : warn ? 'text-amber-600' : 'text-gray-500'}`}>
-                    {usedGB.toFixed(1)} GB / {limitGB} GB
+                    {usedGB.toFixed(1)} GB / {formatStorage(limitGB)}
                   </span>
                 </div>
                 <div className="h-1.5 bg-white/70 rounded-full overflow-hidden">

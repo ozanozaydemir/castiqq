@@ -496,6 +496,7 @@
           "name": "Cast Direktörü",
           "desc": "Yapım şirketleri ve serbest cast direktörleri için",
           "include": [
+            "1 TB video depolama",
             "Sınırsız proje ve rol",
             "Sınırsız audition videosu",
             "Video inceleme, puanlama, etiketleme",
@@ -509,6 +510,7 @@
           "name": "Menajerlik Ajansı",
           "desc": "Oyuncu menajerlikleri için",
           "include": [
+            "200 GB video depolama",
             "Sınırsız oyuncu kadrosu",
             "İş, kaşe ve tahsilat takibi",
             "Stopaj, net ve komisyon hesabı",
@@ -1394,13 +1396,12 @@
     },
     "plan": {
       "title": "Plan & Abonelik",
-      "storage": "GB depolama",
-      "unlimited": "Sınırsız",
+      "storage": "depolama",
       "users": "kullanıcı",
-      "agency": "Ajans",
+      "trial": "Deneme Süresi",
+      "noActivePlan": "Aktif abonelik yok",
       "cancelledUntil": "İptal edildi — {date} tarihine kadar aktif.",
       "manageSubscription": "Aboneliği Yönet",
-      "upgradeTo": "Planını yükselt:",
       "perMonth": "/ay",
       "productIdMissing": "Ürün ID yapılandırılmamış."
     },

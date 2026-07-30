@@ -38,8 +38,8 @@ export const POST = Webhooks({
     await admin
       .from('organizations')
       .update({
-        subscription_plan: 'starter',
-        subscription_status: 'active',
+        subscription_plan: null,
+        subscription_status: 'canceled',
         polar_subscription_id: null,
         subscription_ends_at: null,
       })
