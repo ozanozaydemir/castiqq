@@ -100,7 +100,7 @@ export function matchTalentToRole(role: RoleCriteria, pool: TalentCandidate[]): 
     }
 
     // Şehir — yumuşak puan
-    if (role.city && talent.city && role.city.trim().toLowerCase() === talent.city.trim().toLowerCase()) {
+    if (role.city && talent.city && role.city.trim().toLocaleLowerCase('tr') === talent.city.trim().toLocaleLowerCase('tr')) {
       score += 8
       reasons.push({ type: 'city' })
     }
