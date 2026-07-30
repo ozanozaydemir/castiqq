@@ -1,7 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function GET(req: NextRequest) {
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown'
+  const rl = rateLimit(`public-photo-url:${ip}`, 10, 60_000)
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: 'Çok fazla istek.' },
+      { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } },
+    )
+  }
+
   const roleToken = req.nextUrl.searchParams.get('roleToken')
   if (!roleToken) return NextResponse.json({ error: 'roleToken required' }, { status: 400 })
 

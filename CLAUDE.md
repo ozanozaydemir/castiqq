@@ -294,10 +294,15 @@ NEXT_PUBLIC_POLAR_AGENCY_PRODUCT_ID
 - i18n linkleri `next/navigation`'dan değil `@/i18n/navigation`'dan import et
 - Yeni UI metni eklerken hem `messages/tr.json` hem `messages/en.json`'a ekle
 
+## Implement Edilmiş (Roadmap'ten Kapatılanlar)
+- **Sentry** — `@sentry/nextjs` kurulu, `sentry.server.config.ts` + `sentry.edge.config.ts` + `sentry.client.config.ts` + `instrumentation.ts` mevcut; `NEXT_PUBLIC_SENTRY_DSN` env var gerekli
+- **Rate limiting** — `lib/rate-limit.ts` in-memory sliding window; `/api/upload-url`, `/api/checkout`, `/api/video-complete`, `/api/public-photo-url`, `public-apply`, auth action'larında aktif. **Not:** Vercel serverless multi-instance'da per-instance çalışır — production'da Upstash Redis ile değiştirilmeli
+- **Onboarding flow** — `OnboardingCard.tsx` ile dashboard'da 3 adımlı checklist; localStorage ile dismiss
+- **Resend entegrasyonu** — `lib/resend.ts` eksiksiz (welcome, team invite, audition invite, video notification, agency digest, role share); `sendWelcomeEmail` `auth/callback/route.ts`'ten tetikleniyor
+- **DavetModal** — `app/[locale]/(app)/roller/[id]/DavetModal.tsx` mevcut ama hiçbir yerde import edilmiyor (dead code); aktif davet akışı `AdayEkleModal` + `AuditionIsteModal` üzerinden
+
 ## Roadmap — Henüz Yapılmadı
-- **Sentry** — `@sentry/nextjs` kurulumu + DSN (Vercel'e env var eklenecek)
-- **Plan enforcement middleware** — pro/agency gerektiren rotalarda plan kontrolü
-- **Rate limiting** — `/api/upload-url` ve `/api/checkout`'ta (Upstash Redis)
-- **Onboarding flow** — ilk girişte hoş geldin checklist'i dashboard'da
-- **Resend entegrasyonu** — `sendWelcomeEmail`'i `/kayit` action'ından çağır
+- **Upstash Redis rate limiter** — mevcut in-memory limiter'ı `@upstash/ratelimit` ile değiştir; `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` env var gerekli
+- **Plan enforcement middleware** — pro/agency gerektiren rotalarda plan kontrolü; `maxTalent: 250` (agency) oyuncu ekleme action'ında henüz kontrol edilmiyor
+- **Test coverage** — kritik iş mantığı (billing webhook, public-apply, plan enforcement) için en az temel entegrasyon testleri
 - **Referral programı** — planlı

@@ -1,6 +1,8 @@
 'use server'
 
+import { headers } from 'next/headers'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { rateLimit } from '@/lib/rate-limit'
 
 export type PublicApplyResult =
   | { success: true; uploadToken: string; isExisting?: boolean }
@@ -43,6 +45,11 @@ export async function submitPublicApplication(
   rolePublicToken: string,
   data: PublicApplyData,
 ): Promise<PublicApplyResult> {
+  const hdrs = await headers()
+  const ip = hdrs.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown'
+  const rl = rateLimit(`public-apply:${ip}`, 10, 60_000)
+  if (!rl.ok) return { error: 'Çok fazla istek. Lütfen bir dakika bekleyin.' }
+
   if (!data.full_name.trim()) return { error: 'İsim zorunludur.' }
 
   const admin = createAdminClient()

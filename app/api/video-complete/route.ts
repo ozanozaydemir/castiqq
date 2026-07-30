@@ -2,9 +2,25 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { R2_PUBLIC_URL } from '@/lib/r2'
 import { sendVideoNotificationEmail } from '@/lib/resend'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(req: NextRequest) {
-  const { auditionId, organizationId, storagePath, duration, fileSizeBytes } = await req.json()
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown'
+  const rl = rateLimit(`video-complete:${ip}`, 20, 60_000)
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: 'Çok fazla istek.' },
+      { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } },
+    )
+  }
+
+  let body: { auditionId?: string; organizationId?: string; storagePath?: string; duration?: number; fileSizeBytes?: number }
+  try {
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: 'Geçersiz istek.' }, { status: 400 })
+  }
+  const { auditionId, organizationId, storagePath, duration, fileSizeBytes } = body
 
   if (!auditionId || !organizationId || !storagePath) {
     return NextResponse.json({ error: 'Eksik parametre' }, { status: 400 })

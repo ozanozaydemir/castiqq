@@ -11,12 +11,13 @@ type Talent = { id: string; full_name: string; phone: string | null; email: stri
 interface DavetModalProps {
   roleId: string
   roleName: string
+  projectTitle: string
   talents: Talent[]
   siteUrl: string
   onClose: () => void
 }
 
-export function DavetModal({ roleId, roleName, talents, siteUrl, onClose }: DavetModalProps) {
+export function DavetModal({ roleId, roleName, projectTitle, talents, siteUrl, onClose }: DavetModalProps) {
   const t = useTranslations('auditions')
   const tc = useTranslations('common')
   const [tab, setTab] = useState<'havuz' | 'manuel'>('havuz')
@@ -63,7 +64,7 @@ export function DavetModal({ roleId, roleName, talents, siteUrl, onClose }: Dave
         setToken(result.token)
         if (talentEmail) {
           const uploadUrl = `${siteUrl}/oyuncu/${result.token}`
-          sendAuditionEmailAction(talentEmail, talentName, roleName, '', uploadUrl)
+          sendAuditionEmailAction(talentEmail, talentName, roleName, projectTitle, uploadUrl)
             .catch(err => console.error('Audition email error:', err))
         }
       }
