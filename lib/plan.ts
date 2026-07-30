@@ -6,12 +6,11 @@ export type Plan = 'starter' | 'pro' | 'agency'
 export const PLAN_LIMITS: Record<Plan, {
   maxUsers: number
   storageGB: number
-  maxTalent?: number
   label: string
 }> = {
   starter: { maxUsers: 1, storageGB: 10,  label: 'Başlangıç' },
   pro:     { maxUsers: 3, storageGB: 200, label: 'Production Planı' },
-  agency:  { maxUsers: 5, storageGB: 50, maxTalent: 250, label: 'Menajerlik Planı' },
+  agency:  { maxUsers: 5, storageGB: 50,  label: 'Menajerlik Planı' },
 }
 
 export function getPlanLabel(plan: string): string {

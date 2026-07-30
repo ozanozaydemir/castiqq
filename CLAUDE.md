@@ -303,6 +303,6 @@ NEXT_PUBLIC_POLAR_AGENCY_PRODUCT_ID
 
 ## Roadmap — Henüz Yapılmadı
 - **Upstash Redis rate limiter** — mevcut in-memory limiter'ı `@upstash/ratelimit` ile değiştir; `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` env var gerekli
-- **Plan enforcement middleware** — pro/agency gerektiren rotalarda plan kontrolü; `maxTalent: 250` (agency) oyuncu ekleme action'ında henüz kontrol edilmiyor
+- **Plan enforcement middleware** — pro/agency gerektiren rotalarda plan kontrolü
 - **Test coverage** — kritik iş mantığı (billing webhook, public-apply, plan enforcement) için en az temel entegrasyon testleri
 - **Referral programı** — planlı

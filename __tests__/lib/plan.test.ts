@@ -14,9 +14,9 @@ describe('PLAN_LIMITS', () => {
     expect(PLAN_LIMITS.pro.maxTalent).toBeUndefined()
   })
 
-  it('agency planı talent limiti var', () => {
+  it('agency planı tanımlı', () => {
     expect(PLAN_LIMITS.agency.maxUsers).toBe(5)
-    expect(PLAN_LIMITS.agency.maxTalent).toBe(250)
+    expect(PLAN_LIMITS.agency.storageGB).toBe(50)
   })
 
   it('tüm planların storage limiti > 0', () => {
