@@ -70,7 +70,7 @@
     "registerPanelBullet1": "Projelerinizi ve rollerinizi yönetin",
     "registerPanelBullet2": "Oyunculardan audition videosu toplayın",
     "registerPanelBullet3": "Ekibinizle değerlendirin ve karar verin",
-    "registerPanelBadge": "14 gün ücretsiz · Kredi kartı gerekmez",
+    "registerPanelBadge": "14 gün ücretsiz deneme",
     "loginPanelTitle": "Tekrar hoş geldiniz.",
     "loginPanelBullet1": "Tüm projeleriniz ve rolleriniz sizi bekliyor",
     "loginPanelBullet2": "Oyuncuların yüklediği videoları izleyin",
@@ -148,7 +148,7 @@
       "subtitle": "Audition videoları WhatsApp'ta, kararlar dağınık dosyalarda kaybolmasın. Rolü tanımla, oyuncuları davet et, ekiple birlikte değerlendir — tek platformda.",
       "ctaPrimary": "14 Gün Ücretsiz Dene",
       "ctaSecondary": "Nasıl Çalışır",
-      "disclaimer": "Kredi kartı gerekmez · İstediğin an iptal et",
+      "disclaimer": "İstediğin an iptal et",
       "freeBadge": "Ücretsiz Başla"
     },
     "floatingBadge": {

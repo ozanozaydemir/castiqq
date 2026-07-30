@@ -70,7 +70,7 @@
     "registerPanelBullet1": "Manage your projects and roles",
     "registerPanelBullet2": "Collect audition videos from talent",
     "registerPanelBullet3": "Evaluate and decide with your team",
-    "registerPanelBadge": "14 days free · No credit card required",
+    "registerPanelBadge": "14-day free trial",
     "loginPanelTitle": "Welcome back.",
     "loginPanelBullet1": "All your projects and roles are waiting for you",
     "loginPanelBullet2": "Watch the audition videos talent uploaded",
@@ -147,7 +147,7 @@
       "subtitle": "Stop losing audition videos in WhatsApp, your roster in Excel and fee negotiations in email. Castiqq connects casting directors and talent agencies on one platform.",
       "ctaPrimary": "Start 14-Day Free Trial",
       "ctaSecondary": "How It Works",
-      "disclaimer": "No credit card required · Cancel anytime",
+      "disclaimer": "Cancel anytime",
       "freeBadge": "Start Free"
     },
     "floatingBadge": {
@@ -2061,7 +2061,7 @@
         },
         {
           "q": "How is it priced?",
-          "a": "The Casting Director plan is 1,999 TRY per month with no per-seat charge — your whole team is included. A 14-day free trial is offered and no credit card is required."
+          "a": "The Casting Director plan is 1,999 TRY per month with no per-seat charge — your whole team is included. A 14-day free trial is offered."
         }
       ]
     },
