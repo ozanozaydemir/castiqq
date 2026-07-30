@@ -582,10 +582,6 @@
         {
           "q": "Verilerim güvende mi?",
           "a": "Her organizasyonun verisi veritabanı seviyesinde satır bazlı güvenlik politikalarıyla ayrıştırılıyor; bir organizasyon diğerinin kayıtlarını göremiyor. Platform KVKK ve GDPR uyumlu olacak şekilde tasarlandı; gizlilik politikasında kullanılan alt işleyiciler açıkça listeleniyor."
-        },
-        {
-          "q": "Arayüz hangi dillerde?",
-          "a": "Türkçe ve İngilizce. Dil tercihi kullanıcı bazında saklanıyor, böylece uluslararası yapımlarla çalışan ekipler aynı hesap üzerinden farklı dillerde çalışabiliyor."
         }
       ]
     }
