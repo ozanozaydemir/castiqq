@@ -164,6 +164,15 @@ app/
 25. `supabase/migrations/053_storage_counter_trigger.sql` — storage_used_bytes sayacı trigger'a taşındı (cascade silmede de doğru çalışır), mevcut sayaçlar yeniden hesaplandı
 26. `supabase/migrations/054_profiles_delete_policy.sql` — profiles'a admin DELETE politikası (yoktu; RLS açık + politika yok = silme sessizce engelleniyordu)
 27. `supabase/migrations/055_lock_down_storage_functions.sql` — increment_storage kaldırıldı (anon'a açık güvenlik açığı), sync_org_storage REST'ten kapatıldı
+28. `supabase/migrations/056_scope_public_bucket_listing.sql` — talent-avatars + org-logos SELECT politikaları org'a kısıtlandı (çapraz kiracı listeleme sızıntısı)
+29. `supabase/migrations/057_function_hardening.sql` — search_path sabitleme + trigger fonksiyonlarından EXECUTE revoke
+
+### Supabase Security Advisor — bilinçli olarak bırakılanlar
+`get_user_org_id()` / `get_user_role()` "anon/authenticated execute edebiliyor" uyarısı veriyor ama **kaldırılamaz**: her RLS politikası bunları çağırıyor ve politika ifadeleri sorguyu çalıştıran rolün yetkisiyle değerlendiriliyor. `PUBLIC`'ten EXECUTE alınınca tüm RLS `permission denied for function get_user_org_id` ile çöküyor (test edildi). Argümansızlar, yalnızca `auth.uid()`'den kendi org/rolünü dönüyorlar — anon çağırınca `null` geliyor, sızıntı yok.
+
+`rls_auto_enable()` de işaretleniyor ama dönüş tipi `event_trigger`; RPC denemesi `cannot display a value of type event_trigger` ile reddediliyor.
+
+**Açık kalan (dashboard'dan yapılmalı):** Leaked Password Protection — Authentication → Policies.
 
 **Uygulama durumu:** 053–055 production'a uygulandı. `supabase_migrations.schema_migrations` tablosu 001–052 için boş (elle uygulanmışlar) — bu yüzden `supabase db push` çalıştırmak eski migration'ları yeniden uygulamayı deneyebilir. Yeni migration'ları MCP `apply_migration` ile uygula.
 
