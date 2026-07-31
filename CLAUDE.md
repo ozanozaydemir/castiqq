@@ -271,7 +271,9 @@ NEXT_PUBLIC_POLAR_AGENCY_PRODUCT_ID
 - `lib/plan.ts` — `Plan` type (`'pro' | 'agency'`), `PLAN_LIMITS` (maxUsers, storageGB, label), `getActivePlan()`, `isSubscriptionActive()`, `formatStorage()`, product ID helpers
 - `/api/checkout` — Polar checkout, `customerExternalId=orgId`, success → `/dashboard?upgraded=1`
 - `/api/portal` — `polar.customerSessions.create()` → customer portal URL'e redirect
-- `/api/webhook/polar` — `subscription.created/updated/canceled/revoked` eventlerini işler, organizations tablosunu günceller
+- `/api/webhook/polar` — `subscription.created/updated/canceled/revoked` eventlerini işler
+- `lib/polar-sync.ts` — `syncSubscription()`; route ile test aynı kodu paylaşır (test eskiden route mantığını kopyalıyordu, kod değişince sessizce yalan söylüyordu)
+- **Tanınmayan ürün ID'si:** `getPlanFromProductId()` eşleşme yoksa `null` döner (eskiden sessizce `'pro'` dönüyordu). `syncSubscription` bu durumda aboneliği kaydeder ama `subscription_plan`'e **dokunmaz** — `getActivePlan()` `org_type`'a düşerek doğru limitleri verir; `'pro'` yazmak ödeme yapan ajansı sessizce düşürürdü. Durum Sentry'ye `error` seviyesinde raporlanır. **Sandbox → production geçişinde ürün ID'leri değişir**, env güncellenmezse Sentry'de bu uyarıyı görürsün.
 - Planlar: `pro` (₺1.999/ay, 1 TB, 3 kullanıcı — cast direktörleri), `agency` (₺4.999/ay, 200 GB, 5 kullanıcı — menajerlik ajansları)
 - Ücretsiz tier yoktur. Yeni kullanıcılar 14 gün deneme sonrası `pro` veya `agency` planına abone olur.
 - `subscription_plan = NULL` → abonelik yok (deneme veya ön-kayıt); `getActivePlan()` bu durumda `org_type`'a bakarak doğru limitleri döner.

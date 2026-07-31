@@ -119,12 +119,25 @@ describe('getPlanFromProductId', () => {
     expect(getPlanFromProductId('prod_agency_456')).toBe('agency')
   })
 
-  it('bilinmeyen product id → pro (varsayılan)', () => {
-    expect(getPlanFromProductId('prod_unknown')).toBe('pro')
+  // Sessizce 'pro' dönmek, yanlış ürün ID'si yapılandırıldığında ödeme
+  // yapan bir ajansı fark edilmeden pro limitlerine düşürüyordu.
+  it('bilinmeyen product id → null (sessizce pro varsaymaz)', () => {
+    expect(getPlanFromProductId('prod_unknown')).toBeNull()
   })
 
-  it('boş string → pro (varsayılan)', () => {
-    expect(getPlanFromProductId('')).toBe('pro')
+  it('boş string → null', () => {
+    expect(getPlanFromProductId('')).toBeNull()
+  })
+
+  it('null/undefined → null', () => {
+    expect(getPlanFromProductId(null)).toBeNull()
+    expect(getPlanFromProductId(undefined)).toBeNull()
+  })
+
+  it('env var tanımsızsa eşleşme uydurmaz', () => {
+    vi.stubEnv('POLAR_PRO_PRODUCT_ID', '')
+    vi.stubEnv('POLAR_AGENCY_PRODUCT_ID', '')
+    expect(getPlanFromProductId('prod_pro_123')).toBeNull()
   })
 })
 

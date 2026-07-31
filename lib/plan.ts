@@ -43,8 +43,20 @@ export function getProductIdForPlan(plan: 'pro' | 'agency'): string {
   return id ?? ''
 }
 
-export function getPlanFromProductId(productId: string): Plan {
-  if (productId === process.env.POLAR_PRO_PRODUCT_ID) return 'pro'
-  if (productId === process.env.POLAR_AGENCY_PRODUCT_ID) return 'agency'
-  return 'pro'
+// Bilinmeyen/eşleşmeyen ürün ID'sinde `null` döner.
+//
+// Eskiden sessizce 'pro' dönüyordu. Sandbox → production geçişinde ürün
+// ID'leri değiştiği için env güncellenmezse ₺4.999 ödeyen bir ajansın
+// webhook'u eşleşmez ve müşteri fark edilmeden pro limitlerine düşerdi —
+// hata yok, log yok. Artık çağıran tarafın bu durumu ele alması zorunlu.
+//
+// Env değişkeninin kendisi tanımsızsa karşılaştırma yapılmaz: aksi halde
+// `undefined === undefined` ile yanlış eşleşme oluşabilirdi.
+export function getPlanFromProductId(productId: string | null | undefined): Plan | null {
+  if (!productId) return null
+  const proId    = process.env.POLAR_PRO_PRODUCT_ID
+  const agencyId = process.env.POLAR_AGENCY_PRODUCT_ID
+  if (proId    && productId === proId)    return 'pro'
+  if (agencyId && productId === agencyId) return 'agency'
+  return null
 }

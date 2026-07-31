@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { getPlanFromProductId } from '../../lib/plan'
 
-// syncSubscription fonksiyonunu izole test etmek için DB mock'u
-const mockUpdate = vi.fn().mockReturnValue({ error: null })
-const mockEq = vi.fn().mockReturnValue({ error: null })
+const mockUpdate = vi.fn()
+const mockEq = vi.fn().mockResolvedValue({ error: null })
+const captureMessage = vi.fn()
+const captureException = vi.fn()
 
 vi.mock('../../lib/supabase/admin', () => ({
   createAdminClient: () => ({
@@ -16,34 +17,14 @@ vi.mock('../../lib/supabase/admin', () => ({
   }),
 }))
 
-// syncSubscription'ı doğrudan test edebilmek için route'daki mantığı burada tekrar yazıyoruz.
-// Route @polar-sh/nextjs Webhooks wrapper'ı kullandığından HTTP handler'ı mock'lamak yerine
-// iş mantığını (DB güncelleme) ayrı olarak test ediyoruz.
-async function syncSubscription(sub: {
-  id: string
-  status: string
-  productId: string
-  currentPeriodEnd?: Date | null
-  customer: { id: string; externalId: string | null }
-}) {
-  const { createAdminClient } = await import('../../lib/supabase/admin')
-  const orgId = sub.customer.externalId
-  if (!orgId) return
+vi.mock('@sentry/nextjs', () => ({
+  captureMessage: (...args: unknown[]) => captureMessage(...args),
+  captureException: (...args: unknown[]) => captureException(...args),
+}))
 
-  const plan = getPlanFromProductId(sub.productId)
-  const admin = createAdminClient()
-
-  await admin
-    .from('organizations')
-    .update({
-      subscription_plan: plan,
-      subscription_status: sub.status,
-      polar_customer_id: sub.customer.id,
-      polar_subscription_id: sub.id,
-      subscription_ends_at: sub.currentPeriodEnd?.toISOString() ?? null,
-    })
-    .eq('id', orgId)
-}
+// Route'daki mantığı kopyalamak yerine gerçek modülü test ediyoruz —
+// kopya test, route kodu değiştiğinde sessizce yalan söyleyebiliyordu.
+import { syncSubscription } from '../../lib/polar-sync'
 
 const MOCK_SUB = {
   id: 'sub_abc',
@@ -53,20 +34,23 @@ const MOCK_SUB = {
   customer: { id: 'cust_abc', externalId: 'org-uuid-123' },
 }
 
-describe('syncSubscription', () => {
-  beforeEach(() => {
-    vi.stubEnv('POLAR_PRO_PRODUCT_ID', 'prod_pro_123')
-    vi.stubEnv('POLAR_AGENCY_PRODUCT_ID', 'prod_agency_456')
-    mockUpdate.mockClear()
-    mockEq.mockClear()
-  })
+beforeEach(() => {
+  vi.stubEnv('POLAR_PRO_PRODUCT_ID', 'prod_pro_123')
+  vi.stubEnv('POLAR_AGENCY_PRODUCT_ID', 'prod_agency_456')
+  mockUpdate.mockClear()
+  mockEq.mockClear()
+  captureMessage.mockClear()
+  captureException.mockClear()
+  vi.spyOn(console, 'error').mockImplementation(() => {})
+})
 
+describe('syncSubscription', () => {
   it('externalId yoksa DB güncellememeli', async () => {
     await syncSubscription({ ...MOCK_SUB, customer: { id: 'cust_abc', externalId: null } })
     expect(mockUpdate).not.toHaveBeenCalled()
   })
 
-  it('pro subscription → DB\'ye pro plan yazmalı', async () => {
+  it("pro subscription → DB'ye pro plan yazmalı", async () => {
     await syncSubscription(MOCK_SUB)
     expect(mockUpdate).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -78,20 +62,10 @@ describe('syncSubscription', () => {
     expect(mockEq).toHaveBeenCalledWith('id', 'org-uuid-123')
   })
 
-  it('agency subscription → DB\'ye agency plan yazmalı', async () => {
-    await syncSubscription({
-      ...MOCK_SUB,
-      productId: 'prod_agency_456',
-    })
+  it("agency subscription → DB'ye agency plan yazmalı", async () => {
+    await syncSubscription({ ...MOCK_SUB, productId: 'prod_agency_456' })
     expect(mockUpdate).toHaveBeenCalledWith(
       expect.objectContaining({ subscription_plan: 'agency' }),
-    )
-  })
-
-  it('bilinmeyen productId → pro plan (varsayılan)', async () => {
-    await syncSubscription({ ...MOCK_SUB, productId: 'prod_unknown' })
-    expect(mockUpdate).toHaveBeenCalledWith(
-      expect.objectContaining({ subscription_plan: 'pro' }),
     )
   })
 
@@ -110,15 +84,49 @@ describe('syncSubscription', () => {
   })
 })
 
-describe('getPlanFromProductId — edge cases', () => {
-  beforeEach(() => {
-    vi.stubEnv('POLAR_PRO_PRODUCT_ID', 'prod_pro_123')
-    vi.stubEnv('POLAR_AGENCY_PRODUCT_ID', 'prod_agency_456')
+// Sandbox → production geçişinde ürün ID'leri değişir. Env güncellenmezse
+// eski davranış ödeme yapan ajansı sessizce pro limitlerine düşürüyordu.
+describe('syncSubscription — tanınmayan ürün ID', () => {
+  const UNKNOWN = { ...MOCK_SUB, productId: 'prod_unknown_999' }
+
+  it('subscription_plan alanına HİÇ dokunmamalı', async () => {
+    await syncSubscription(UNKNOWN)
+    const patch = mockUpdate.mock.calls[0][0] as Record<string, unknown>
+    expect(patch).not.toHaveProperty('subscription_plan')
   })
 
+  it('aboneliğin geri kalanını yine de kaydetmeli — müşteri erişimini kaybetmesin', async () => {
+    await syncSubscription(UNKNOWN)
+    expect(mockUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        subscription_status: 'active',
+        polar_customer_id: 'cust_abc',
+        polar_subscription_id: 'sub_abc',
+      }),
+    )
+  })
+
+  it("Sentry'ye bildirmeli — sessiz kalmamalı", async () => {
+    await syncSubscription(UNKNOWN)
+    expect(captureMessage).toHaveBeenCalledTimes(1)
+    const [, opts] = captureMessage.mock.calls[0] as [
+      string,
+      { level: string; extra: Record<string, unknown> },
+    ]
+    expect(opts.level).toBe('error')
+    expect(opts.extra.productId).toBe('prod_unknown_999')
+    expect(opts.extra.orgId).toBe('org-uuid-123')
+  })
+
+  it("bilinen ürün ID'sinde Sentry'ye bildirmemeli", async () => {
+    await syncSubscription(MOCK_SUB)
+    expect(captureMessage).not.toHaveBeenCalled()
+  })
+})
+
+describe('getPlanFromProductId — edge cases', () => {
   it('her iki env var da aynı değerse pro döner', () => {
     vi.stubEnv('POLAR_AGENCY_PRODUCT_ID', 'prod_pro_123')
-    // pro check önce → pro kazanır
     expect(getPlanFromProductId('prod_pro_123')).toBe('pro')
   })
 })
