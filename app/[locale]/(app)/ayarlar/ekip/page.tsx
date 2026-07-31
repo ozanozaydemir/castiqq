@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { EkipClient } from './EkipClient'
@@ -5,11 +6,14 @@ import { EkipClient } from './EkipClient'
 export default async function EkipPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  // Layout da guard ediyor ama Next sayfa ile layout'u paralel render
+  // ettiği için burada `user!` kullanmak oturumsuz istekte crash veriyordu.
+  if (!user) redirect('/giris')
 
   const { data: myProfile } = await supabase
     .from('profiles')
     .select('organization_id, role')
-    .eq('id', user!.id)
+    .eq('id', user.id)
     .single()
 
   const orgId = myProfile?.organization_id
@@ -47,11 +51,11 @@ export default async function EkipPage() {
   const pendingInvites   = enriched.filter((m: { confirmed: boolean }) => !m.confirmed)
 
   return (
-    <div className="max-w-2xl pb-8">
+    <div className="p-6 pb-8">
       <EkipClient
         members={confirmedMembers}
         pendingInvites={pendingInvites}
-        currentUserId={user!.id}
+        currentUserId={user.id}
         isAdmin={isAdmin}
       />
     </div>

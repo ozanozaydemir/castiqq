@@ -80,7 +80,7 @@ export async function inviteTeamMember(_: ActionState, formData: FormData): Prom
     return { error: 'Davet oluşturuldu ancak email gönderilemedi. Lütfen tekrar deneyin.' }
   }
 
-  revalidatePath('/ayarlar/ekip')
+  revalidatePath('/[locale]/ayarlar/ekip', 'page')
   return { success: true }
 }
 
@@ -95,15 +95,37 @@ export async function updateMemberRole(memberId: string, role: string): Promise<
   if (myProfile?.role !== 'admin') return { error: 'Sadece yöneticiler rol değiştirebilir.' }
   if (memberId === userId) return { error: 'Kendi rolünüzü değiştiremezsiniz.' }
 
-  const { error } = await supabase
+  // profiles_update_self politikası yalnızca `id = auth.uid()` satırına izin
+  // veriyor — yani yönetici başkasının rolünü RLS client'ıyla değiştiremez,
+  // silme gibi bu da sessizce 0 satır etkiliyordu.
+  if (!(await assertSameOrg(supabase, memberId, orgId))) return { error: 'Üye bulunamadı.' }
+
+  const admin = createAdminClient()
+  const { error } = await admin
     .from('profiles')
     .update({ role })
     .eq('id', memberId)
     .eq('organization_id', orgId)
 
   if (error) return { error: error.message }
-  revalidatePath('/ayarlar/ekip')
+  revalidatePath('/[locale]/ayarlar/ekip', 'page')
   return { success: true }
+}
+
+// Hedef üyenin gerçekten çağıranın org'una ait olduğunu doğrular.
+// Admin client RLS'i baypas ettiği için bu kontrol atlanamaz — aksi halde
+// bir yönetici ID tahmin ederek başka org'un üyesini silebilirdi.
+async function assertSameOrg(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any, memberId: string, orgId: string,
+): Promise<boolean> {
+  const { data } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('id', memberId)
+    .eq('organization_id', orgId)
+    .maybeSingle()
+  return !!data
 }
 
 export async function removeMember(memberId: string): Promise<ActionState> {
@@ -116,15 +138,20 @@ export async function removeMember(memberId: string): Promise<ActionState> {
     .single()
   if (myProfile?.role !== 'admin') return { error: 'Sadece yöneticiler üye çıkarabilir.' }
   if (memberId === userId) return { error: 'Kendinizi çıkaramazsınız.' }
+  if (!(await assertSameOrg(supabase, memberId, orgId))) return { error: 'Üye bulunamadı.' }
 
-  const { error } = await supabase
+  // profiles'ta DELETE politikası migration 054'e kadar yoktu; RLS açık +
+  // politika yok = silme sessizce 0 satır etkiliyor, hata da dönmüyordu.
+  // Admin client kullanmak bu tuzağı tamamen ortadan kaldırıyor.
+  const admin = createAdminClient()
+  const { error } = await admin
     .from('profiles')
     .delete()
     .eq('id', memberId)
     .eq('organization_id', orgId)
 
   if (error) return { error: error.message }
-  revalidatePath('/ayarlar/ekip')
+  revalidatePath('/[locale]/ayarlar/ekip', 'page')
   return { success: true }
 }
 
@@ -134,13 +161,18 @@ export async function cancelInvite(memberId: string): Promise<ActionState> {
   const { data: myProfile } = await supabase
     .from('profiles').select('role').eq('id', userId).single()
   if (myProfile?.role !== 'admin') return { error: 'Sadece yöneticiler davet iptal edebilir.' }
+  if (memberId === userId) return { error: 'Kendi davetinizi iptal edemezsiniz.' }
+  if (!(await assertSameOrg(supabase, memberId, orgId))) return { error: 'Davet bulunamadı.' }
 
-  // Profili sil (auth user'ı da silebiliriz, ama mevcut hesapları etkilemez)
-  await supabase.from('profiles').delete().eq('id', memberId).eq('organization_id', orgId)
-
+  // profiles.id → auth.users(id) ON DELETE CASCADE olduğu için auth
+  // kullanıcısını silmek profil satırını da götürür.
+  // Bu çağrının hatası önceden yutuluyordu: başarısız olsa bile action
+  // success dönüyor, arayüzde davet duruyor ve "sayfa yenilenmedi" gibi
+  // görünüyordu.
   const adminClient = createAdminClient()
-  await adminClient.auth.admin.deleteUser(memberId)
+  const { error } = await adminClient.auth.admin.deleteUser(memberId)
+  if (error) return { error: error.message }
 
-  revalidatePath('/ayarlar/ekip')
+  revalidatePath('/[locale]/ayarlar/ekip', 'page')
   return { success: true }
 }

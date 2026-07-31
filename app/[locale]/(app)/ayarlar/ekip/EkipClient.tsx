@@ -92,6 +92,7 @@ function MemberRow({ member, currentUserId, isAdmin }: {
   const t = useTranslations('settings')
   const router = useRouter()
   const [, startTransition] = useTransition()
+  const [err, setErr] = useState('')
   const isSelf = member.id === currentUserId
 
   const ROLE_LABELS: Record<string, string> = {
@@ -101,22 +102,27 @@ function MemberRow({ member, currentUserId, isAdmin }: {
   }
 
   function handleRoleChange(role: string) {
+    setErr('')
     startTransition(async () => {
-      await updateMemberRole(member.id, role)
+      const res = await updateMemberRole(member.id, role)
+      if (res?.error) { setErr(res.error); return }
       router.refresh()
     })
   }
 
   function handleRemove() {
     if (!confirm(t('team.removeConfirm', { name: member.full_name }))) return
+    setErr('')
     startTransition(async () => {
-      await removeMember(member.id)
+      const res = await removeMember(member.id)
+      if (res?.error) { setErr(res.error); return }
       router.refresh()
     })
   }
 
   return (
-    <div className="flex items-center gap-3 py-3 px-5 border-b border-gray-50 last:border-0">
+    <div className="border-b border-gray-50 last:border-0">
+    <div className="flex items-center gap-3 py-3 px-5">
       <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
         <span className="text-xs font-bold text-indigo-600">
           {member.full_name.trim().split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()}
@@ -162,6 +168,8 @@ function MemberRow({ member, currentUserId, isAdmin }: {
         )}
       </div>
     </div>
+    {err && <p className="text-xs text-red-500 bg-red-50 mx-5 mb-3 px-3 py-2 rounded-lg">{err}</p>}
+    </div>
   )
 }
 
@@ -170,34 +178,42 @@ function MemberRow({ member, currentUserId, isAdmin }: {
 function PendingInviteRow({ member, isAdmin }: { member: Member; isAdmin: boolean }) {
   const t = useTranslations('settings')
   const router = useRouter()
-  const [, startTransition] = useTransition()
+  const [pending, startTransition] = useTransition()
+  const [err, setErr] = useState('')
 
   function handleCancel() {
     if (!confirm(t('team.cancelInviteConfirm', { email: member.email }))) return
+    setErr('')
     startTransition(async () => {
-      await cancelInvite(member.id)
+      const res = await cancelInvite(member.id)
+      if (res?.error) { setErr(res.error); return }
       router.refresh()
     })
   }
 
   return (
-    <div className="flex items-center gap-3 py-3 px-5 border-b border-gray-50 last:border-0">
-      <div className="w-8 h-8 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center flex-shrink-0">
-        <Clock className="w-3.5 h-3.5 text-amber-500" />
+    <div className="border-b border-gray-50 last:border-0">
+      <div className="flex items-center gap-3 py-3 px-5">
+        <div className="w-8 h-8 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center flex-shrink-0">
+          <Clock className="w-3.5 h-3.5 text-amber-500" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm text-gray-500 truncate">{member.email}</p>
+          <p className="text-xs text-amber-500">{t('team.pendingInviteHint')}</p>
+        </div>
+        {isAdmin && (
+          <button
+            onClick={handleCancel}
+            disabled={pending}
+            className="flex-shrink-0 text-xs text-gray-400 hover:text-red-500 disabled:opacity-50 transition-colors px-2 py-1 rounded-lg hover:bg-red-50 inline-flex items-center gap-1.5"
+            title={t('team.cancelInvite')}
+          >
+            {pending && <Loader2 className="w-3 h-3 animate-spin" />}
+            {t('team.cancelInvite')}
+          </button>
+        )}
       </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm text-gray-500 truncate">{member.email}</p>
-        <p className="text-xs text-amber-500">{t('team.pendingInviteHint')}</p>
-      </div>
-      {isAdmin && (
-        <button
-          onClick={handleCancel}
-          className="flex-shrink-0 text-xs text-gray-400 hover:text-red-500 transition-colors px-2 py-1 rounded-lg hover:bg-red-50"
-          title={t('team.cancelInvite')}
-        >
-          {t('team.cancelInvite')}
-        </button>
-      )}
+      {err && <p className="text-xs text-red-500 bg-red-50 mx-5 mb-3 px-3 py-2 rounded-lg">{err}</p>}
     </div>
   )
 }
