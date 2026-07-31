@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from '@/i18n/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Clapperboard, Loader2, Eye, EyeOff, CheckCircle } from 'lucide-react'
+import { Clapperboard, Loader2, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
 import { resolveHomePath } from '@/lib/home-path'
@@ -17,6 +17,39 @@ export default function ResetPasswordPage() {
   const [showConfirm, setShowConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  // null = session hâlâ kontrol ediliyor
+  const [hasSession, setHasSession] = useState<boolean | null>(null)
+
+  // Hash client oluşturulmadan ÖNCE okunmalı: detectSessionInUrl session'ı
+  // kurduktan sonra fragment'ı history.replaceState ile siliyor. useEffect'e
+  // bıraksaydık bu silme önce olabilir ve davet metni kaçardı.
+  const [isInvite] = useState(
+    () => typeof window !== 'undefined' && window.location.hash.includes('type=invite')
+  )
+
+  const supabaseRef = useRef<ReturnType<typeof createClient> | null>(null)
+  if (!supabaseRef.current) supabaseRef.current = createClient()
+  const supabase = supabaseRef.current
+
+  useEffect(() => {
+    // Davet linki (implicit flow) token'ları `#access_token=...` fragment'ında
+    // taşır — sunucu bunu göremez, session'ı browser client kurar. Bu işlem
+    // asenkron olduğu için form hazır olmadan submit edilmesin diye bekliyoruz.
+    let active = true
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event: string, session: unknown) => {
+        if (active && session) setHasSession(true)
+      }
+    )
+
+    // getSession() client initialization'ını (fragment ayrıştırma dahil) bekler.
+    supabase.auth.getSession().then(({ data: { session } }: { data: { session: unknown } }) => {
+      // Listener zaten session bulduysa geri alma.
+      if (active) setHasSession(prev => prev === true ? true : !!session)
+    })
+
+    return () => { active = false; subscription.unsubscribe() }
+  }, [supabase])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -32,7 +65,6 @@ export default function ResetPasswordPage() {
     }
 
     setLoading(true)
-    const supabase = createClient()
     const { error: err } = await supabase.auth.updateUser({ password })
 
     if (err) {
@@ -46,26 +78,63 @@ export default function ResetPasswordPage() {
     router.push(homePath)
   }
 
-  return (
+  const shell = (children: React.ReactNode) => (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-12">
-
-      {/* Logo */}
       <Link href="/" className="flex items-center gap-2.5 mb-8">
         <div className="w-9 h-9 bg-indigo-500 rounded-xl flex items-center justify-center shadow-sm shadow-indigo-500/30">
           <Clapperboard className="w-4 h-4 text-white" />
         </div>
         <span className="font-bold text-gray-900 text-xl tracking-tight">Castiqq</span>
       </Link>
-
-      {/* Card */}
       <div className="w-full max-w-sm bg-white border border-gray-200 rounded-2xl shadow-sm p-8">
+        {children}
+      </div>
+      <p className="text-center text-xs text-gray-400 mt-6">
+        © {new Date().getFullYear()} {t('copyright')}
+      </p>
+    </div>
+  )
+
+  if (hasSession === null) {
+    return shell(
+      <div className="flex items-center gap-3 text-sm text-gray-500 py-2">
+        <Loader2 className="w-4 h-4 animate-spin text-indigo-500" />
+        {t('linkChecking')}
+      </div>
+    )
+  }
+
+  if (hasSession === false) {
+    return shell(
+      <>
+        <div className="w-12 h-12 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center mb-6">
+          <AlertCircle className="w-6 h-6 text-red-500" />
+        </div>
+        <h1 className="text-2xl font-bold text-gray-900 mb-1.5">{t('linkInvalid')}</h1>
+        <p className="text-sm text-gray-500 mb-6">{t('linkInvalidDesc')}</p>
+        <Link
+          href="/giris"
+          className="w-full flex items-center justify-center py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold text-sm rounded-xl transition-colors shadow-sm shadow-indigo-500/20"
+        >
+          {t('backToLogin')}
+        </Link>
+      </>
+    )
+  }
+
+  return shell(
+    <>
         <div className="w-12 h-12 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-center justify-center mb-6">
           <CheckCircle className="w-6 h-6 text-indigo-500" />
         </div>
 
         <div className="mb-7">
-          <h1 className="text-2xl font-bold text-gray-900 mb-1.5">{t('newPassword')}</h1>
-          <p className="text-sm text-gray-500">{t('newPasswordSubtitle')}</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1.5">
+            {isInvite ? t('inviteTitle') : t('newPassword')}
+          </h1>
+          <p className="text-sm text-gray-500">
+            {isInvite ? t('inviteSubtitle') : t('newPasswordSubtitle')}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -152,11 +221,6 @@ export default function ResetPasswordPage() {
             ) : t('savePassword')}
           </button>
         </form>
-      </div>
-
-      <p className="text-center text-xs text-gray-400 mt-6">
-        © {new Date().getFullYear()} {t('copyright')}
-      </p>
-    </div>
+    </>
   )
 }

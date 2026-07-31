@@ -48,7 +48,14 @@ export async function inviteTeamMember(_: ActionState, formData: FormData): Prom
     email,
     options: {
       data: { organization_id: orgId, role },
-      redirectTo: `${siteUrl}/auth/callback?next=/sifremi-sifirla`,
+      // generateLink sunucu tarafında çalışıyor — tarayıcı olmadığı için PKCE
+      // code verifier üretilemiyor ve Supabase implicit flow'a düşüyor. Token'lar
+      // `#access_token=...` fragment'ıyla dönüyor; fragment sunucuya HİÇ
+      // gönderilmediği için /auth/callback route handler'ı onu göremez
+      // (`?code=` boş kalır → error=no_code → /giris). Bu yüzden davet linki
+      // doğrudan client sayfasına gitmeli: browser client fragment'ı okuyup
+      // session'ı kurar (detectSessionInUrl).
+      redirectTo: `${siteUrl}/sifremi-sifirla`,
     },
   })
 
