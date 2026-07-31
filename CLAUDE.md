@@ -131,8 +131,10 @@ app/
 
 ### Supabase RPC Fonksiyonları
 - `get_user_org_id()` — RLS helper, her tabloda kullanılır
-- `increment_storage(org_id UUID, bytes BIGINT)` — **DEPRECATED** (migration 053). Sayaç artık trigger'la yönetiliyor; bu fonksiyonu çağırmak çift sayıma yol açar.
-- `sync_org_storage()` — `audition_videos` üzerindeki INSERT/UPDATE/DELETE trigger'ı, `organizations.storage_used_bytes`'ı senkron tutar (SECURITY DEFINER, migration 053). Cascade silmede de çalışır — `org_update` RLS politikası admin şartı koştuğu için SECURITY DEFINER zorunlu.
+- `increment_storage(...)` — **KALDIRILDI** (migration 055). SECURITY DEFINER + `anon`'a açıktı; kimliksiz biri herhangi bir org'un sayacını şişirip o hesabı upload'a kilitleyebiliyordu. Sayaç 053'te trigger'a taşındığı için tamamen silindi.
+- `sync_org_storage()` — `audition_videos` üzerindeki INSERT/UPDATE/DELETE trigger'ı, `organizations.storage_used_bytes`'ı senkron tutar (SECURITY DEFINER, migration 053). Cascade silmede de çalışır — `org_update` RLS politikası admin şartı koştuğu için SECURITY DEFINER zorunlu. REST API'den çağrılamaz (055'te EXECUTE revoke edildi).
+
+**Not:** Yeni SECURITY DEFINER fonksiyon eklerken `anon`/`authenticated` EXECUTE yetkisini revoke et — Supabase varsayılan olarak RPC'ye açıyor.
 
 ## Supabase Migration Sırası
 1. `supabase/schema.sql` — temel tablolar + RLS
@@ -160,6 +162,10 @@ app/
 23. `supabase/migrations/021_storage_tracking.sql` — file_size_bytes + storage_used_bytes + increment_storage()
 24. `supabase/migrations/052_remove_starter_plan.sql` — 'starter' plan kaldırıldı; CHECK: pro|agency, DEFAULT NULL
 25. `supabase/migrations/053_storage_counter_trigger.sql` — storage_used_bytes sayacı trigger'a taşındı (cascade silmede de doğru çalışır), mevcut sayaçlar yeniden hesaplandı
+26. `supabase/migrations/054_profiles_delete_policy.sql` — profiles'a admin DELETE politikası (yoktu; RLS açık + politika yok = silme sessizce engelleniyordu)
+27. `supabase/migrations/055_lock_down_storage_functions.sql` — increment_storage kaldırıldı (anon'a açık güvenlik açığı), sync_org_storage REST'ten kapatıldı
+
+**Uygulama durumu:** 053–055 production'a uygulandı. `supabase_migrations.schema_migrations` tablosu 001–052 için boş (elle uygulanmışlar) — bu yüzden `supabase db push` çalıştırmak eski migration'ları yeniden uygulamayı deneyebilir. Yeni migration'ları MCP `apply_migration` ile uygula.
 
 **Kritik:** Migration'lar sırayla uygulanmalı. 015 olmadan roller/[id] sayfası `profiles!auditions_notes_author_fkey` join'i nedeniyle tüm auditions sorgusunu kırıyor.
 
