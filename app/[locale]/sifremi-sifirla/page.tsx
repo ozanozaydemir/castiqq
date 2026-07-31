@@ -20,11 +20,14 @@ export default function ResetPasswordPage() {
   // null = session hâlâ kontrol ediliyor
   const [hasSession, setHasSession] = useState<boolean | null>(null)
 
-  // Hash client oluşturulmadan ÖNCE okunmalı: detectSessionInUrl session'ı
-  // kurduktan sonra fragment'ı history.replaceState ile siliyor. useEffect'e
-  // bıraksaydık bu silme önce olabilir ve davet metni kaçardı.
+  const [sessionErr, setSessionErr] = useState('')
+
+  // Fragment, client'a dokunmadan önce okunmalı — sonradan tüketilip
+  // silinebiliyor.
   const [hashInfo] = useState(() => {
-    if (typeof window === 'undefined') return { isInvite: false, errCode: '', errDesc: '' }
+    if (typeof window === 'undefined') {
+      return { isInvite: false, errCode: '', errDesc: '', accessToken: '', refreshToken: '' }
+    }
     const raw = window.location.hash.replace(/^#/, '')
     const p = new URLSearchParams(raw)
     return {
@@ -33,33 +36,53 @@ export default function ResetPasswordPage() {
       // #error=access_denied&error_code=otp_expired&error_description=...
       errCode: p.get('error_code') ?? p.get('error') ?? '',
       errDesc: p.get('error_description') ?? '',
+      accessToken: p.get('access_token') ?? '',
+      refreshToken: p.get('refresh_token') ?? '',
     }
   })
-  const { isInvite, errCode, errDesc } = hashInfo
+  const { isInvite, errCode, errDesc, accessToken, refreshToken } = hashInfo
 
   const supabaseRef = useRef<ReturnType<typeof createClient> | null>(null)
   if (!supabaseRef.current) supabaseRef.current = createClient()
   const supabase = supabaseRef.current
 
   useEffect(() => {
-    // Davet linki (implicit flow) token'ları `#access_token=...` fragment'ında
-    // taşır — sunucu bunu göremez, session'ı browser client kurar. Bu işlem
-    // asenkron olduğu için form hazır olmadan submit edilmesin diye bekliyoruz.
     let active = true
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event: string, session: unknown) => {
-        if (active && session) setHasSession(true)
+
+    async function bootstrap() {
+      // Davet linki implicit flow kullanıyor: token'lar `#access_token=...`
+      // fragment'ında gelir. detectSessionInUrl bunu OKUR ama işlemez —
+      // @supabase/ssr flowType'ı 'pkce' olarak sabitliyor ve auth-js implicit
+      // callback görünce "Not a valid PKCE flow url" hatası fırlatıp session'ı
+      // kurmuyor. Bu yüzden token'ları elle setSession'a veriyoruz.
+      // (Şifre sıfırlama PKCE ile geldiği için /auth/callback'te hallediliyor;
+      //  oraya dokunmuyoruz.)
+      if (accessToken && refreshToken) {
+        const { data, error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        })
+        if (!active) return
+
+        if (data?.session) {
+          // Access token URL'de kalmasın — geçmiş, referrer ve ekran
+          // paylaşımıyla sızabilir.
+          window.history.replaceState(null, '', window.location.pathname + window.location.search)
+          setHasSession(true)
+          return
+        }
+        if (error) setSessionErr(error.message)
       }
-    )
 
-    // getSession() client initialization'ını (fragment ayrıştırma dahil) bekler.
-    supabase.auth.getSession().then(({ data: { session } }: { data: { session: unknown } }) => {
-      // Listener zaten session bulduysa geri alma.
-      if (active) setHasSession(prev => prev === true ? true : !!session)
-    })
+      // Fragment yoksa (ör. PKCE ile /auth/callback üzerinden gelindi)
+      // mevcut session'a bak.
+      const { data: { session } } = await supabase.auth.getSession()
+      if (active) setHasSession(!!session)
+    }
 
-    return () => { active = false; subscription.unsubscribe() }
-  }, [supabase])
+    bootstrap()
+    return () => { active = false }
+  }, [supabase, accessToken, refreshToken])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -125,12 +148,11 @@ export default function ResetPasswordPage() {
 
         {/* Supabase'in fragment'ta döndüğü gerçek sebep — hangi durumda
             olduğunu (süre doldu / tükendi / başka) ayırt edebilmek için. */}
-        {errCode && (
+        {(errCode || sessionErr) && (
           <div className="mb-6 px-3.5 py-2.5 bg-gray-50 border border-gray-100 rounded-xl">
-            <p className="text-xs font-mono text-gray-500 break-words">{errCode}</p>
-            {errDesc && (
-              <p className="text-xs text-gray-400 mt-1 break-words">{errDesc}</p>
-            )}
+            {errCode && <p className="text-xs font-mono text-gray-500 break-words">{errCode}</p>}
+            {errDesc && <p className="text-xs text-gray-400 mt-1 break-words">{errDesc}</p>}
+            {sessionErr && <p className="text-xs text-gray-400 break-words">{sessionErr}</p>}
           </div>
         )}
 
