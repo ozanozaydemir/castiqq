@@ -48,13 +48,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  // Storage sayacını artır
-  if (fileSizeBytes) {
-    await admin.rpc('increment_storage', {
-      org_id: organizationId,
-      bytes: fileSizeBytes,
-    })
-  }
+  // storage_used_bytes'ı migration 053'teki trigger artırıyor —
+  // burada ayrıca çağırmak çift sayıma neden olur.
 
   // submitted_at'i sadece ilk video yüklemesinde set et
   const { data: audition } = await admin

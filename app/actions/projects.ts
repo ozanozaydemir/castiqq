@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { requireOrg } from '@/lib/require-org'
+import { projectVideoPaths, roleVideoPaths, purgeR2 } from '@/lib/video-cleanup'
 
 export type ActionState = { error?: string; success?: boolean } | null
 
@@ -66,7 +67,10 @@ export async function updateProjeStatus(id: string, status: string) {
 
 export async function deleteProje(id: string) {
   const { supabase } = await requireOrg()
+  // Videolar CASCADE ile silinecek; R2 yollarını önceden topla.
+  const paths = await projectVideoPaths(supabase, id)
   await supabase.from('projects').delete().eq('id', id)
+  await purgeR2(paths)
   revalidatePath('/projeler')
   redirect('/projeler')
 }
@@ -144,6 +148,8 @@ export async function updateRolStatus(id: string, projectId: string | null, stat
 
 export async function deleteRol(id: string, projectId: string) {
   const { supabase } = await requireOrg()
+  const paths = await roleVideoPaths(supabase, id)
   await supabase.from('project_roles').delete().eq('id', id)
+  await purgeR2(paths)
   revalidatePath(`/projeler/${projectId}`)
 }

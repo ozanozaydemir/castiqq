@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { requireOrg } from '@/lib/require-org'
-import { createAdminClient } from '@/lib/supabase/admin'
+import { auditionVideoPaths, purgeR2 } from '@/lib/video-cleanup'
 
 export type ActionState = { error?: string; success?: boolean; token?: string } | null
 
@@ -65,7 +65,9 @@ export async function updateAuditionStatus(id: string, roleId: string, status: s
 
 export async function deleteAudition(id: string, roleId: string) {
   const { supabase } = await requireOrg()
+  const paths = await auditionVideoPaths(supabase, id)
   await supabase.from('auditions').delete().eq('id', id)
+  await purgeR2(paths)
   revalidatePath(`/roller/${roleId}`)
 }
 
@@ -184,7 +186,7 @@ export async function deleteVideo(videoId: string, roleId: string): Promise<Acti
 
   const { data: video } = await supabase
     .from('audition_videos')
-    .select('storage_path, file_size_bytes')
+    .select('storage_path')
     .eq('id', videoId)
     .eq('organization_id', orgId)
     .single()
@@ -199,11 +201,7 @@ export async function deleteVideo(videoId: string, roleId: string): Promise<Acti
   const { error } = await supabase.from('audition_videos').delete().eq('id', videoId)
   if (error) return { error: error.message }
 
-  if (video.file_size_bytes) {
-    const admin = createAdminClient()
-    admin.rpc('increment_storage', { org_id: orgId, bytes: -video.file_size_bytes })
-      .then(({ error: rpcErr }) => { if (rpcErr) console.error('Storage decrement error:', rpcErr.message) })
-  }
+  // storage_used_bytes'ı migration 053'teki trigger düşürüyor.
 
   revalidatePath(`/roller/${roleId}`)
   return { success: true }
