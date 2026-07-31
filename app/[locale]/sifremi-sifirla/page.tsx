@@ -23,9 +23,19 @@ export default function ResetPasswordPage() {
   // Hash client oluşturulmadan ÖNCE okunmalı: detectSessionInUrl session'ı
   // kurduktan sonra fragment'ı history.replaceState ile siliyor. useEffect'e
   // bıraksaydık bu silme önce olabilir ve davet metni kaçardı.
-  const [isInvite] = useState(
-    () => typeof window !== 'undefined' && window.location.hash.includes('type=invite')
-  )
+  const [hashInfo] = useState(() => {
+    if (typeof window === 'undefined') return { isInvite: false, errCode: '', errDesc: '' }
+    const raw = window.location.hash.replace(/^#/, '')
+    const p = new URLSearchParams(raw)
+    return {
+      isInvite: raw.includes('type=invite'),
+      // Link tükenmiş/süresi dolmuşsa Supabase token yerine hata döner:
+      // #error=access_denied&error_code=otp_expired&error_description=...
+      errCode: p.get('error_code') ?? p.get('error') ?? '',
+      errDesc: p.get('error_description') ?? '',
+    }
+  })
+  const { isInvite, errCode, errDesc } = hashInfo
 
   const supabaseRef = useRef<ReturnType<typeof createClient> | null>(null)
   if (!supabaseRef.current) supabaseRef.current = createClient()
@@ -111,7 +121,19 @@ export default function ResetPasswordPage() {
           <AlertCircle className="w-6 h-6 text-red-500" />
         </div>
         <h1 className="text-2xl font-bold text-gray-900 mb-1.5">{t('linkInvalid')}</h1>
-        <p className="text-sm text-gray-500 mb-6">{t('linkInvalidDesc')}</p>
+        <p className="text-sm text-gray-500 mb-4">{t('linkInvalidDesc')}</p>
+
+        {/* Supabase'in fragment'ta döndüğü gerçek sebep — hangi durumda
+            olduğunu (süre doldu / tükendi / başka) ayırt edebilmek için. */}
+        {errCode && (
+          <div className="mb-6 px-3.5 py-2.5 bg-gray-50 border border-gray-100 rounded-xl">
+            <p className="text-xs font-mono text-gray-500 break-words">{errCode}</p>
+            {errDesc && (
+              <p className="text-xs text-gray-400 mt-1 break-words">{errDesc}</p>
+            )}
+          </div>
+        )}
+
         <Link
           href="/giris"
           className="w-full flex items-center justify-center py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold text-sm rounded-xl transition-colors shadow-sm shadow-indigo-500/20"
