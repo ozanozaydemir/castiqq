@@ -48,7 +48,7 @@ export async function inviteTeamMember(_: ActionState, formData: FormData): Prom
     email,
     options: {
       data: { organization_id: orgId, role },
-      redirectTo: `${siteUrl}/auth/callback?next=/dashboard`,
+      redirectTo: `${siteUrl}/auth/callback?next=/sifremi-sifirla`,
     },
   })
 
