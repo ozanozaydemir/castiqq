@@ -1343,7 +1343,12 @@
     "cancel": "Cancel",
     "save": "Save",
     "selectCollection": "Select List",
-    "bulkAdded": "{count} talents added to list."
+    "bulkAdded": "{count} talents added to list.",
+    "addTalent": "Add Talent",
+    "addTalentTitle": "Add Talent to List",
+    "searchTalentPlaceholder": "Search by name…",
+    "noTalentFound": "No talent found",
+    "addTalentHint": "Talent already in this list are shown with a green checkmark."
   },
   "settings": {
     "title": "Settings",

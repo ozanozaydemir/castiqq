@@ -3,9 +3,10 @@
 import { useState, useTransition } from 'react'
 import { removeFromCollection, updateCollection } from '@/app/actions/collections'
 import { useRouter, Link } from '@/i18n/navigation'
-import { UserMinus, MapPin, Phone, Mail, Share2, Copy, Check, Pencil, X, Loader2 } from 'lucide-react'
+import { UserMinus, UserPlus, MapPin, Phone, Mail, Share2, Copy, Check, Pencil, X, Loader2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { TalentSlideshowButton, type SlideshowTalent, type SlideshowProject } from '@/app/[locale]/(app)/oyuncular/TalentSlideshow'
+import { AddTalentModal } from './AddTalentModal'
 
 type Member = {
   talent_id: string
@@ -170,8 +171,11 @@ export function CollectionDetailClient({ collectionId, collectionName, collectio
       photos: m.talent!.photos,
     }))
   const tc = useTranslations('collections')
-  const [copied, setCopied] = useState(false)
-  const [editOpen, setEditOpen] = useState(false)
+  const [copied, setCopied]       = useState(false)
+  const [editOpen, setEditOpen]   = useState(false)
+  const [addOpen, setAddOpen]     = useState(false)
+
+  const existingIds = new Set(members.map(m => m.talent_id))
 
   const shareUrl = typeof window !== 'undefined'
     ? `${window.location.origin}/paylasim/${shareToken}`
@@ -221,15 +225,35 @@ export function CollectionDetailClient({ collectionId, collectionName, collectio
     />
   )
 
+  const addTalentBtn = (
+    <button
+      onClick={() => setAddOpen(true)}
+      className="inline-flex items-center gap-1.5 text-xs text-indigo-600 hover:text-indigo-800 border border-indigo-200 hover:border-indigo-400 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1.5 rounded-lg transition-colors font-medium"
+    >
+      <UserPlus className="w-3.5 h-3.5" /> {tc('addTalent')}
+    </button>
+  )
+
+  const addModal = addOpen && (
+    <AddTalentModal
+      collectionId={collectionId}
+      existingIds={existingIds}
+      onClose={() => setAddOpen(false)}
+    />
+  )
+
   if (members.length === 0) {
     return (
       <>
         {shareSection}
-        <div className="sb-card p-10 text-center text-gray-300">
-          <p className="text-sm">{tc('noTalentInList')}</p>
-          <p className="text-xs mt-1">{tc('noTalentInListHint')}</p>
+        <div className="sb-card p-10 text-center">
+          <p className="text-sm text-gray-400">{tc('noTalentInList')}</p>
+          <div className="mt-4 flex justify-center">
+            {addTalentBtn}
+          </div>
         </div>
         {editModal}
+        {addModal}
       </>
     )
   }
@@ -240,7 +264,10 @@ export function CollectionDetailClient({ collectionId, collectionName, collectio
       <div className="sb-card overflow-hidden">
         <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between gap-3">
           <p className="text-sm font-semibold text-gray-800">{tc('talentCount', { count: members.length })}</p>
-          <TalentSlideshowButton talents={slideshowTalents} projects={projects} />
+          <div className="flex items-center gap-2">
+            {addTalentBtn}
+            <TalentSlideshowButton talents={slideshowTalents} projects={projects} />
+          </div>
         </div>
         <div className="px-5">
           {members.map(m => (
@@ -249,6 +276,7 @@ export function CollectionDetailClient({ collectionId, collectionName, collectio
         </div>
       </div>
       {editModal}
+      {addModal}
     </>
   )
 }

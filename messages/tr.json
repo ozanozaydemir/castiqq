@@ -1469,7 +1469,12 @@
     "cancel": "İptal",
     "save": "Kaydet",
     "selectCollection": "Liste Seç",
-    "bulkAdded": "{count} oyuncu listeye eklendi."
+    "bulkAdded": "{count} oyuncu listeye eklendi.",
+    "addTalent": "Oyuncu Ekle",
+    "addTalentTitle": "Listeye Oyuncu Ekle",
+    "searchTalentPlaceholder": "İsme göre ara…",
+    "noTalentFound": "Oyuncu bulunamadı",
+    "addTalentHint": "Listeye eklenmiş oyuncular yeşil tik ile gösterilir."
   },
   "settings": {
     "title": "Ayarlar",
