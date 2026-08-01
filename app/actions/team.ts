@@ -140,15 +140,11 @@ export async function removeMember(memberId: string): Promise<ActionState> {
   if (memberId === userId) return { error: 'Kendinizi çıkaramazsınız.' }
   if (!(await assertSameOrg(supabase, memberId, orgId))) return { error: 'Üye bulunamadı.' }
 
-  // profiles'ta DELETE politikası migration 054'e kadar yoktu; RLS açık +
-  // politika yok = silme sessizce 0 satır etkiliyor, hata da dönmüyordu.
-  // Admin client kullanmak bu tuzağı tamamen ortadan kaldırıyor.
+  // auth.users'ı silmek profiles'ı da CASCADE ile götürür (profiles.id → auth.users(id)).
+  // Yalnızca profiles silmek auth.users'ı bırakır — kullanıcı giriş yapabilir ama
+  // org profili olmadığı için plan seçimi ekranına düşer.
   const admin = createAdminClient()
-  const { error } = await admin
-    .from('profiles')
-    .delete()
-    .eq('id', memberId)
-    .eq('organization_id', orgId)
+  const { error } = await admin.auth.admin.deleteUser(memberId)
 
   if (error) return { error: error.message }
   revalidatePath('/[locale]/ayarlar/ekip', 'page')
