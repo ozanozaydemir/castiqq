@@ -7,6 +7,7 @@ import { RolPublicToggle } from './RolPublicToggle'
 import { RoleMatches } from './RoleMatches'
 import { ShareRoleButton } from './ShareRoleButton'
 import { IncomingSharesPanel } from './IncomingSharesPanel'
+import { RoleRelationshipsCard } from './RoleRelationshipsCard'
 import { Link } from '@/i18n/navigation'
 import { ArrowLeft, User, Calendar, Users } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
@@ -194,6 +195,11 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
             <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">{tr('notes')}</h3>
             <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{role.notes}</p>
           </div>
+        )}
+
+        {/* Bu rolün karakter ilişkileri — düzenleme proje diyagramında */}
+        {role.projects?.id && (
+          <RoleRelationshipsCard roleId={id} projectId={role.projects.id} />
         )}
 
         {/* Eşleşen Oyuncular — rol kriterlerine göre org'un talent havuzundan otomatik eşleştirme */}

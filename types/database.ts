@@ -23,6 +23,14 @@ export type RoleShareSubmissionStatus = 'taslak' | 'gonderildi' | 'incelendi' | 
 export type SubmissionItemDecision = 'beklemede' | 'begenildi' | 'reddedildi'
 export type NotificationType = 'role_shared' | 'submission_received' | 'submission_decided' | 'share_revoked' | 'share_expiring'
 
+// ── Rol ilişki haritası ──
+// Simetrik tipler (spouse/partner/sibling/friend/rival) DB'de tek satır olarak
+// kanonik sırayla saklanır — bkz. 058_role_relationships.sql. Yön/etiket ayrımı
+// lib/role-relationships.ts'te.
+export type RelationshipType =
+  | 'spouse' | 'partner' | 'sibling' | 'friend' | 'rival'
+  | 'parent' | 'manager' | 'other'
+
 export type Database = {
   public: {
     Tables: {
@@ -97,11 +105,29 @@ export type Database = {
           max_height_cm: number | null
           required_skills: string[]
           city: string | null
+          // İlişki diyagramındaki konum; NULL = henüz yerleştirilmemiş (otomatik yerleşim uygulanır)
+          diagram_x: number | null
+          diagram_y: number | null
           created_at: string
           updated_at: string
         }
         Insert: Omit<Database['public']['Tables']['project_roles']['Row'], 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['project_roles']['Insert']>
+      }
+      role_relationships: {
+        Row: {
+          id: string
+          organization_id: string
+          project_id: string
+          from_role_id: string
+          to_role_id: string
+          type: RelationshipType
+          label: string | null
+          created_at: string
+          created_by: string | null
+        }
+        Insert: Omit<Database['public']['Tables']['role_relationships']['Row'], 'id' | 'created_at'>
+        Update: Partial<Database['public']['Tables']['role_relationships']['Insert']>
       }
       talent: {
         Row: {
@@ -570,6 +596,7 @@ export type Database = {
 
 export type Project = Database['public']['Tables']['projects']['Row']
 export type ProjectRole = Database['public']['Tables']['project_roles']['Row']
+export type RoleRelationship = Database['public']['Tables']['role_relationships']['Row']
 export type Talent = Database['public']['Tables']['talent']['Row']
 export type TalentLanguage = Database['public']['Tables']['talent_languages']['Row']
 export type TalentExperience = Database['public']['Tables']['talent_experiences']['Row']

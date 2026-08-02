@@ -21,7 +21,9 @@
     "@sentry/nextjs": "^10.68.0",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.105.4",
+    "@xyflow/react": "^12.11.2",
     "clsx": "^2.1.1",
+    "dagre": "^0.8.5",
     "date-fns": "^4.1.0",
     "googleapis": "^173.0.0",
     "lucide-react": "^1.16.0",
@@ -38,6 +40,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/dagre": "^0.7.54",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

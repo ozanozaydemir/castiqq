@@ -3,12 +3,16 @@ import { notFound } from 'next/navigation'
 import type { ProjectRole } from '@/types/database'
 import { Badge } from '@/components/ui/Badge'
 import { RollerSection } from './RollerSection'
+import { ProjectTabs, type ProjectTab } from './ProjectTabs'
+import { DiagramLoader } from './iliskiler/DiagramLoader'
+import type { DiagramRelationship } from './iliskiler/RelationshipDiagram'
+import type { SelectedTalent } from './iliskiler/RoleNode'
 import { deleteProje, updateProjeStatus } from '@/app/actions/projects'
 import { DeleteButton } from '@/components/DeleteButton'
 import { Link } from '@/i18n/navigation'
 import {
   ArrowLeft, Pencil, Film, Tv, Megaphone, Theater, Clapperboard,
-  Calendar, MapPin, User, Monitor, Users, Layers, ClipboardList, Clock,
+  Calendar, MapPin, User, Monitor, Users, Layers, ClipboardList, Clock, Share2,
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
@@ -21,10 +25,14 @@ function formatDate(d: string | null) {
 
 export default async function ProjeDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>
+  searchParams: Promise<{ tab?: string }>
 }) {
   const { id } = await params
+  const { tab } = await searchParams
+  const activeTab: ProjectTab = tab === 'iliskiler' ? 'iliskiler' : 'roller'
   const supabase = await createClient()
   const t = await getTranslations('projects')
 
@@ -59,15 +67,36 @@ export default async function ProjeDetailPage({
   const roleList: ProjectRole[] = roles ?? []
   const roleIds = roleList.map(r => r.id)
 
-  const auditionsResult = roleIds.length > 0
-    ? await supabase.from('auditions').select('role_id, status').in('role_id', roleIds)
-    : { data: [] as { role_id: string; status: string }[] }
+  // Oyuncu bilgisi ilişki diyagramındaki casting overlay için: seçili adayın
+  // fotoğrafı ve boyu düğümde gösteriliyor.
+  const [auditionsResult, relationshipsResult] = await Promise.all([
+    roleIds.length > 0
+      ? supabase
+          .from('auditions')
+          .select('role_id, status, talent:talent_id(id, full_name, avatar_url, height_cm)')
+          .in('role_id', roleIds)
+      : Promise.resolve({ data: [] }),
+    supabase
+      .from('role_relationships')
+      .select('id, from_role_id, to_role_id, type, label')
+      .eq('project_id', id),
+  ])
 
-  type AuditionRow = { role_id: string; status: string }
+  type AuditionRow = {
+    role_id: string
+    status: string
+    talent: SelectedTalent | null
+  }
   const auditionList: AuditionRow[] = (auditionsResult.data ?? []) as AuditionRow[]
+  const relationships: DiagramRelationship[] = (relationshipsResult.data ?? []) as DiagramRelationship[]
 
   const auditionCounts = auditionList.reduce((acc: Record<string, number>, a) => {
     acc[a.role_id] = (acc[a.role_id] ?? 0) + 1
+    return acc
+  }, {})
+
+  const selectedByRole = auditionList.reduce((acc: Record<string, SelectedTalent>, a) => {
+    if (a.status === 'selected' && a.talent) acc[a.role_id] = a.talent
     return acc
   }, {})
 
@@ -190,13 +219,44 @@ export default async function ProjeDetailPage({
         ))}
       </div>
 
-      {/* Roles */}
-      <div className="px-6 pb-8">
-        <RollerSection
-          projectId={project.id}
-          roles={roleList}
-          auditionCounts={auditionCounts}
-        />
+      {/* Tabs */}
+      <ProjectTabs
+        projectId={project.id}
+        active={activeTab}
+        relationshipCount={relationships.length}
+      />
+
+      <div className="px-6 pt-6 pb-8">
+        {activeTab === 'roller' ? (
+          <RollerSection
+            projectId={project.id}
+            roles={roleList}
+            auditionCounts={auditionCounts}
+          />
+        ) : roleList.length < 2 ? (
+          <div className="sb-card p-10 text-center">
+            <Share2 className="w-8 h-8 text-gray-300 mx-auto mb-3" />
+            <p className="text-sm font-medium text-gray-500">{t('relNeedRoles')}</p>
+            <p className="text-xs text-gray-400 mt-1">{t('relNeedRolesHint')}</p>
+          </div>
+        ) : (
+          <DiagramLoader
+            projectId={project.id}
+            roles={roleList.map(r => ({
+              id: r.id,
+              name: r.name,
+              gender: r.gender,
+              age_min: r.age_min,
+              age_max: r.age_max,
+              status: r.status,
+              diagram_x: r.diagram_x,
+              diagram_y: r.diagram_y,
+            }))}
+            relationships={relationships}
+            selectedByRole={selectedByRole}
+            candidateCounts={auditionCounts}
+          />
+        )}
       </div>
     </div>
   )

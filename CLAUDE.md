@@ -19,6 +19,8 @@ Yapım şirketleri, casting ajansları ve serbest cast direktörlerinin kulland�
 - **lucide-react** — ikonlar
 - **date-fns** — tarih formatlama (`tr` locale)
 - **@dnd-kit** — audition tablosunda sürükle-bırak sıralama
+- **@xyflow/react** — rol ilişki diyagramı canvas'ı (yalnızca ilgili tab'da dynamic import, `ssr: false`)
+- **dagre** — diyagramda otomatik hiyerarşik yerleşim (aile ağacı / org şeması)
 - **next-intl 4.13.1** — i18n (TR varsayılan, EN `/en/` prefix'li)
 - **@polar-sh/nextjs** — ödeme & abonelik (Merchant of Record)
 - **resend** — transaksiyonel email
@@ -128,6 +130,10 @@ app/
 - `collections` — direktörün oluşturduğu özel oyuncu listeleri (migration 017)
 - `collection_items` — collection ↔ talent çoka-çok (migration 017)
 - `video_notes` — video timestamp'e bağlı notlar (migration 018)
+- `role_relationships` — roller arası tipli graf kenarları (migration 058)
+  - `type`: `spouse|partner|sibling|friend|rival` (simetrik) + `parent|manager|other` (yönlü)
+  - Simetrik tipler **tek satır** olarak saklanır; `canonicalize_role_relationship()` trigger'ı uçları `from < to` sırasına sokar, unique index ters yönlü kopyayı da yakalar
+  - Düğüm konumları `project_roles.diagram_x` / `diagram_y` (NULL = otomatik yerleşim)
 
 ### Supabase RPC Fonksiyonları
 - `get_user_org_id()` — RLS helper, her tabloda kullanılır
@@ -166,6 +172,7 @@ app/
 27. `supabase/migrations/055_lock_down_storage_functions.sql` — increment_storage kaldırıldı (anon'a açık güvenlik açığı), sync_org_storage REST'ten kapatıldı
 28. `supabase/migrations/056_scope_public_bucket_listing.sql` — talent-avatars + org-logos SELECT politikaları org'a kısıtlandı (çapraz kiracı listeleme sızıntısı)
 29. `supabase/migrations/057_function_hardening.sql` — search_path sabitleme + trigger fonksiyonlarından EXECUTE revoke
+30. `supabase/migrations/058_role_relationships.sql` — rol ilişki haritası: `role_relationships` tablosu + `project_roles.diagram_x/y` + kanonik sıralama trigger'ı
 
 ### Supabase Security Advisor — bilinçli olarak bırakılanlar
 `get_user_org_id()` / `get_user_role()` "anon/authenticated execute edebiliyor" uyarısı veriyor ama **kaldırılamaz**: her RLS politikası bunları çağırıyor ve politika ifadeleri sorguyu çalıştıran rolün yetkisiyle değerlendiriliyor. `PUBLIC`'ten EXECUTE alınınca tüm RLS `permission denied for function get_user_org_id` ile çöküyor (test edildi). Argümansızlar, yalnızca `auth.uid()`'den kendi org/rolünü dönüyorlar — anon çağırınca `null` geliyor, sızıntı yok.
@@ -253,6 +260,16 @@ NEXT_PUBLIC_POLAR_AGENCY_PRODUCT_ID
 - Availability selector (müsait/meşgul/uygun değil)
 - Audition geçmişi: video sayısı badge + not satırı
 - "Listeye Ekle" butonu → mevcut listeden seçme veya yeni liste oluşturma
+
+### Rol İlişki Haritası (Karakter Grafiği)
+- **Yer:** proje detay → "İlişkiler" tab'ı (`/projeler/[id]?tab=iliskiler`). Rol detayında salt-okunur özet kartı (`RoleRelationshipsCard`).
+- **Model:** serbest çizim değil, yapılandırılmış graf. Düğümler `project_roles`, kenarlar `role_relationships`. Veri sistem tarafından anlaşıldığı için doğrulama + casting overlay mümkün.
+- **Canvas:** React Flow + dagre. `DiagramLoader` ile `ssr: false` dynamic import — ana bundle etkilenmiyor.
+- **Aile ağacı yerleşimi:** düz dagre eşleri yan yana koymaz. `lib/diagram-layout.ts` **union node** tekniği kullanıyor — evliliği temsil eden 1×1 görünmez düğüm; eşler ona bağlanır, çocuklar ondan sarkar.
+- **Casting overlay:** düğümlerde `status='selected'` audition'ın oyuncusu (fotoğraf + boy). Çift kenarına tıklayınca **kombinasyon modu** açılır: iki rolün adayları yan yana, ok tuşlarıyla gezinme, boy/yaş farkı hesabı.
+- **Uyarılar** (`lib/role-relationships.ts`): ebeveyn–çocuk yaş tutarsızlığı (<16 yıl), `parent` kenarlarında döngü, aynı oyuncunun ilişkili iki role seçilmesi.
+- **Mobil:** React Flow mount edilmiyor; `MobileRelationshipList` ile yapılandırılmış liste gösteriliyor.
+- **Kapsam dışı bırakılanlar:** serbest çizim araçları (veriyi anlamsızlaştırır), gerçek zamanlı çoklu imleç, çoklu board, senaryodan AI ile ilişki çıkarımı.
 
 ### Listeler (Collections)
 - `/listeler` — özel oyuncu listelerini yönet (oluştur, sil)
