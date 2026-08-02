@@ -4,7 +4,7 @@ import { Fragment } from 'react'
 import { getTranslations } from 'next-intl/server'
 import {
   ArrowRight, Check, Play, Wand2, Share2, AlertTriangle,
-  FolderKanban, Link2, Star, ListChecks,
+  FolderKanban, Link2, Star, ListChecks, Film,
 } from 'lucide-react'
 import { AnimationInit } from '@/components/AnimationInit'
 import { JsonLd } from '@/components/JsonLd'
@@ -69,6 +69,7 @@ export default async function CastDirektorleriPage({ params }: Props) {
   const features = t.raw('features.items') as Item[]
   const faqs = t.raw('faq.items') as Faq[]
   const matchPoints = t.raw('matching.points') as string[]
+  const proPlanInclude = tl.raw('pricing.plans.pro.include') as string[]
 
   const isTr = locale !== 'en'
   const path = '/cast-direktorleri'
@@ -197,8 +198,10 @@ export default async function CastDirektorleriPage({ params }: Props) {
       </section>
 
       {/* ── KARŞILAŞTIRMA ──
-          Gerçek rakip bir depolama ürünü değil, "Drive + Excel + WhatsApp"
-          üçlüsü. Kıyası bu eksende kurmak konuyu GB'dan iş akışına taşıyor. */}
+          Kıyas GB üzerinden değil iş akışı üzerinden kuruluyor. Metinler
+          bilinçli olarak nötr: sütun başlığı ürün adı saymıyor ("Bugünkü
+          düzen"), giriş ve dipnot rakip karşılaştırmasına davet etmiyor.
+          Satırlar okuyucunun kendi gündelik deneyimini anlatıyor. */}
       <section className="py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <SectionHead label={t('compare.label')} title={t('compare.title')} desc={t('compare.intro')} />
@@ -345,8 +348,67 @@ export default async function CastDirektorleriPage({ params }: Props) {
         </div>
       </section>
 
+      {/* ── FİYATLAR ──
+          Ajans sayfasındaki bölümün direktör karşılığı. Metinler zaten
+          `landing.pricing` altında cast direktörüne göre yazılmıştı; sayfa
+          bunları hiç render etmediği için ziyaretçi fiyatı göremiyordu. */}
+      <section id="fiyatlar" className="py-24 px-6 bg-[#f8f8f8] border-y border-gray-100">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-14" data-animate>
+            <p className="text-[13px] font-semibold uppercase tracking-[0.05em] text-indigo-600 mb-3">
+              {tl('pricing.sectionLabel')}
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] mb-4">{tl('pricing.title')}</h2>
+            <p className="text-gray-500 leading-relaxed">{tl('pricing.subtitle')}</p>
+          </div>
+
+          <div className="max-w-md mx-auto" data-animate>
+            <div className="relative rounded-3xl p-7 bg-white border border-gray-200 hover:border-indigo-200 transition-colors">
+              <div className="flex items-center gap-2.5 mb-4">
+                <span className="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
+                  <Film className="w-4 h-4 text-indigo-500" />
+                </span>
+                <div className="min-w-0">
+                  <h3 className="font-bold text-gray-900 leading-tight">{tl('pricing.plans.pro.name')}</h3>
+                  <p className="text-xs text-gray-400">{tl('pricing.plans.pro.desc')}</p>
+                </div>
+              </div>
+
+              <div className="flex items-baseline gap-1 mb-6">
+                <span className="text-4xl font-extrabold tracking-[-0.03em] text-gray-900">₺1.999</span>
+                <span className="text-sm text-gray-400">{tl('pricing.perMonth')}</span>
+              </div>
+
+              <Link
+                href="/kayit"
+                className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl font-semibold text-sm transition-all bg-indigo-500 hover:bg-indigo-600 text-white shadow-lg shadow-indigo-500/25"
+              >
+                {tl('pricing.trialCta')}
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+
+              <ul className="mt-7 space-y-2.5">
+                {proPlanInclude.map(f => (
+                  <li key={f} className="flex items-start gap-2.5">
+                    <Check className="w-4 h-4 text-indigo-500 shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-600">{f}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <p className="text-center text-sm text-gray-400 mt-8">
+            {tl('pricing.agencyNote')}{' '}
+            <Link href="/menajerlik-ajanslari" className="text-indigo-500 hover:underline font-medium">
+              {tl('pricing.agencyLink')}
+            </Link>
+          </p>
+        </div>
+      </section>
+
       {/* ── SSS ── */}
-      <section className="py-24 px-6 bg-[#f8f8f8] border-y border-gray-100">
+      <section className="py-24 px-6">
         <div className="max-w-3xl mx-auto">
           <SectionHead label={t('faq.label')} title={t('faq.title')} />
           <dl className="divide-y divide-gray-200 border-y border-gray-200">

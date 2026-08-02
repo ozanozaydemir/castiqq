@@ -2186,10 +2186,10 @@
     },
     "compare": {
       "label": "Comparison",
-      "title": "One place instead of Drive + Excel + WhatsApp",
-      "intro": "Castiqq does not compete with a storage product — it replaces the trio most teams use today. Here are the same jobs, side by side.",
+      "title": "The same jobs, in one place",
+      "intro": "For most teams, casting work is spread across a few separate tools today. Here is how those same jobs come together in a single flow in Castiqq.",
       "colTask": "The job",
-      "colToday": "Drive + Excel + WhatsApp",
+      "colToday": "Today's setup",
       "colCastiqq": "Castiqq",
       "rows": [
         {
@@ -2218,7 +2218,7 @@
           "castiqq": "Deleted automatically on the date you set; actors can remove their own video at any time."
         }
       ],
-      "note": "We are not comparing storage capacity — cloud storage is cheap everywhere. The difference is that the system knows who a video belongs to, which role it is for, and how long it may be kept."
+      "note": "Castiqq does more than store the video: it also knows which actor and which role it belongs to, and how long it should be kept."
     }
   }
 }

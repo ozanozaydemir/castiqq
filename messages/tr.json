@@ -2312,10 +2312,10 @@
     },
     "compare": {
       "label": "Karşılaştırma",
-      "title": "Drive + Excel + WhatsApp yerine tek yer",
-      "intro": "Castiqq'in rakibi bir depolama ürünü değil; çoğu ekibin bugün kullandığı üçlü. Aynı işleri iki yöntemle yan yana koyduk.",
+      "title": "Aynı işler, tek yerde",
+      "intro": "Casting işi bugün çoğu ekipte birkaç ayrı araca dağılmış durumda. Aşağıda aynı işlerin Castiqq'te nasıl tek akışta toplandığını görebilirsiniz.",
       "colTask": "Yapılan iş",
-      "colToday": "Drive + Excel + WhatsApp",
+      "colToday": "Bugünkü düzen",
       "colCastiqq": "Castiqq",
       "rows": [
         {
@@ -2344,7 +2344,7 @@
           "castiqq": "Belirlediğiniz tarihte otomatik silinir; oyuncu kendi videosunu istediği an kaldırabilir."
         }
       ],
-      "note": "Depolama alanı kıyaslamıyoruz — bulut depolama her yerde ucuz. Fark, videonun kiminle, hangi rol için ve ne kadar süreyle durduğunu sistemin bilmesinde."
+      "note": "Castiqq'in yaptığı videoyu saklamaktan ibaret değil: hangi oyuncuya ve hangi role ait olduğunu, ne kadar süre duracağını da biliyor."
     }
   }
 }
