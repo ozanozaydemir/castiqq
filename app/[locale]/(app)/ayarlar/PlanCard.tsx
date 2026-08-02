@@ -55,7 +55,8 @@ export function PlanCard({ plan, status, endsAt, hasPortal, orgId, orgType }: Pr
             {planBadgeLabel}
           </span>
           <p className="text-xs text-gray-500 mt-1">
-            {formatStorage(info.storageGB)} {t('storage')} · {info.maxUsers} {t('users')}
+            {/* Kullanıcı önde: depolama satın alınan şey değil, sadece bir sınır. */}
+            {info.maxUsers} {t('users')} · {formatStorage(info.storageGB)} {t('storage')}
           </p>
           {isCancelled && endsAt && (
             <p className="text-xs text-amber-600 mt-1">

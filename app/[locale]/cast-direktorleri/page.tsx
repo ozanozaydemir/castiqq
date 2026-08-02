@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Link } from '@/i18n/navigation'
+import { Fragment } from 'react'
 import { getTranslations } from 'next-intl/server'
 import {
   ArrowRight, Check, Play, Wand2, Share2, AlertTriangle,
@@ -63,6 +64,7 @@ export default async function CastDirektorleriPage({ params }: Props) {
   const tl = await getTranslations('landing')
 
   const problems = t.raw('problem.items') as Item[]
+  const compareRows = t.raw('compare.rows') as { task: string; today: string; castiqq: string }[]
   const steps = t.raw('workflow.steps') as Item[]
   const features = t.raw('features.items') as Item[]
   const faqs = t.raw('faq.items') as Faq[]
@@ -194,8 +196,51 @@ export default async function CastDirektorleriPage({ params }: Props) {
         </div>
       </section>
 
+      {/* ── KARŞILAŞTIRMA ──
+          Gerçek rakip bir depolama ürünü değil, "Drive + Excel + WhatsApp"
+          üçlüsü. Kıyası bu eksende kurmak konuyu GB'dan iş akışına taşıyor. */}
+      <section className="py-24 px-6">
+        <div className="max-w-4xl mx-auto">
+          <SectionHead label={t('compare.label')} title={t('compare.title')} desc={t('compare.intro')} />
+
+          {/* Dar ekranda üç sütun sığmıyor ve son sütun kırpılıyordu. Tablo
+              kendi içinde yatay kayıyor; sayfa gövdesi asla yana kaymıyor. */}
+          <div className="rounded-2xl border border-gray-200 overflow-x-auto bg-white" data-animate>
+            <div className="grid grid-cols-3 min-w-[640px]">
+              <div className="px-4 sm:px-6 py-3.5 bg-gray-50 border-b border-gray-200">
+                <p className="text-[13px] font-semibold text-gray-400">{t('compare.colTask')}</p>
+              </div>
+              <div className="px-4 sm:px-6 py-3.5 bg-gray-50 border-b border-l border-gray-200">
+                <p className="text-[13px] font-semibold text-gray-400">{t('compare.colToday')}</p>
+              </div>
+              <div className="px-4 sm:px-6 py-3.5 bg-indigo-50/60 border-b border-l border-gray-200">
+                <p className="text-[13px] font-semibold text-indigo-600">{t('compare.colCastiqq')}</p>
+              </div>
+
+              {compareRows.map((row, i) => (
+                <Fragment key={row.task}>
+                  <div className={`px-4 sm:px-6 py-4 ${i > 0 ? 'border-t border-gray-100' : ''}`}>
+                    <p className="text-sm font-medium text-gray-900 leading-snug">{row.task}</p>
+                  </div>
+                  <div className={`px-4 sm:px-6 py-4 border-l border-gray-200 ${i > 0 ? 'border-t border-gray-100' : ''}`}>
+                    <p className="text-sm text-gray-500 leading-snug">{row.today}</p>
+                  </div>
+                  <div className={`px-4 sm:px-6 py-4 border-l border-gray-200 bg-indigo-50/25 ${i > 0 ? 'border-t border-gray-100' : ''}`}>
+                    <p className="text-sm text-gray-700 leading-snug">{row.castiqq}</p>
+                  </div>
+                </Fragment>
+              ))}
+            </div>
+          </div>
+
+          <p className="text-sm text-gray-400 mt-5 max-w-2xl leading-relaxed" data-animate>
+            {t('compare.note')}
+          </p>
+        </div>
+      </section>
+
       {/* ── AKIŞ ── */}
-      <section id="nasil-calisir" className="py-24 px-6">
+      <section id="nasil-calisir" className="py-24 px-6 bg-[#f8f8f8] border-y border-gray-100">
         <div className="max-w-4xl mx-auto">
           <SectionHead label={t('workflow.label')} title={t('workflow.title')} />
           <ol className="space-y-10">

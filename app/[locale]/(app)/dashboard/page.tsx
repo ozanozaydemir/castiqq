@@ -8,6 +8,9 @@ import { getTranslations, getLocale } from 'next-intl/server'
 import { PLAN_LIMITS, getActivePlan, formatStorage } from '@/lib/plan'
 import { OnboardingCard } from './OnboardingCard'
 
+/** Depolama göstergesinin görünmeye başladığı doluluk yüzdesi. */
+const STORAGE_VISIBLE_PCT = 60
+
 export default async function DashboardPage() {
   const supabase = await createClient()
   const t = await getTranslations('dashboard')
@@ -122,12 +125,16 @@ export default async function DashboardPage() {
           </div>
         )}
 
-        {/* Storage sayacı */}
+        {/* Storage sayacı — yalnızca anlamlı doluluğun üstünde.
+            Sürekli göstermek kullanıcıya asla ulaşmayacağı bir tavanı
+            hatırlatıyor ve ürünü GB cinsinden düşünmeye itiyordu; oysa
+            depolama satın alınan şey değil, sadece bir sınır. */}
         {orgData && (() => {
           const plan = getActivePlan(orgData.subscription_plan, orgData.subscription_status, orgData.org_type)
           const limitGB = PLAN_LIMITS[plan].storageGB
           const usedGB = (orgData.storage_used_bytes ?? 0) / (1024 ** 3)
           const pct = Math.min(100, Math.round((usedGB / limitGB) * 100))
+          if (pct < STORAGE_VISIBLE_PCT) return null
           const critical = pct >= 90
           const warn = pct >= 75
           return (

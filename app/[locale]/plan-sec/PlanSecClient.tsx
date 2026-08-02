@@ -23,9 +23,13 @@ const PLANS: Plan[] = [
     tagline: { tr: 'Yapım şirketleri ve serbest çalışan cast direktörleri için.', en: 'For production companies and freelance casting directors.' },
     price: '₺1.999',
     icon: Film,
+    // Depolama kotası bilerek listelenmiyor: satılan şey kapasite değil, iş
+    // akışı. GB yazmak müşteriyi doğrudan Drive/Google One ile kıyaslamaya
+    // davet ediyordu — kaybedilecek tek eksen orası. (Sabit kodlanmış rakamlar
+    // ayrıca PLAN_LIMITS'ten kopmuştu: burada 200 GB yazıyordu, uygulanan 1 TB'dı.)
     features: {
-      tr: ['3 kullanıcı', '200 GB video depolama', 'Sınırsız proje & rol', 'Audition video toplama', '5 yıldız puanlama', 'Etiket & koleksiyonlar', 'Zaman damgalı notlar', 'WhatsApp entegrasyonu'],
-      en: ['3 users', '200 GB video storage', 'Unlimited projects & roles', 'Audition video collection', '5-star rating', 'Tags & collections', 'Timestamp notes', 'WhatsApp integration'],
+      tr: ['3 kullanıcıya kadar', 'Sınırsız proje & rol', 'Audition video toplama', 'KVKK uyumlu otomatik video imhası', '5 yıldız puanlama', 'Etiket & koleksiyonlar', 'Zaman damgalı notlar', 'WhatsApp entegrasyonu'],
+      en: ['Up to 3 users', 'Unlimited projects & roles', 'Audition video collection', 'GDPR-compliant automatic video deletion', '5-star rating', 'Tags & collections', 'Timestamp notes', 'WhatsApp integration'],
     },
   },
   {
@@ -34,9 +38,11 @@ const PLANS: Plan[] = [
     tagline: { tr: 'Oyuncu temsil eden menajerlik ajansları için.', en: 'For talent agencies managing their roster.' },
     price: '₺4.999',
     icon: Users2,
+    // Ajanslar video biriktirmiyor, oyuncu portföyü yönetiyor — depolamadan
+    // hiç bahsetmiyoruz. Limit kodda duruyor, pazarlamada yok.
     features: {
-      tr: ['5 kullanıcı', '100 GB depolama', '250 oyuncu kadrosu', 'Sözleşme & komisyon takibi', 'Müşteri CRM\'i', 'Teklif pipeline\'ı', 'Çakışma kontrolü', 'Google Takvim entegrasyonu'],
-      en: ['5 users', '100 GB storage', '250-talent roster', 'Contract & commission tracking', 'Client CRM', 'Offer pipeline', 'Conflict detection', 'Google Calendar integration'],
+      tr: ['5 kullanıcıya kadar', 'Sınırsız oyuncu kadrosu', 'Sözleşme & komisyon takibi', 'Müşteri CRM\'i', 'Teklif pipeline\'ı', 'Reklam yasağı çakışma kontrolü', 'Belge süre takibi', 'Google Takvim entegrasyonu'],
+      en: ['Up to 5 users', 'Unlimited talent roster', 'Contract & commission tracking', 'Client CRM', 'Offer pipeline', 'Exclusivity conflict detection', 'Document expiry tracking', 'Google Calendar integration'],
     },
   },
 ]

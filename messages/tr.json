@@ -496,7 +496,7 @@
     "pricing": {
       "sectionLabel": "Fiyatlandırma",
       "title": "Cast direktörleri için tek plan",
-      "subtitle": "Gizli paket yok, kullanıcı başına ücret yok. 14 gün ücretsiz deneme.",
+      "subtitle": "Gizli paket yok. 3 kullanıcıya kadar ek ücret yok. 14 gün ücretsiz deneme.",
       "perMonth": "/ay",
       "trialCta": "14 Gün Ücretsiz Dene",
       "agencyNote": "Menajerlik ajansı mısınız?",
@@ -506,13 +506,13 @@
           "name": "Cast Direktörü",
           "desc": "Yapım şirketleri ve serbest cast direktörleri için",
           "include": [
-            "1 TB video depolama",
             "Sınırsız proje ve rol",
             "Sınırsız audition videosu",
+            "KVKK uyumlu otomatik video imhası",
             "Video inceleme, puanlama, etiketleme",
             "Otomatik oyuncu eşleştirme",
             "Şifresiz başvuru linkleri",
-            "Ekip üyeleri ve yetki yönetimi",
+            "3 kullanıcıya kadar ekip ve yetki yönetimi",
             "Menajerlik ajanslarıyla rol paylaşımı"
           ]
         },
@@ -520,7 +520,6 @@
           "name": "Menajerlik Ajansı",
           "desc": "Oyuncu menajerlikleri için",
           "include": [
-            "200 GB video depolama",
             "Sınırsız oyuncu kadrosu",
             "İş, kaşe ve tahsilat takibi",
             "Stopaj, net ve komisyon hesabı",
@@ -528,6 +527,7 @@
             "Teklif pipeline'ı",
             "Reklam yasağı çakışma kontrolü",
             "Belge süre takibi ve uyarılar",
+            "5 kullanıcıya kadar ekip yönetimi",
             "Cast direktörlerinden gelen rollere öneri gönderme"
           ]
         }
@@ -582,7 +582,7 @@
         },
         {
           "q": "Fiyatlandırma nasıl?",
-          "a": "Tarafınıza göre tek plan var: Cast Direktörü planı aylık 1.999 TL, Menajerlik Ajansı planı aylık 4.999 TL. Kullanıcı başına ek ücret yok. Her iki planda da 14 gün ücretsiz deneme sunuluyor."
+          "a": "Tarafınıza göre tek plan var: Cast Direktörü planı aylık 1.999 TL, Menajerlik Ajansı planı aylık 4.999 TL. Cast Direktörü planı 3, Menajerlik Ajansı planı 5 kullanıcıya kadar ek ücret almaz. Her iki planda da 14 gün ücretsiz deneme sunuluyor."
         },
         {
           "q": "Verilerim güvende mi?",
@@ -679,7 +679,7 @@
     "pricing": {
       "sectionLabel": "Fiyatlandırma",
       "title": "Menajerlik ajansları için tek plan",
-      "subtitle": "Kullanıcı başına ek ücret yok. 14 gün ücretsiz deneme.",
+      "subtitle": "5 kullanıcıya kadar ek ücret yok. 14 gün ücretsiz deneme.",
       "directorNote": "Cast direktörü müsünüz?",
       "directorLink": "Direktör planını inceleyin →"
     },
@@ -701,7 +701,7 @@
         },
         {
           "q": "Fiyatlandırma nasıl?",
-          "a": "Menajerlik Ajansı planı aylık 4.999 TL'dir, kullanıcı başına ek ücret yoktur. 14 gün ücretsiz deneme sunuluyor."
+          "a": "Menajerlik Ajansı planı aylık 4.999 TL'dir, 5 kullanıcıya kadar ek ücret yoktur. 14 gün ücretsiz deneme sunuluyor."
         },
         {
           "q": "Verilerim güvende mi?",
@@ -2300,7 +2300,7 @@
         },
         {
           "q": "Fiyatlandırma nasıl?",
-          "a": "Cast Direktörü planı aylık 1.999 TL'dir ve kullanıcı başına ek ücret yoktur; ekibinizin tamamı dahildir. 14 gün ücretsiz deneme sunulur."
+          "a": "Cast Direktörü planı aylık 1.999 TL'dir ve 3 kullanıcıya kadar ek ücret yoktur. 14 gün ücretsiz deneme sunulur."
         }
       ]
     },
@@ -2309,6 +2309,42 @@
       "desc": "Kurulum yok, eğitim gerekmez. Hesabınızı açın, ilk rolünüzü bugün tanımlayın.",
       "primary": "Ücretsiz Başla",
       "secondary": "Tüm özellikleri gör"
+    },
+    "compare": {
+      "label": "Karşılaştırma",
+      "title": "Drive + Excel + WhatsApp yerine tek yer",
+      "intro": "Castiqq'in rakibi bir depolama ürünü değil; çoğu ekibin bugün kullandığı üçlü. Aynı işleri iki yöntemle yan yana koyduk.",
+      "colTask": "Yapılan iş",
+      "colToday": "Drive + Excel + WhatsApp",
+      "colCastiqq": "Castiqq",
+      "rows": [
+        {
+          "task": "Oyuncudan video toplamak",
+          "today": "Link paylaşırsınız; video WhatsApp'tan sıkışmış, Drive'dan izinsiz ya da WeTransfer'dan süresi dolmuş gelir.",
+          "castiqq": "Şifresiz davet linki. Video doğrudan role bağlı düşer, hangi sahne için olduğu bellidir."
+        },
+        {
+          "task": "Senaryo göndermek",
+          "today": "PDF'i herkese aynı şekilde yollarsınız; kimin hangi sahneyi aldığını takip edemezsiniz.",
+          "castiqq": "Adaya özel sahne seçimi. Her PDF oyuncunun adıyla filigranlanır."
+        },
+        {
+          "task": "Aday değerlendirmek",
+          "today": "Excel'in üç sürümü dolaşır; yönetmenin yorumu e-postada, yapımcınınki WhatsApp'ta kalır.",
+          "castiqq": "Puan, etiket ve zaman damgalı notlar videonun yanında, tek listede."
+        },
+        {
+          "task": "Eşleşmeyi görmek",
+          "today": "Çift ya da aile rollerini kafanızda kurar, fotoğrafları elle yan yana koyarsınız.",
+          "castiqq": "Rol ilişki haritası; adayları yan yana gezer, boy ve yaş farkını hesaplar."
+        },
+        {
+          "task": "Veriyi imha etmek",
+          "today": "Videolar Drive'da süresiz durur. Oyuncu silinmesini isterse elle aramanız gerekir.",
+          "castiqq": "Belirlediğiniz tarihte otomatik silinir; oyuncu kendi videosunu istediği an kaldırabilir."
+        }
+      ],
+      "note": "Depolama alanı kıyaslamıyoruz — bulut depolama her yerde ucuz. Fark, videonun kiminle, hangi rol için ve ne kadar süreyle durduğunu sistemin bilmesinde."
     }
   }
 }
