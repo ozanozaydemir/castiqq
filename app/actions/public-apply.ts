@@ -2,6 +2,7 @@
 
 import { headers } from 'next/headers'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { retentionDateFromDays } from '@/lib/retention'
 import { rateLimit } from '@/lib/rate-limit'
 
 export type PublicApplyResult =
@@ -66,6 +67,17 @@ export async function submitPublicApplication(
     return { error: 'Bu rol için başvuru kapalı.' }
   }
 
+  // Public başvurularda da org varsayılanı uygulanıyor; aksi halde bu yoldan
+  // gelen videolar saklama politikasının tamamen dışında kalırdı.
+  const { data: org } = await admin
+    .from('organizations')
+    .select('default_retention_days')
+    .eq('id', role.organization_id)
+    .single()
+  const retentionUntil = org?.default_retention_days == null
+    ? null
+    : retentionDateFromDays(org.default_retention_days).toISOString()
+
   // Duplicate detection — same email for same role returns existing token and updates talent
   if (data.email) {
     const { data: existing } = await admin
@@ -115,6 +127,7 @@ export async function submitPublicApplication(
       talent_email: data.email?.trim() || null,
       invite_phone: data.phone?.trim() || null,
       status: 'pending',
+      retention_until: retentionUntil,
     })
     .select('token')
     .single()

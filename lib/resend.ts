@@ -380,3 +380,56 @@ export async function sendShareExpiringEmail(
     `),
   })
 }
+
+/** Yaklaşan otomatik video silme uyarısı — direktöre indirme/uzatma şansı verir. */
+export async function sendRetentionWarningEmail(
+  to: string, videoCount: number, deleteDate: string, locale: 'tr' | 'en' = 'tr',
+) {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castiqq.app'
+  const date = new Date(deleteDate).toLocaleDateString(locale === 'en' ? 'en-US' : 'tr-TR')
+
+  return resend.emails.send({
+    from: FROM,
+    to,
+    subject: locale === 'en'
+      ? `${videoCount} audition video(s) will be deleted on ${date}`
+      : `${videoCount} audition videosu ${date} tarihinde silinecek`,
+    html: baseHtml(locale === 'en' ? `
+      <p class="h1">Scheduled deletion ⏰</p>
+      <p class="p"><strong>${videoCount}</strong> audition video(s) are scheduled for automatic deletion on <strong>${date}</strong>, per your retention settings.</p>
+      <p class="p">If you still need this material, download it or extend the retention date before then.</p>
+      <a class="btn" href="${siteUrl}/dashboard">Open CastFlow →</a>
+    ` : `
+      <p class="h1">Planlı silme ⏰</p>
+      <p class="p">Saklama ayarlarınız gereği <strong>${videoCount}</strong> audition videosu <strong>${date}</strong> tarihinde otomatik silinecek.</p>
+      <p class="p">Bu materyale hâlâ ihtiyacınız varsa o tarihten önce indirin ya da saklama süresini uzatın.</p>
+      <a class="btn" href="${siteUrl}/dashboard">CastFlow'u Aç →</a>
+    `),
+  })
+}
+
+/** Oyuncu KVKK/GDPR silme hakkını kullandığında direktöre bilgi. */
+export async function sendTalentDeletedVideoEmail(
+  to: string, talentName: string, roleName: string, locale: 'tr' | 'en' = 'tr',
+) {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://castiqq.app'
+
+  return resend.emails.send({
+    from: FROM,
+    to,
+    subject: locale === 'en'
+      ? `${talentName} deleted their audition video`
+      : `${talentName} audition videosunu sildi`,
+    html: baseHtml(locale === 'en' ? `
+      <p class="h1">Video deleted by talent</p>
+      <p class="p"><strong>${talentName}</strong> removed their audition video for <strong>"${roleName}"</strong>, exercising their right to erasure.</p>
+      <p class="p">Your notes, rating and tags for this candidate are unaffected.</p>
+      <a class="btn" href="${siteUrl}/dashboard">Open CastFlow →</a>
+    ` : `
+      <p class="h1">Oyuncu videosunu sildi</p>
+      <p class="p"><strong>${talentName}</strong>, <strong>"${roleName}"</strong> rolü için yüklediği audition videosunu silme hakkını kullanarak kaldırdı.</p>
+      <p class="p">Bu aday için yazdığınız notlar, puan ve etiketler etkilenmedi.</p>
+      <a class="btn" href="${siteUrl}/dashboard">CastFlow'u Aç →</a>
+    `),
+  })
+}

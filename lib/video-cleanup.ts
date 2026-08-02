@@ -1,4 +1,5 @@
 import { deleteManyFromR2 } from '@/lib/r2'
+import { queueForPurge } from '@/lib/video-purge'
 
 // audition_videos, projects → project_roles → auditions zinciri boyunca
 // ON DELETE CASCADE ile siliniyor. DB tarafında sayaç trigger'ı (migration
@@ -43,11 +44,28 @@ export async function auditionVideoPaths(supabase: Client, auditionId: string): 
   return pathsForAuditions(supabase, [auditionId])
 }
 
-// R2 temizliği DB silmesini bloklamamalı — nesne sızıntısı, kullanıcıya
-// hata göstermekten iyidir. Hata loglanır, akış devam eder.
-export async function purgeR2(paths: string[]): Promise<void> {
+/**
+ * R2 temizliği DB silmesini bloklamamalı. Eskiden hata yutuluyordu ve nesneler
+ * kalıcı olarak sızıyordu — artık yollar önce kuyruğa yazılıyor, silme
+ * başarısız olursa cron yeniden deniyor.
+ */
+export async function purgeR2(paths: string[], organizationId?: string | null): Promise<void> {
   if (paths.length === 0) return
-  await deleteManyFromR2(paths).catch(err =>
-    console.error('[video-cleanup] R2 purge failed:', err.message, `(${paths.length} nesne sızdı)`)
-  )
+
+  const { createAdminClient } = await import('@/lib/supabase/admin')
+  const admin = createAdminClient()
+
+  // Kuyruğa yaz: bu çağrı başarısız olsa bile aşağıdaki denemenin sonucundan
+  // bağımsız olarak yol kayıt altında kalsın.
+  await queueForPurge(admin, paths, 'cascade', organizationId)
+
+  try {
+    await deleteManyFromR2(paths)
+    await admin.from('video_purge_queue').delete().in('storage_path', paths)
+  } catch (err) {
+    console.error(
+      '[video-cleanup] R2 silme başarısız, kuyrukta yeniden denenecek:',
+      (err as Error).message, `(${paths.length} nesne)`,
+    )
+  }
 }

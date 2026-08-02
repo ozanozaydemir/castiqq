@@ -12,6 +12,7 @@ import { Link } from '@/i18n/navigation'
 import { ArrowLeft, User, Calendar, Users } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { matchTalentToRole, type TalentCandidate } from '@/lib/roleMatching'
+import { retentionDateFromDays, toDateInputValue } from '@/lib/retention'
 import { listRoleShares } from '@/app/actions/roleShares'
 import { listSubmissionsForShare } from '@/app/actions/roleShareSubmissions'
 
@@ -25,7 +26,7 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
     erkek: tr('gender.erkek'), kadin: tr('gender.kadin'), diger: tr('gender.diger'),
   }
 
-  const [{ data: role }, { data: talents }, { data: projectsRaw }] = await Promise.all([
+  const [{ data: role }, { data: talents }, { data: projectsRaw }, { data: scriptsRaw }, { data: orgRow }] = await Promise.all([
     supabase
       .from('project_roles')
       .select('*, projects(id, title, type, status)')
@@ -40,7 +41,22 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
       .select('id, title, project_roles(id, name)')
       .eq('status', 'active')
       .order('title'),
+    supabase
+      .from('role_scripts')
+      .select('id, label, original_name')
+      .eq('role_id', id)
+      .order('sort_order', { ascending: true }),
+    supabase.from('organizations').select('default_retention_days').single(),
   ])
+  type ScriptRef = { id: string; label: string | null; original_name: string }
+  const roleScripts = (scriptsRaw ?? []) as ScriptRef[]
+  const scriptCount = roleScripts.length
+
+  // Davet modalindaki tarih alanini org varsayilaniyla on-dolduruyoruz.
+  const retentionDays = (orgRow as { default_retention_days: number | null } | null)?.default_retention_days
+  const defaultRetention = retentionDays == null
+    ? null
+    : toDateInputValue(retentionDateFromDays(retentionDays))
   const slideshowProjects = ((projectsRaw ?? []) as { id: string; title: string; project_roles: { id: string; name: string }[] }[])
     .filter(p => p.project_roles.length > 0)
 
@@ -146,7 +162,7 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
             )}
           </div>
           <div className="flex items-center gap-2">
-            <ShareRoleButton projectRoleId={id} hasScript={!!role.script_url} />
+            <ShareRoleButton projectRoleId={id} hasScript={scriptCount > 0} />
             <RolDuzenleButton role={role as any} />
           </div>
         </div>
@@ -216,6 +232,8 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
           talents={(talents ?? []) as any[]}
           siteUrl={siteUrl}
           slideshowProjects={slideshowProjects}
+          roleScripts={roleScripts}
+          defaultRetention={defaultRetention}
         />
       </div>
     </div>

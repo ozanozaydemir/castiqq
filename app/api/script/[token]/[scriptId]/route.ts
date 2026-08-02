@@ -15,20 +15,14 @@ function normalizeTr(text: string): string {
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: Promise<{ token: string }> },
+  { params }: { params: Promise<{ token: string; scriptId: string }> },
 ) {
-  const { token } = await params
+  const { token, scriptId } = await params
   const admin = createAdminClient()
 
-  // Token → audition + senaryo yolu
   const { data: audition } = await admin
     .from('auditions')
-    .select(`
-      id,
-      talent_name,
-      talent(full_name),
-      project_roles(script_url, name)
-    `)
+    .select('id, talent_name, talent(full_name), project_roles(name)')
     .eq('token', token)
     .single()
 
@@ -36,9 +30,21 @@ export async function GET(
     return new NextResponse('Geçersiz link', { status: 404 })
   }
 
-  const role = audition.project_roles as unknown as { script_url: string | null; name: string } | null
-  if (!role?.script_url) {
-    return new NextResponse('Bu rol için senaryo henüz yüklenmedi', { status: 404 })
+  // Yetkilendirme sınırı: senaryonun role ait olması YETMEZ, bu davete
+  // gönderilmiş olmalı. Aksi halde token sahibi, kendisine yollanmayan
+  // sahneleri de indirebilirdi.
+  const { data: link } = await admin
+    .from('audition_scripts')
+    .select('script_id, role_scripts(storage_path, original_name, label)')
+    .eq('audition_id', audition.id)
+    .eq('script_id', scriptId)
+    .maybeSingle()
+
+  const script = link?.role_scripts as unknown as
+    { storage_path: string; original_name: string; label: string | null } | null
+
+  if (!script) {
+    return new NextResponse('Bu senaryoya erişiminiz yok', { status: 404 })
   }
 
   const talentName = normalizeTr(
@@ -46,11 +52,11 @@ export async function GET(
     ?? audition.talent_name
     ?? 'Oyuncu'
   )
+  const roleName = (audition.project_roles as unknown as { name: string } | null)?.name ?? 'rol'
 
-  // Storage'dan PDF'i çek (admin client — private bucket)
   const { data: fileData, error } = await admin.storage
     .from('scripts')
-    .download(role.script_url)
+    .download(script.storage_path)
 
   if (error || !fileData) {
     return new NextResponse('Senaryo bulunamadi', { status: 404 })
@@ -58,56 +64,40 @@ export async function GET(
 
   const originalBytes = await fileData.arrayBuffer()
 
-  // Watermark ekle
   try {
     const pdfDoc = await PDFDocument.load(originalBytes)
     const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
     const pages = pdfDoc.getPages()
 
     const watermarkText = `${talentName} - GIZLI`
-    const date = new Date().toLocaleDateString('tr-TR')
-    const dateText = `${date}`
-    const fontSize = 36
-    const smallFontSize = 14
+    const dateText = new Date().toLocaleDateString('tr-TR')
 
     for (const page of pages) {
       const { width, height } = page.getSize()
 
-      // Diagonal büyük watermark — 3 satır
-      const positions = [
+      for (const pos of [
         { x: width * 0.1, y: height * 0.75 },
         { x: width * 0.1, y: height * 0.45 },
         { x: width * 0.1, y: height * 0.15 },
-      ]
-
-      for (const pos of positions) {
+      ]) {
         page.drawText(watermarkText, {
-          x: pos.x,
-          y: pos.y,
-          size: fontSize,
-          font,
-          color: rgb(0.7, 0.7, 0.7),
-          opacity: 0.18,
-          rotate: degrees(35),
+          x: pos.x, y: pos.y, size: 36, font,
+          color: rgb(0.7, 0.7, 0.7), opacity: 0.18, rotate: degrees(35),
         })
       }
 
-      // Alt köşede küçük imza
       page.drawText(`${talentName} | ${dateText}`, {
-        x: 30,
-        y: 18,
-        size: smallFontSize,
-        font,
-        color: rgb(0.6, 0.6, 0.6),
-        opacity: 0.5,
+        x: 30, y: 18, size: 14, font,
+        color: rgb(0.6, 0.6, 0.6), opacity: 0.5,
       })
     }
 
     const watermarkedBytes = await pdfDoc.save()
 
-    const filename = normalizeTr(`${role.name}-senaryo.pdf`)
-      .replace(/\s+/g, '-')
-      .toLowerCase()
+    // Dosya adı: etiket varsa onu kullan (kullanıcı "Sahne 12" yazmışsa
+    // indirilen dosya da öyle görünsün), yoksa rol adına düş.
+    const base = script.label?.trim() || `${roleName}-senaryo`
+    const filename = normalizeTr(base).replace(/[^a-zA-Z0-9._-]+/g, '-').toLowerCase() + '.pdf'
 
     return new NextResponse(Buffer.from(watermarkedBytes), {
       headers: {

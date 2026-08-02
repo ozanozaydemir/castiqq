@@ -49,3 +49,33 @@ export async function updateShareSettings(_: ActionState, formData: FormData): P
   revalidatePath('/ayarlar')
   return { success: true }
 }
+
+/**
+ * Yeni davetlerde uygulanacak varsayılan video saklama süresi.
+ *
+ * Mevcut davetlere dokunmuyor: retention_until davet oluşturulurken mutlak
+ * tarihe çevrilip snapshot alınıyor, aksi halde bu ayarı kısaltmak yürürlükteki
+ * videoları beklenmedik şekilde silinebilir hale getirirdi.
+ */
+export async function updateRetentionSettings(_: ActionState, formData: FormData): Promise<ActionState> {
+  const { supabase, orgId } = await requireOrg()
+
+  const raw = (formData.get('default_retention_days') as string)?.trim()
+  let days: number | null = null
+
+  if (raw) {
+    days = Number(raw)
+    if (!Number.isInteger(days) || days < 1 || days > 3650) {
+      return { error: 'Saklama süresi 1–3650 gün arasında olmalıdır.' }
+    }
+  }
+
+  const { error } = await supabase
+    .from('organizations')
+    .update({ default_retention_days: days })
+    .eq('id', orgId)
+
+  if (error) return { error: error.message }
+  revalidatePath('/ayarlar')
+  return { success: true }
+}

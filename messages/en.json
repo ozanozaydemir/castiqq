@@ -723,7 +723,7 @@
     "ageMaxLabel": "Age Max",
     "notesLabel": "Notes",
     "notesPlaceholder": "Casting director notes…",
-    "scriptLabel": "Script PDF",
+    "scriptLabel": "Scripts",
     "scriptUploading": "Uploading…",
     "scriptUpload": "Upload PDF",
     "scriptMaxSize": "Max 20MB",
@@ -823,7 +823,14 @@
       "selftapeAd": "Self-tape (Ad)",
       "voiceSample": "Voice Sample",
       "educationLabel": "Education"
-    }
+    },
+    "scriptAddMore": "Add script",
+    "scriptLabelPlaceholder": "Scene name (optional)",
+    "scriptLimit": "You can add at most {max} scripts.",
+    "scriptOnlyPdf": "Only PDF files can be uploaded.",
+    "scriptTooLarge": "{name} is too large (max 20 MB).",
+    "scriptAttachOnSave": "Scripts will be attached when the role is saved.",
+    "scriptAttaching": "Attaching scripts…"
   },
   "auditions": {
     "status": {
@@ -937,7 +944,11 @@
     "deleteVideoConfirm": "Are you sure you want to delete this video? This action cannot be undone.",
     "tagFilterClear": "Clear filter",
     "bulkStatusPlaceholder": "Change status...",
-    "clearSelection": "Clear selection"
+    "clearSelection": "Clear selection",
+    "scriptsToSend": "Scripts to send ({count} selected)",
+    "retentionLabel": "Video deletion date",
+    "retentionHint": "The talent will see this date. Videos are deleted automatically on this date.",
+    "retentionHintNone": "If no date is set, videos are not deleted automatically."
   },
   "talent": {
     "title": "Talent",
@@ -1511,6 +1522,16 @@
       "slugHint": "Set a unique identifier so production companies can find you (lowercase, numbers, hyphens).",
       "acceptsLabel": "Accept external shares (production companies can share roles with you)",
       "saved": "Saved"
+    },
+    "retention": {
+      "sectionTitle": "Video Retention",
+      "description": "Sets how long videos are kept for new audition invites. Existing invites are unaffected.",
+      "label": "Number of days",
+      "placeholder": "e.g. 180",
+      "days": "{count} days",
+      "never": "Never delete",
+      "noticeSet": "Talent will be told their videos are deleted after {count} days.",
+      "noticeNever": "Videos will not be deleted automatically. Talent can still delete their own videos."
     }
   },
   "upload": {
@@ -1551,7 +1572,18 @@
     "addMoreVideo": "Upload another video",
     "completedTitle": "Application complete!",
     "completedSubtitle": "Your video has been received. The casting team will review it and contact you if needed.",
-    "completedGoodLuck": "Good luck!"
+    "completedGoodLuck": "Good luck!",
+    "scriptsPlural": "Scripts ({count})",
+    "retentionNotice": "Your uploaded videos will be automatically deleted on {date}. You can also delete them yourself at any time.",
+    "privacyTitle": "Privacy Notice:",
+    "privacyBody": "Your videos are used solely for casting evaluation and are never shared with third parties. You can delete your videos at any time.",
+    "privacyBodyWithDate": "Your videos are used solely for casting evaluation, are never shared with third parties, and will be deleted on {date}. You can also delete them yourself at any time.",
+    "privacyPolicy": "Privacy Policy",
+    "deleteVideo": "Delete video",
+    "deleteConfirmTitle": "Delete this video?",
+    "deleteConfirmBody": "This video will be permanently deleted and the casting team will no longer have access. This cannot be undone.",
+    "deleteConfirmCta": "Yes, delete",
+    "cancel": "Cancel"
   },
   "cookie": {
     "ariaLabel": "Cookie preferences",

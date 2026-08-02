@@ -1,7 +1,22 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // vi.mock hoisted edildiği için mock referansı da hoisted olmalı.
-const { sendMock } = vi.hoisted(() => ({ sendMock: vi.fn() }))
+const { sendMock, queueUpsert, queueDelete } = vi.hoisted(() => ({
+  sendMock: vi.fn(),
+  queueUpsert: vi.fn().mockResolvedValue({ error: null }),
+  queueDelete: vi.fn().mockResolvedValue({ error: null }),
+}))
+
+// purgeR2 artık yolları önce silme kuyruğuna yazıyor (admin client gerekiyor).
+// Kuyruğa yazmak, R2 çağrısı patlarsa yolun kaybolmamasını sağlıyor.
+vi.mock('../../lib/supabase/admin', () => ({
+  createAdminClient: () => ({
+    from: () => ({
+      upsert: queueUpsert,
+      delete: () => ({ in: queueDelete }),
+    }),
+  }),
+}))
 
 vi.mock('@aws-sdk/client-s3', () => ({
   S3Client: class { send = sendMock },
@@ -122,5 +137,29 @@ describe('purgeR2', () => {
   it('R2 hatası fırlatmaz — DB silmesi bloklanmamalı', async () => {
     sendMock.mockRejectedValue(new Error('R2 down'))
     await expect(purgeR2(['v/1.mp4'])).resolves.toBeUndefined()
+  })
+
+  // Eskiden hata yutuluyordu ve nesne kalıcı olarak sızıyordu. Artık yol
+  // kuyrukta kalıyor, cron yeniden deniyor.
+  it('R2 patlarsa yol kuyrukta kalır', async () => {
+    queueUpsert.mockClear(); queueDelete.mockClear()
+    sendMock.mockRejectedValue(new Error('R2 down'))
+    await purgeR2(['v/kayip.mp4'], 'org-1')
+    expect(queueUpsert).toHaveBeenCalledTimes(1)
+    expect(queueDelete).not.toHaveBeenCalled()
+  })
+
+  it('R2 başarılıysa kuyruktan düşer', async () => {
+    queueUpsert.mockClear(); queueDelete.mockClear()
+    sendMock.mockResolvedValue({})
+    await purgeR2(['v/ok.mp4'], 'org-1')
+    expect(queueUpsert).toHaveBeenCalledTimes(1)
+    expect(queueDelete).toHaveBeenCalledTimes(1)
+  })
+
+  it('boş listede hiçbir şey yapmaz', async () => {
+    queueUpsert.mockClear()
+    await purgeR2([])
+    expect(queueUpsert).not.toHaveBeenCalled()
   })
 })

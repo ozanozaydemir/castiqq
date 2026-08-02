@@ -849,7 +849,7 @@
     "ageMaxLabel": "Yaş Max",
     "notesLabel": "Notlar",
     "notesPlaceholder": "Casting direktörü notları…",
-    "scriptLabel": "Senaryo PDF",
+    "scriptLabel": "Senaryolar",
     "scriptUploading": "Yükleniyor…",
     "scriptUpload": "PDF yükle",
     "scriptMaxSize": "Maks 20MB",
@@ -949,7 +949,14 @@
       "selftapeAd": "Self-tape (Reklam)",
       "voiceSample": "Ses Örneği",
       "educationLabel": "Eğitim"
-    }
+    },
+    "scriptAddMore": "Senaryo ekle",
+    "scriptLabelPlaceholder": "Sahne adı (opsiyonel)",
+    "scriptLimit": "En fazla {max} senaryo eklenebilir.",
+    "scriptOnlyPdf": "Yalnızca PDF dosyası yüklenebilir.",
+    "scriptTooLarge": "{name} çok büyük (en fazla 20 MB).",
+    "scriptAttachOnSave": "Senaryolar rol kaydedilince eklenecek.",
+    "scriptAttaching": "Senaryolar ekleniyor…"
   },
   "auditions": {
     "status": {
@@ -1063,7 +1070,11 @@
     "deleteVideoConfirm": "Bu videoyu silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
     "tagFilterClear": "Filtreyi kaldır",
     "bulkStatusPlaceholder": "Statü değiştir...",
-    "clearSelection": "Seçimi iptal et"
+    "clearSelection": "Seçimi iptal et",
+    "scriptsToSend": "Gönderilecek senaryolar ({count} seçili)",
+    "retentionLabel": "Videoların silineceği tarih",
+    "retentionHint": "Oyuncu bu tarihi bilgi olarak görecek. Videolar bu tarihte otomatik silinir.",
+    "retentionHintNone": "Tarih seçilmezse videolar otomatik silinmez."
   },
   "talent": {
     "title": "Oyuncular",
@@ -1637,6 +1648,16 @@
       "slugHint": "Menajerliklerin sizi bulabilmesi için benzersiz bir kimlik belirleyin (küçük harf, rakam, tire).",
       "acceptsLabel": "Dış paylaşım kabul et (yapım şirketleri size rol paylaşabilir)",
       "saved": "Kaydedildi"
+    },
+    "retention": {
+      "sectionTitle": "Video Saklama Süresi",
+      "description": "Yeni audition davetlerinde videoların ne kadar süre saklanacağını belirler. Mevcut davetler etkilenmez.",
+      "label": "Gün sayısı",
+      "placeholder": "örn. 180",
+      "days": "{count} gün",
+      "never": "Silme",
+      "noticeSet": "Oyuncular, videolarının {count} gün sonra silineceği bilgisini görecek.",
+      "noticeNever": "Videolar otomatik silinmeyecek. Oyuncular yine de kendi videolarını silebilir."
     }
   },
   "upload": {
@@ -1677,7 +1698,18 @@
     "addMoreVideo": "Ek video yükle",
     "completedTitle": "Başvurunuz tamamlandı!",
     "completedSubtitle": "Videonuz alındı. Casting ekibi inceleyecek ve gerekirse sizinle iletişime geçecek.",
-    "completedGoodLuck": "Başarılar dileriz!"
+    "completedGoodLuck": "Başarılar dileriz!",
+    "scriptsPlural": "Senaryolar ({count})",
+    "retentionNotice": "Yüklediğiniz videolar {date} tarihinde otomatik olarak silinecektir. Dilediğiniz an kendiniz de silebilirsiniz.",
+    "privacyTitle": "Gizlilik Bildirimi:",
+    "privacyBody": "Yüklediğiniz videolar yalnızca casting değerlendirmesi amacıyla kullanılır ve üçüncü taraflarla paylaşılmaz. Videolarınızı dilediğiniz an silebilirsiniz.",
+    "privacyBodyWithDate": "Yüklediğiniz videolar yalnızca casting değerlendirmesi amacıyla kullanılır, üçüncü taraflarla paylaşılmaz ve {date} tarihinde silinir. Dilediğiniz an kendiniz de silebilirsiniz.",
+    "privacyPolicy": "Gizlilik Politikası",
+    "deleteVideo": "Videoyu sil",
+    "deleteConfirmTitle": "Video silinsin mi?",
+    "deleteConfirmBody": "Bu video kalıcı olarak silinecek ve casting ekibi artık erişemeyecek. Bu işlem geri alınamaz.",
+    "deleteConfirmCta": "Evet, sil",
+    "cancel": "Vazgeç"
   },
   "cookie": {
     "ariaLabel": "Çerez tercihleri",

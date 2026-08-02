@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { useTranslations } from 'next-intl'
-import { Upload, CheckCircle2, Loader2, Film, Clock, Plus, PartyPopper } from 'lucide-react'
+import { Upload, CheckCircle2, Loader2, Film, Clock, Plus, PartyPopper, Trash2 } from 'lucide-react'
 
 const MAX_VIDEOS = 3
 
@@ -68,9 +68,40 @@ function uploadWithProgress(
   })
 }
 
+/**
+ * Silme onayı. Oyuncunun silme hakkı geri alınamaz bir işlem olduğu için
+ * tek tıkla değil, açık onayla yapılıyor.
+ */
+function DeleteConfirm({ onConfirm, onCancel, pending }: {
+  onConfirm: () => void; onCancel: () => void; pending: boolean
+}) {
+  const t = useTranslations('upload')
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onCancel}>
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-5" onClick={e => e.stopPropagation()}>
+        <h3 className="font-semibold text-gray-900 text-sm mb-2">{t('deleteConfirmTitle')}</h3>
+        <p className="text-sm text-gray-500 leading-relaxed mb-4">{t('deleteConfirmBody')}</p>
+        <div className="flex gap-2">
+          <button onClick={onCancel} className="sb-btn-secondary flex-1 text-sm">{t('cancel')}</button>
+          <button
+            onClick={onConfirm}
+            disabled={pending}
+            className="flex-1 text-sm bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white rounded-xl py-2.5 font-medium transition-colors inline-flex items-center justify-center gap-2"
+          >
+            {pending ? <Loader2 className="w-4 h-4 animate-spin" /> : t('deleteConfirmCta')}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function UploadSection({ token, initialVideos }: Props) {
   const t = useTranslations('upload')
   const [videos, setVideos]     = useState<UploadedVideo[]>(initialVideos)
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
+  const [deletingId, setDeletingId]       = useState<string | null>(null)
+  const [deleteError, setDeleteError]     = useState<string | null>(null)
   const [file, setFile]         = useState<File | null>(null)
   const [duration, setDuration] = useState<number | null>(null)
   const [uploading, setUploading] = useState(false)
@@ -181,6 +212,37 @@ export function UploadSection({ token, initialVideos }: Props) {
         <span className="text-xs text-gray-400">{t('videoCount', { current: videos.length, max: MAX_VIDEOS })}</span>
       </div>
 
+      {deleteError && (
+        <p className="text-xs text-red-500 bg-red-50 rounded-lg px-3 py-2">{deleteError}</p>
+      )}
+
+      {confirmDelete && (
+        <DeleteConfirm
+          pending={deletingId !== null}
+          onCancel={() => setConfirmDelete(null)}
+          onConfirm={async () => {
+            const id = confirmDelete
+            setDeletingId(id)
+            setDeleteError(null)
+            try {
+              const res = await fetch('/api/talent-video', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token, videoId: id }),
+              })
+              const json = await res.json()
+              if (!res.ok) { setDeleteError(json.error ?? 'Video silinemedi.'); return }
+              setVideos(prev => prev.filter(v => v.id !== id))
+            } catch {
+              setDeleteError('Bağlantı hatası.')
+            } finally {
+              setDeletingId(null)
+              setConfirmDelete(null)
+            }
+          }}
+        />
+      )}
+
       {/* Yüklenen videolar */}
       {videos.length > 0 && (
         <div className="space-y-2">
@@ -197,6 +259,16 @@ export function UploadSection({ token, initialVideos }: Props) {
               <span className="text-xs text-green-500">
                 {new Date(v.uploaded_at).toLocaleDateString('tr-TR')}
               </span>
+              <button
+                onClick={() => setConfirmDelete(v.id)}
+                disabled={deletingId === v.id}
+                className="text-green-400 hover:text-red-500 transition-colors flex-shrink-0 disabled:opacity-40"
+                title={t('deleteVideo')}
+              >
+                {deletingId === v.id
+                  ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  : <Trash2 className="w-3.5 h-3.5" />}
+              </button>
             </div>
           ))}
         </div>

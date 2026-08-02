@@ -64,7 +64,7 @@ export async function createRoleShare(projectRoleId: string, _: ActionState, for
 
   const { data: role } = await supabase
     .from('project_roles')
-    .select('id, name, description, gender, age_min, age_max, min_height_cm, max_height_cm, required_skills, city, script_url, status, projects(title)')
+    .select('id, name, description, gender, age_min, age_max, min_height_cm, max_height_cm, required_skills, city, status, projects(title)')
     .eq('id', projectRoleId)
     .single()
 
@@ -72,6 +72,21 @@ export async function createRoleShare(projectRoleId: string, _: ActionState, for
   if (role.status === 'filled' || role.status === 'cancelled') return { error: 'Kapanmış bir rol paylaşılamaz.' }
 
   const includeScript = formData.get('include_script') === 'on'
+
+  // role_shares tek bir senaryo yolu saklıyor (paylaşım anındaki snapshot).
+  // Rol artık birden fazla senaryo taşıyabildiği için havuzdaki ilkini
+  // gönderiyoruz — ajans paylaşımı bugünkü davranışını koruyor.
+  let sharedScriptPath: string | null = null
+  if (includeScript) {
+    const { data: firstScript } = await supabase
+      .from('role_scripts')
+      .select('storage_path')
+      .eq('role_id', projectRoleId)
+      .order('sort_order', { ascending: true })
+      .limit(1)
+      .maybeSingle()
+    sharedScriptPath = firstScript?.storage_path ?? null
+  }
   const deadlineDays = Number(formData.get('expires_in_days')) || 30
   const expiresAt = new Date(Date.now() + deadlineDays * 86400000).toISOString()
   const project = role.projects as unknown as { title: string } | null
@@ -91,7 +106,7 @@ export async function createRoleShare(projectRoleId: string, _: ActionState, for
     required_skills: role.required_skills ?? [],
     city: role.city,
     submission_deadline: str(formData.get('submission_deadline')),
-    script_asset_path: includeScript ? role.script_url : null,
+    script_asset_path: sharedScriptPath,
     message: str(formData.get('message')),
     expires_at: expiresAt,
     created_by: userId,

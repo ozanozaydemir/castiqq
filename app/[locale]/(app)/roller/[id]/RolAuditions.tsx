@@ -87,6 +87,10 @@ interface Props {
   talents: Talent[]
   siteUrl: string
   slideshowProjects: SlideshowProject[]
+  /** Rolün senaryo havuzu — davet gönderirken hangilerinin yollanacağı seçiliyor. */
+  roleScripts: { id: string; label: string | null; original_name: string }[]
+  /** Org varsayılanından hesaplanan saklama tarihi (YYYY-MM-DD), yoksa null. */
+  defaultRetention: string | null
 }
 
 // ── Copy link button ─────────────────────────────────────────────
@@ -154,8 +158,11 @@ function StatusSelect({ auditionId, roleId, currentStatus }: {
 
 // ── Audition İste modal ──────────────────────────────────────────
 
-function AuditionIsteModal({ state, roleId, siteUrl, onClose }: {
-  state: RequestState; roleId: string; siteUrl: string; onClose: () => void
+function AuditionIsteModal({ state, roleId, siteUrl, roleScripts, defaultRetention, onClose }: {
+  state: RequestState; roleId: string; siteUrl: string
+  roleScripts: { id: string; label: string | null; original_name: string }[]
+  defaultRetention: string | null
+  onClose: () => void
 }) {
   const t = useTranslations('auditions')
   const tc = useTranslations('common')
@@ -165,6 +172,15 @@ function AuditionIsteModal({ state, roleId, siteUrl, onClose }: {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
+
+  // Varsayılan: rolün tüm senaryoları seçili. Direktör tek tek kaldırabilir.
+  const [selectedScripts, setSelectedScripts] = useState<string[]>(roleScripts.map(s => s.id))
+  const [retentionDate, setRetentionDate] = useState(defaultRetention ?? '')
+
+  function toggleScript(id: string) {
+    setSelectedScripts(prev =>
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id])
+  }
 
   const inviteUrl = token ? `${siteUrl}/oyuncu/${token}` : null
   const waLink = inviteUrl && phone
@@ -176,7 +192,14 @@ function AuditionIsteModal({ state, roleId, siteUrl, onClose }: {
   function handleRequest() {
     setError(null)
     startTransition(async () => {
-      const result = await requestAudition(state.id, roleId, phone || null)
+      // Tarih girdisi gün bazlı; günün sonuna sabitliyoruz ki oyuncu seçilen
+      // günü tam olarak yaşasın (00:00 olsaydı bir gün eksik alırdı).
+      const retention = retentionDate
+        ? new Date(`${retentionDate}T23:59:59`).toISOString()
+        : null
+      const result = await requestAudition(
+        state.id, roleId, phone || null, selectedScripts, retention,
+      )
       if (result?.error) { setError(result.error); return }
       if (result?.token) {
         setToken(result.token)
@@ -212,6 +235,49 @@ function AuditionIsteModal({ state, roleId, siteUrl, onClose }: {
                 />
                 <p className="text-xs text-gray-400">{t('whatsappHint')}</p>
               </div>
+
+              {/* Gönderilecek senaryolar */}
+              {roleScripts.length > 0 && (
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-gray-600">
+                    {t('scriptsToSend', { count: selectedScripts.length })}
+                  </label>
+                  <div className="space-y-1 max-h-40 overflow-y-auto">
+                    {roleScripts.map(s => (
+                      <label
+                        key={s.id}
+                        className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg hover:bg-gray-50 cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selectedScripts.includes(s.id)}
+                          onChange={() => toggleScript(s.id)}
+                          className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-400"
+                        />
+                        <span className="text-sm text-gray-700 truncate flex-1">
+                          {s.label || s.original_name}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Saklama tarihi */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-gray-600">{t('retentionLabel')}</label>
+                <input
+                  type="date"
+                  className="sb-input"
+                  value={retentionDate}
+                  min={new Date(Date.now() + 86400000).toISOString().slice(0, 10)}
+                  onChange={e => setRetentionDate(e.target.value)}
+                />
+                <p className="text-xs text-gray-400">
+                  {retentionDate ? t('retentionHint') : t('retentionHintNone')}
+                </p>
+              </div>
+
               {error && <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>}
               <button
                 onClick={handleRequest}
@@ -431,7 +497,7 @@ function SortableRow({ audition, roleId, siteUrl, isDragMode, isSelected, onTogg
 
 // ── Main component ───────────────────────────────────────────────
 
-export function RolAuditions({ roleId, roleName, auditions: initial, talents, siteUrl, slideshowProjects }: Props) {
+export function RolAuditions({ roleId, roleName, auditions: initial, talents, siteUrl, slideshowProjects, roleScripts, defaultRetention }: Props) {
   const slideshowTalents: SlideshowTalent[] = initial
     .filter(a => a.talent)
     .map(a => ({
@@ -741,6 +807,8 @@ export function RolAuditions({ roleId, roleName, auditions: initial, talents, si
           state={requestingAudition}
           roleId={roleId}
           siteUrl={siteUrl}
+          roleScripts={roleScripts}
+          defaultRetention={defaultRetention}
           onClose={() => { setRequestingAudition(null) }}
         />
       )}

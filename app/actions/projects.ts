@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 import { requireOrg } from '@/lib/require-org'
 import { projectVideoPaths, roleVideoPaths, purgeR2 } from '@/lib/video-cleanup'
 
-export type ActionState = { error?: string; success?: boolean } | null
+export type ActionState = { error?: string; success?: boolean; roleId?: string } | null
 
 // ── Projeler ────────────────────────────────────────────────────
 
@@ -84,7 +84,10 @@ export async function createRol(_: ActionState, formData: FormData): Promise<Act
   const name = (formData.get('name') as string)?.trim()
   if (!name) return { error: 'Rol adı zorunludur.' }
 
-  const { error } = await supabase.from('project_roles').insert({
+  // Yeni rolün id'sini döndürüyoruz: senaryolar role_scripts'te satır olarak
+  // duruyor ve role_id gerektiriyor, ama oluşturma anında henüz id yok.
+  // Modal, kaydetme başarılı olunca bekleyen senaryoları bu id'ye bağlıyor.
+  const { data, error } = await supabase.from('project_roles').insert({
     project_id: projectId,
     organization_id: orgId,
     name,
@@ -93,16 +96,15 @@ export async function createRol(_: ActionState, formData: FormData): Promise<Act
     age_min: formData.get('age_min') ? Number(formData.get('age_min')) : null,
     age_max: formData.get('age_max') ? Number(formData.get('age_max')) : null,
     notes: (formData.get('notes') as string) || null,
-    script_url: (formData.get('script_url') as string) || null,
     min_height_cm: formData.get('min_height_cm') ? Number(formData.get('min_height_cm')) : null,
     max_height_cm: formData.get('max_height_cm') ? Number(formData.get('max_height_cm')) : null,
     required_skills: JSON.parse((formData.get('required_skills_json') as string) || '[]'),
     city: (formData.get('city') as string)?.trim() || null,
-  })
+  }).select('id').single()
 
   if (error) return { error: error.message }
   revalidatePath(`/projeler/${projectId}`)
-  return { success: true }
+  return { success: true, roleId: data.id }
 }
 
 export async function updateRol(id: string, _: ActionState, formData: FormData): Promise<ActionState> {
@@ -119,7 +121,6 @@ export async function updateRol(id: string, _: ActionState, formData: FormData):
     age_min: formData.get('age_min') ? Number(formData.get('age_min')) : null,
     age_max: formData.get('age_max') ? Number(formData.get('age_max')) : null,
     notes: (formData.get('notes') as string) || null,
-    script_url: (formData.get('script_url') as string) || null,
     min_height_cm: formData.get('min_height_cm') ? Number(formData.get('min_height_cm')) : null,
     max_height_cm: formData.get('max_height_cm') ? Number(formData.get('max_height_cm')) : null,
     required_skills: JSON.parse((formData.get('required_skills_json') as string) || '[]'),

@@ -4,9 +4,10 @@ import { useState, useTransition, useCallback } from 'react'
 import { useRouter } from '@/i18n/navigation'
 import { Link } from '@/i18n/navigation'
 import { Plus, Pencil, Trash2, Users } from 'lucide-react'
-import { RolModal } from './RolModal'
+import { RolModal, type DraftScript } from './RolModal'
 import { createRol, updateRol, updateRolStatus, deleteRol } from '@/app/actions/projects'
 import type { ProjectRole } from '@/types/database'
+import { createClient } from '@/lib/supabase/client'
 import { useTranslations } from 'next-intl'
 
 interface RollerSectionProps {
@@ -21,6 +22,7 @@ export function RollerSection({ projectId, roles: initialRoles, auditionCounts }
   const [isPending, startTransition] = useTransition()
   const [showModal, setShowModal] = useState(false)
   const [editingRole, setEditingRole] = useState<ProjectRole | null>(null)
+  const [editingScripts, setEditingScripts] = useState<DraftScript[]>([])
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
@@ -42,12 +44,35 @@ export function RollerSection({ projectId, roles: initialRoles, auditionCounts }
 
   function openCreate() {
     setEditingRole(null)
+    setEditingScripts([])
     setShowModal(true)
   }
 
-  function openEdit(role: ProjectRole) {
+  async function openEdit(role: ProjectRole) {
     setEditingRole(role)
+    setEditingScripts([])
     setShowModal(true)
+
+    // Senaryoları modal açıldıktan sonra çekiyoruz: rol listesiyle birlikte
+    // yüklemek her satır için gereksiz sorgu demek olurdu.
+    const supabase = createClient()
+    const { data } = await supabase
+      .from('role_scripts')
+      .select('id, storage_path, original_name, label, file_size_bytes')
+      .eq('role_id', role.id)
+      .order('sort_order', { ascending: true })
+
+    type ScriptRow = {
+      id: string; storage_path: string; original_name: string
+      label: string | null; file_size_bytes: number | null
+    }
+    setEditingScripts(((data ?? []) as ScriptRow[]).map(s => ({
+      id: s.id,
+      storagePath: s.storage_path,
+      originalName: s.original_name,
+      label: s.label ?? '',
+      fileSizeBytes: s.file_size_bytes,
+    })))
   }
 
   async function handleStatusChange(roleId: string, status: string) {
@@ -181,8 +206,10 @@ export function RollerSection({ projectId, roles: initialRoles, auditionCounts }
       {/* Modal */}
       {showModal && (
         <RolModal
+          key={editingRole?.id ?? 'new'}
           projectId={projectId}
           editingRole={editingRole}
+          existingScripts={editingScripts}
           action={modalAction}
           onClose={closeModal}
         />

@@ -48,6 +48,8 @@ export type Database = {
           storage_used_bytes: number
           public_slug: string | null
           accepts_external_shares: boolean
+          /** Yeni davetlerde videoların kaç gün sonra silineceği. NULL = otomatik silme yok. */
+          default_retention_days: number | null
           created_at: string
           updated_at: string
         }
@@ -100,11 +102,12 @@ export type Database = {
           gender: string | null
           notes: string | null
           status: 'open' | 'casting' | 'filled' | 'cancelled'
-          script_url: string | null
           min_height_cm: number | null
           max_height_cm: number | null
           required_skills: string[]
           city: string | null
+          // Senaryolar artık role_scripts tablosunda (migration 059) — rol başına
+          // birden fazla senaryo tutulabiliyor ve davet başına seçiliyor.
           // İlişki diyagramındaki konum; NULL = henüz yerleştirilmemiş (otomatik yerleşim uygulanır)
           diagram_x: number | null
           diagram_y: number | null
@@ -566,6 +569,10 @@ export type Database = {
           invite_phone: string | null
           sort_order: number
           submitted_at: string | null
+          /** Videoların otomatik silineceği tarih. NULL = otomatik silme yok. Yalnızca direktör belirler. */
+          retention_until: string | null
+          /** Oyuncu silme hakkını kullandıysa zaman damgası — videolar gitse de iz kalır. */
+          talent_deleted_video_at: string | null
           created_at: string
           updated_at: string
         }
@@ -580,11 +587,50 @@ export type Database = {
           storage_path: string
           public_url: string | null
           duration_seconds: number | null
+          file_size_bytes: number | null
           notes: string | null
           uploaded_at: string
         }
         Insert: Omit<Database['public']['Tables']['audition_videos']['Row'], 'id' | 'uploaded_at'>
         Update: Partial<Database['public']['Tables']['audition_videos']['Insert']>
+      }
+      role_scripts: {
+        Row: {
+          id: string
+          organization_id: string
+          role_id: string
+          storage_path: string
+          original_name: string
+          label: string | null
+          sort_order: number
+          file_size_bytes: number | null
+          created_at: string
+          created_by: string | null
+        }
+        Insert: Omit<Database['public']['Tables']['role_scripts']['Row'], 'id' | 'created_at'>
+        Update: Partial<Database['public']['Tables']['role_scripts']['Insert']>
+      }
+      audition_scripts: {
+        Row: {
+          audition_id: string
+          script_id: string
+        }
+        Insert: Database['public']['Tables']['audition_scripts']['Row']
+        Update: Partial<Database['public']['Tables']['audition_scripts']['Row']>
+      }
+      video_purge_queue: {
+        Row: {
+          id: string
+          organization_id: string | null
+          storage_path: string
+          reason: 'retention' | 'talent_request' | 'cascade' | 'manual'
+          attempts: number
+          last_error: string | null
+          created_at: string
+          last_attempt_at: string | null
+        }
+        Insert: Omit<Database['public']['Tables']['video_purge_queue']['Row'], 'id' | 'created_at'>
+        Update: Partial<Database['public']['Tables']['video_purge_queue']['Insert']>
       }
     }
     Functions: {
@@ -597,6 +643,7 @@ export type Database = {
 export type Project = Database['public']['Tables']['projects']['Row']
 export type ProjectRole = Database['public']['Tables']['project_roles']['Row']
 export type RoleRelationship = Database['public']['Tables']['role_relationships']['Row']
+export type RoleScript = Database['public']['Tables']['role_scripts']['Row']
 export type Talent = Database['public']['Tables']['talent']['Row']
 export type TalentLanguage = Database['public']['Tables']['talent_languages']['Row']
 export type TalentExperience = Database['public']['Tables']['talent_experiences']['Row']

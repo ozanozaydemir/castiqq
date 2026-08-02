@@ -130,6 +130,9 @@ app/
 - `collections` — direktörün oluşturduğu özel oyuncu listeleri (migration 017)
 - `collection_items` — collection ↔ talent çoka-çok (migration 017)
 - `video_notes` — video timestamp'e bağlı notlar (migration 018)
+- `role_scripts` — rol başına senaryo havuzu (migration 059). Tek `script_url` kolonunun yerini aldı; etiket, sıra ve boyut taşıyor
+- `audition_scripts` — davet başına senaryo seçimi. **Yetkilendirme sınırı burası:** `/api/script/[token]/[scriptId]` senaryonun role ait olmasına değil, o davete gönderilmiş olmasına bakar
+- `video_purge_queue` — R2 silme kuyruğu. DB ile nesne deposu arasındaki sıralama tuzağını çözüyor: yol önce kuyruğa yazılır, DB satırı silinir, R2 en son temizlenir; başarısızlar yeniden denenir
 - `role_relationships` — roller arası tipli graf kenarları (migration 058)
   - `type`: `spouse|partner|sibling|friend|rival` (simetrik) + `parent|manager|other` (yönlü)
   - Simetrik tipler **tek satır** olarak saklanır; `canonicalize_role_relationship()` trigger'ı uçları `from < to` sırasına sokar, unique index ters yönlü kopyayı da yakalar
@@ -173,6 +176,8 @@ app/
 28. `supabase/migrations/056_scope_public_bucket_listing.sql` — talent-avatars + org-logos SELECT politikaları org'a kısıtlandı (çapraz kiracı listeleme sızıntısı)
 29. `supabase/migrations/057_function_hardening.sql` — search_path sabitleme + trigger fonksiyonlarından EXECUTE revoke
 30. `supabase/migrations/058_role_relationships.sql` — rol ilişki haritası: `role_relationships` tablosu + `project_roles.diagram_x/y` + kanonik sıralama trigger'ı
+31. `supabase/migrations/059_scripts_and_retention.sql` — çoklu senaryo (`role_scripts` + `audition_scripts`), video saklama süresi, `video_purge_queue`; `project_roles.script_url` düşürüldü
+32. `supabase/migrations/060_service_role_grants_scripts.sql` — 059'daki tablolara service_role GRANT'i (eksikliği `/oyuncu/[token]`'ı 404'e düşürüyordu — 012'nin tekrarı)
 
 ### Supabase Security Advisor — bilinçli olarak bırakılanlar
 `get_user_org_id()` / `get_user_role()` "anon/authenticated execute edebiliyor" uyarısı veriyor ama **kaldırılamaz**: her RLS politikası bunları çağırıyor ve politika ifadeleri sorguyu çalıştıran rolün yetkisiyle değerlendiriliyor. `PUBLIC`'ten EXECUTE alınınca tüm RLS `permission denied for function get_user_org_id` ile çöküyor (test edildi). Argümansızlar, yalnızca `auth.uid()`'den kendi org/rolünü dönüyorlar — anon çağırınca `null` geliyor, sızıntı yok.
@@ -261,6 +266,15 @@ NEXT_PUBLIC_POLAR_AGENCY_PRODUCT_ID
 - Audition geçmişi: video sayısı badge + not satırı
 - "Listeye Ekle" butonu → mevcut listeden seçme veya yeni liste oluşturma
 
+### Çoklu Senaryo + Video Saklama Süresi
+- **Senaryo modeli:** havuz rolde (`role_scripts`), seçim davette (`audition_scripts`). Direktör farklı adaylara farklı sahne gönderebiliyor. Rol başına 10 dosya, dosya başına 20MB sınırı (`lib/scripts.ts`).
+- **Saklama tarihi yalnızca direktör tarafından belirlenir.** Oyuncu tarihe müdahale etmez, ama **istediği an kendi videosunu silebilir** (`/api/talent-video`) — KVKK/GDPR silme hakkı bu yolla karşılanıyor, dolayısıyla bu rota birinci sınıf ve kolay bulunur olmalı.
+- `organizations.default_retention_days` (varsayılan 180) davet oluşturulurken **mutlak tarihe çevrilip** `auditions.retention_until`'a snapshot alınır — org ayarı sonradan kısalırsa yürürlükteki davetlerin videoları beklenmedik şekilde silinmesin diye.
+- Mevcut audition'lar bilinçli olarak `retention_until = NULL` bırakıldı: yürürlükteki veriye geriye dönük silme tarihi atamak, müşteri onayı olmadan veri imha etmek olurdu.
+- **Silme sırası kritik:** kuyruk → DB → R2. Tersi olsaydı DB silinip R2 patladığında `storage_path` kaybolur, nesne sonsuza kadar para yakardı. `lib/video-purge.ts`.
+- Video silinince **audition kaydı korunur** — not, puan ve etiketler direktörün kendi değerlendirme emeği.
+- Cron: `/api/cron/video-retention` (03:00). Süresi dolanları siler, kuyruğu işler, 3 gün önce direktöre uyarı yollar.
+
 ### Rol İlişki Haritası (Karakter Grafiği)
 - **Yer:** proje detay → "İlişkiler" tab'ı (`/projeler/[id]?tab=iliskiler`). Rol detayında salt-okunur özet kartı (`RoleRelationshipsCard`).
 - **Model:** serbest çizim değil, yapılandırılmış graf. Düğümler `project_roles`, kenarlar `role_relationships`. Veri sistem tarafından anlaşıldığı için doğrulama + casting overlay mümkün.
@@ -329,6 +343,8 @@ NEXT_PUBLIC_POLAR_AGENCY_PRODUCT_ID
 - RLS her zaman `organization_id = get_user_org_id()` pattern'ini kullan
 - Admin işlemler için `createAdminClient()` kullan
 - Yeni tablo eklerken `organization_id` foreign key + RLS policy + GRANT TO authenticated zorunlu
+- **Admin client'ın (service_role) dokunduğu her tabloya ayrıca `GRANT ... TO service_role` gerekiyor.** RLS baypas edilse bile temel tablo yetkisi olmadan sorgu "permission denied" ile düşer ve Supabase istemcisi `data: null` döndürür — bu, public sayfaları sessizce 404'e sokar. Migration 012 ve 060 aynı hatayı düzeltti
+- Supabase sorgularında `error`'ı kontrol etmeden `data`'ya güvenme; `notFound()`'a sessizce düşen sayfalar teşhisi çok zorlaştırıyor
 - Server action'larda `requireOrg()` kullan — doğrudan `createClient()` değil
 - Supabase hata objesi `console.error` ile `{}` gösterir — `error.message`, `error.code`, `error.hint` ayrı logla
 - i18n linkleri `next/navigation`'dan değil `@/i18n/navigation`'dan import et

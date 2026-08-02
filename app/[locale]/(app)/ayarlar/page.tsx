@@ -8,7 +8,8 @@ import { PlanCard } from './PlanCard'
 import { GoogleSheetsCard } from './GoogleSheetsCard'
 import { ShareSettingsForm } from './ShareSettingsForm'
 import { StorageCard } from './StorageCard'
-import { Building2, User, Lock, FileSpreadsheet, Share2, HardDrive } from 'lucide-react'
+import { RetentionForm } from './RetentionForm'
+import { Building2, User, Lock, FileSpreadsheet, Share2, HardDrive, ShieldCheck } from 'lucide-react'
 import { getActivePlan, PLAN_LIMITS } from '@/lib/plan'
 
 const GOOGLE_MESSAGE_KEYS: Record<string, string> = {
@@ -51,7 +52,7 @@ export default async function AyarlarPage({
 
   const { data: org } = await supabase
     .from('organizations')
-    .select('name, subscription_plan, subscription_status, subscription_ends_at, polar_customer_id, org_type, public_slug, accepts_external_shares, storage_used_bytes')
+    .select('name, subscription_plan, subscription_status, subscription_ends_at, polar_customer_id, org_type, public_slug, accepts_external_shares, storage_used_bytes, default_retention_days')
     .eq('id', profile?.organization_id ?? '')
     .single()
 
@@ -125,6 +126,10 @@ export default async function AyarlarPage({
           initialName={profile?.full_name ?? ''}
           email={user?.email ?? ''}
         />
+      </SettingsCard>
+
+      <SettingsCard title={t('retention.sectionTitle')} icon={<ShieldCheck className="w-4 h-4" />}>
+        <RetentionForm initialDays={org?.default_retention_days ?? null} />
       </SettingsCard>
 
       <SettingsCard title={t('sectionGoogle')} icon={<FileSpreadsheet className="w-4 h-4" />}>
