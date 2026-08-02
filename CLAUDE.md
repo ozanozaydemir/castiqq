@@ -169,7 +169,7 @@ app/
 21. `supabase/migrations/019_audition_rating.sql` — auditions.rating (1–5 yıldız)
 22. `supabase/migrations/020_polar_billing.sql` — Polar kolonları + subscription plan/status CHECK güncelleme
 23. `supabase/migrations/021_storage_tracking.sql` — file_size_bytes + storage_used_bytes + increment_storage()
-24. `supabase/migrations/052_remove_starter_plan.sql` — 'starter' plan kaldırıldı; CHECK: pro|agency, DEFAULT NULL
+24. `supabase/migrations/052_remove_starter_plan.sql` — 'starter' plan kaldırıldı; `NOT NULL` düşürüldü, CHECK: `NULL|pro|agency`, DEFAULT kaldırıldı. **2026-08-02'ye kadar hiç uygulanmamıştı ve yazıldığı haliyle çalışamıyordu** — `subscription_plan` `schema.sql`'den beri NOT NULL olduğu için `SET subscription_plan = NULL` satırı 23502 ile patlıyordu. `DROP NOT NULL` eklenip uygulandı
 25. `supabase/migrations/053_storage_counter_trigger.sql` — storage_used_bytes sayacı trigger'a taşındı (cascade silmede de doğru çalışır), mevcut sayaçlar yeniden hesaplandı
 26. `supabase/migrations/054_profiles_delete_policy.sql` — profiles'a admin DELETE politikası (yoktu; RLS açık + politika yok = silme sessizce engelleniyordu)
 27. `supabase/migrations/055_lock_down_storage_functions.sql` — increment_storage kaldırıldı (anon'a açık güvenlik açığı), sync_org_storage REST'ten kapatıldı
@@ -186,7 +186,9 @@ app/
 
 **Açık kalan (dashboard'dan yapılmalı):** Leaked Password Protection — Authentication → Policies.
 
-**Uygulama durumu:** 053–055 production'a uygulandı. `supabase_migrations.schema_migrations` tablosu 001–052 için boş (elle uygulanmışlar) — bu yüzden `supabase db push` çalıştırmak eski migration'ları yeniden uygulamayı deneyebilir. Yeni migration'ları MCP `apply_migration` ile uygula.
+**Uygulama durumu:** 052–060 production'a uygulandı. `supabase_migrations.schema_migrations` tablosu 001–051 için boş (elle uygulanmışlar) — bu yüzden `supabase db push` çalıştırmak eski migration'ları yeniden uygulamayı deneyebilir. Yeni migration'ları MCP `apply_migration` ile uygula.
+
+**Ders:** "elle uygulandı" varsayımı doğrulanmadan yazılmıştı ve 052 için yanlıştı — DB, 020'nin bıraktığı halde kalmıştı. Bir migration'ın uygulandığını varsayma; `pg_constraint` / `information_schema.columns` üzerinden fiilî şemayı kontrol et.
 
 **Kritik:** Migration'lar sırayla uygulanmalı. 015 olmadan roller/[id] sayfası `profiles!auditions_notes_author_fkey` join'i nedeniyle tüm auditions sorgusunu kırıyor.
 
@@ -309,6 +311,7 @@ NEXT_PUBLIC_POLAR_AGENCY_PRODUCT_ID
 - Ücretsiz tier yoktur. Yeni kullanıcılar 14 gün deneme sonrası `pro` veya `agency` planına abone olur.
 - `subscription_plan = NULL` → abonelik yok (deneme veya ön-kayıt); `getActivePlan()` bu durumda `org_type`'a bakarak doğru limitleri döner.
 - Subscription revoke → `subscription_plan = NULL, subscription_status = 'canceled'`
+- **Webhook'un tüm DB yazımları `lib/polar-sync.ts`'teki `applyOrgPatch()` üzerinden geçer.** Route eskiden `canceled`/`revoked` için doğrudan `admin.from(...).update()` çağırıyor ve dönen `error`'ı kontrol etmiyordu. Supabase throw etmediği için başarısız UPDATE yutuluyor, webhook Polar'a 200 dönüyor, Polar bir daha denemiyordu — revoke edilen abonelikler ücretli planlarıyla açık kalıyordu. Webhook'ta yeni bir yazma eklerken `applyOrgPatch()` kullan
 
 ### Email (Resend)
 - `lib/resend.ts` — 3 branded HTML şablonu:

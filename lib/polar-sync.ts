@@ -53,11 +53,54 @@ export async function syncSubscription(sub: PolarSubscriptionLike): Promise<void
     })
   }
 
+  await applyOrgPatch(orgId, patch, sub.id)
+}
+
+// Abonelik iptal edildi: dönem sonuna kadar erişim sürer, plan korunur.
+export async function markSubscriptionCanceled(sub: PolarSubscriptionLike): Promise<void> {
+  const orgId = sub.customer.externalId
+  if (!orgId) {
+    console.error('[polar webhook] canceled subscription has no externalId (orgId)', sub.id)
+    return
+  }
+
+  await applyOrgPatch(orgId, {
+    subscription_status:  'canceled',
+    subscription_ends_at: sub.currentPeriodEnd?.toISOString() ?? null,
+  }, sub.id)
+}
+
+// Abonelik geri alındı: erişim biter, plan sıfırlanır.
+export async function markSubscriptionRevoked(sub: PolarSubscriptionLike): Promise<void> {
+  const orgId = sub.customer.externalId
+  if (!orgId) {
+    console.error('[polar webhook] revoked subscription has no externalId (orgId)', sub.id)
+    return
+  }
+
+  await applyOrgPatch(orgId, {
+    subscription_plan:     null,
+    subscription_status:   'canceled',
+    polar_subscription_id: null,
+    subscription_ends_at:  null,
+  }, sub.id)
+}
+
+// Tek yazma noktası. Supabase istemcisi throw ETMEZ — hatayı sonuç nesnesinde
+// döndürür. Bu kontrol atlanırsa başarısız UPDATE sessizce yutulur ve webhook
+// Polar'a 200 döner; Polar bir daha denemez. Revoke handler'ı tam olarak bu
+// şekilde çalışmıyordu: subscription_plan NOT NULL olduğu için UPDATE 23502
+// ile düşüyor, org ücretli planıyla açık kalıyordu.
+async function applyOrgPatch(
+  orgId: string,
+  patch: Record<string, unknown>,
+  subscriptionId: string,
+): Promise<void> {
   const admin = createAdminClient()
   const { error } = await admin.from('organizations').update(patch).eq('id', orgId)
 
   if (error) {
     console.error('[polar webhook] DB update failed', error.message, error.code)
-    Sentry.captureException(error, { extra: { orgId, subscriptionId: sub.id } })
+    Sentry.captureException(error, { extra: { orgId, subscriptionId, patch } })
   }
 }
