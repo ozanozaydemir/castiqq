@@ -21,7 +21,7 @@ Yapım şirketleri, casting ajansları ve serbest cast direktörlerinin kulland�
 - **@dnd-kit** — audition tablosunda sürükle-bırak sıralama
 - **@xyflow/react** — rol ilişki diyagramı canvas'ı (yalnızca ilgili tab'da dynamic import, `ssr: false`)
 - **dagre** — diyagramda otomatik hiyerarşik yerleşim (aile ağacı / org şeması)
-- **next-intl 4.13.1** — i18n (TR varsayılan, EN `/en/` prefix'li)
+- **next-intl 4.13.1** — i18n. **Şu an yalnızca TR yayında**; EN hazır ama kapalı (aşağıya bak)
 - **@polar-sh/nextjs** — ödeme & abonelik (Merchant of Record)
 - **resend** — transaksiyonel email
 - **next-sitemap** — `postbuild`'de sitemap.xml + robots.txt üretimi
@@ -52,11 +52,11 @@ Yapım şirketleri, casting ajansları ve serbest cast direktörlerinin kulland�
 `lib/require-org.ts` — tüm server action'larda kullanılır, `{ supabase, userId, orgId }` döner.
 
 ### i18n Yapısı
-- `i18n/routing.ts` — `localePrefix: 'as-needed'`, TR default (prefix yok), EN `/en/` prefix alır
+- `i18n/routing.ts` — **`locales: ['tr']`, `localePrefix: 'never'`**. EN bilinçli olarak kapalı: `/en/...` adresleri 404 döner, bu bir hata değil. Açmak için `locales`'e `'en'` eklenip `localePrefix` `'as-needed'` yapılır (TR prefix'siz kalır, EN `/en/` alır)
 - `i18n/request.ts` — `getRequestConfig`, mesaj dosyalarını yükler
 - `i18n/navigation.ts` — locale-aware `Link`, `redirect`, `useRouter`, `usePathname`
 - `middleware.ts` — next-intl middleware, locale tespiti + yönlendirme
-- `messages/tr.json` + `messages/en.json` — tüm UI metinleri
+- `messages/tr.json` + `messages/en.json` — tüm UI metinleri. EN yayında olmasa da **senkron tutuluyor**; açılacağı gün iki dosya ayrışmış olmasın diye
 - Server'da `getTranslations('namespace')`, client'ta `useTranslations('namespace')`
 - **Yeni sayfa eklerken:** `@/i18n/navigation`'dan `Link`/`redirect` kullan, `next/navigation`'dan değil
 
@@ -487,10 +487,10 @@ Cast direktörü bir rolü + senaryo parçasını belirli bir menajerlik org'una
 
 ### SEO & Altyapı
 - **Security headers:** HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy (`next.config.ts`)
-- **Sitemap:** `next-sitemap.config.js` — `postbuild` script, TR/EN hreflang, `/dashboard` ve tüm app route'ları `disallow`
+- **Sitemap & robots:** `app/sitemap.ts` + `app/robots.ts` (Next.js yerel metadata rotaları). Yalnızca TR yolları listelenir. **`next-sitemap` artık kullanılmıyor** — `postbuild` script'i yok, paket `package.json`'da artık bağımlılık olarak duruyor; temizlenebilir
 - **OG Image:** `app/[locale]/opengraph-image.tsx` — Edge runtime, 1200×630, indigo gradient
 - **JSON-LD:** `components/JsonLd.tsx` — landing'de `SoftwareApplication` şeması
-- **hreflang:** `app/[locale]/layout.tsx`'te `generateMetadata`'dan `alternates.languages`
+- **hreflang:** **şu an yayınlanmıyor.** EN kapalı olduğu için `alternates` yalnızca `canonical` taşıyor. `cast-direktorleri` sayfası bir süre `en` alternate'i yayınlıyordu ve arama motorunu 404'e yolluyordu — kaldırıldı. EN açıldığında hem `alternates.languages` hem `app/sitemap.ts` birlikte güncellenmeli
 - **Gizlilik:** `/gizlilik` — KVKK + GDPR (TR+EN, sub-processors: Supabase, R2, Vercel, PostHog)
 - **Koşullar:** `/kullanim-kosullari` — Polar MoR (vergi Polar'ın sorumluluğu), Türk hukuku
 

@@ -23,20 +23,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'castingDirectors.seo' })
 
-  const isTr = locale !== 'en'
   const path = '/cast-direktorleri'
-  const canonical = isTr ? `${SITE_URL}${path}` : `${SITE_URL}/en${path}`
+  const canonical = `${SITE_URL}${path}`
 
+  // hreflang bilinçli olarak yok: `i18n/routing.ts` şu an `locales: ['tr']`
+  // ile çalışıyor, yani `/en/...` 404 dönüyor. Buradan `en` alternate'i
+  // yayınlamak arama motorunu var olmayan bir sayfaya yolluyordu.
+  // EN açıldığında `languages: { tr, en, 'x-default' }` geri eklenmeli —
+  // `app/sitemap.ts` de aynı anda EN yollarını içerecek şekilde güncellensin.
   return {
     title: t('title'),
     description: t('description'),
     alternates: {
       canonical,
-      languages: {
-        tr: `${SITE_URL}${path}`,
-        en: `${SITE_URL}/en${path}`,
-        'x-default': `${SITE_URL}${path}`,
-      },
     },
     openGraph: {
       title: t('title'),
