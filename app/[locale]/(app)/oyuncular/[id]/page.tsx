@@ -9,7 +9,7 @@ import { Link } from '@/i18n/navigation'
 import {
   ArrowLeft, Pencil, MapPin, Phone, Mail, Building2, User,
   Ruler, Globe, Star, GraduationCap,
-  Clapperboard, Play, Mic, Film, Banknote, Users, FileSignature,
+  Clapperboard, Play, Mic, Film, Banknote, Users, FileSignature, Video,
 } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { MediaEmbed } from './MediaEmbed'
@@ -19,6 +19,7 @@ import { DocumentsSection } from './DocumentsSection'
 import { RepresentationHistorySection } from './RepresentationHistorySection'
 import { AdvancesSection } from './AdvancesSection'
 import { SelfServiceLinkCard } from './SelfServiceLinkCard'
+import { TalentVideosTab, type AuditionWithVideos } from './TalentVideosTab'
 import type { Booking, TalentDocument, RepresentationPeriod, TalentAdvance } from '@/types/database'
 
 const LANG_LEVEL_LABELS: Record<string, string> = {
@@ -60,8 +61,17 @@ function InitialsAvatar({ name, size = 'lg' }: { name: string; size?: 'lg' | 'xl
   )
 }
 
-export default async function OyuncuDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function OyuncuDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ tab?: string }>
+}) {
   const { id } = await params
+  const { tab } = await searchParams
+  const activeTab = tab === 'videolar' ? 'videolar' : 'profil'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
   const supabase = await createClient()
   const t = await getTranslations('talent')
 
@@ -103,7 +113,12 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
     supabase.from('talent_experiences').select('*').eq('talent_id', id).order('sort_order'),
     supabase.from('talent_education').select('*').eq('talent_id', id).order('sort_order'),
     supabase.from('auditions')
-      .select('id, status, notes, submitted_at, project_roles(id, name, projects(id, title)), audition_videos(id)')
+      .select(`
+        id, status, notes, rating, submitted_at, token, talent_name, invite_phone,
+        project_roles(id, name, projects(id, title)),
+        audition_videos(id, storage_path, public_url, uploaded_at, duration_seconds, file_size_bytes),
+        audition_tags(tags(id, name))
+      `)
       .eq('talent_id', id)
       .order('created_at', { ascending: false }),
     supabase.from('collections').select('id, name').order('name'),
@@ -127,15 +142,7 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
   const experiences = (expRes.data ?? []) as TalentExperience[]
   const education = (eduRes.data ?? []) as TalentEducation[]
 
-  type AudRow = {
-    id: string
-    status: string
-    notes: string | null
-    submitted_at: string | null
-    project_roles: { id: string; name: string; projects: { id: string; title: string } | null } | null
-    audition_videos: { id: string }[]
-  }
-  const audList: AudRow[] = (audRes.data ?? []) as AudRow[]
+  const audList = (audRes.data ?? []) as AuditionWithVideos[]
   const collections = (colRes.data ?? []) as { id: string; name: string }[]
   const bookings = (bookingsRes.data ?? []) as Booking[]
   const documents = (documentsRes.data ?? []) as TalentDocument[]
@@ -145,6 +152,7 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
   const totalAuditions = audList.length
   const callbackCount = audList.filter(a => a.status === 'shortlisted' || a.status === 'selected').length
   const callbackRate = totalAuditions > 0 ? Math.round((callbackCount / totalAuditions) * 100) : null
+  const totalVideoCount = audList.reduce((s, a) => s + (a.audition_videos?.length ?? 0), 0)
 
   const delAction = deleteOyuncu.bind(null, talent.id)
 
@@ -226,11 +234,54 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
         </div>
       )}
 
-      {/* Content — dengeli masonry akışı: hangi kartların dolu olacağı
-          oyuncuya göre değiştiğinden sabit 1/3-2/3 sütun bölünmesi boş
-          sütunlara yol açıyordu (bkz. menajerlik oyuncuları). Bunun yerine
-          kartlar tek bir CSS multi-column akışında dengeleniyor. */}
-      <div className="px-6 pb-8 columns-1 md:columns-2 xl:columns-3 gap-4 [&>*]:mb-4 [&>*]:break-inside-avoid">
+      {/* Tab navigation */}
+      <div className="px-6 border-b border-gray-100 mb-4">
+        <div className="flex gap-0 -mb-px">
+          <Link
+            href={`/oyuncular/${id}`}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'profil'
+                ? 'border-indigo-500 text-indigo-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            <Users className="w-3.5 h-3.5" />
+            Profil
+          </Link>
+          <Link
+            href={`/oyuncular/${id}?tab=videolar`}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'videolar'
+                ? 'border-indigo-500 text-indigo-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            <Video className="w-3.5 h-3.5" />
+            Videolar
+            {totalVideoCount > 0 && (
+              <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
+                activeTab === 'videolar'
+                  ? 'bg-indigo-100 text-indigo-600'
+                  : 'bg-gray-100 text-gray-500'
+              }`}>
+                {totalVideoCount}
+              </span>
+            )}
+          </Link>
+        </div>
+      </div>
+
+      {/* Videos tab */}
+      {activeTab === 'videolar' && (
+        <TalentVideosTab
+          auditions={audList}
+          talent={{ id: talent.id, full_name: talent.full_name }}
+          siteUrl={siteUrl}
+        />
+      )}
+
+      {/* Profile tab — masonry layout */}
+      {activeTab === 'profil' && <div className="px-6 pb-8 columns-1 md:columns-2 xl:columns-3 gap-4 [&>*]:mb-4 [&>*]:break-inside-avoid">
           {/* Fotoğraf galerisi */}
           {(talent.photos as string[] | null) && (talent.photos as string[]).length > 0 && (
             <div className="sb-card overflow-hidden">
@@ -498,7 +549,7 @@ export default async function OyuncuDetailPage({ params }: { params: Promise<{ i
               </div>
             </Section>
           )}
-      </div>
+      </div>}
     </div>
   )
 }
