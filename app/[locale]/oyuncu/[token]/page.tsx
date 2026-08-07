@@ -13,7 +13,7 @@ export default async function OyuncuTokenPage({ params }: { params: Promise<{ to
   const { data: audition, error: auditionError } = await admin
     .from('auditions')
     .select(`
-      id, status, submitted_at, talent_name, organization_id, retention_until,
+      id, status, submitted_at, talent_name, organization_id, retention_until, current_round,
       project_roles (
         id, name, description, gender, age_min, age_max, notes,
         projects ( title, type, deadline )
@@ -45,6 +45,7 @@ export default async function OyuncuTokenPage({ params }: { params: Promise<{ to
   const scripts = ((audition.audition_scripts as unknown as ScriptLink[] | null) ?? [])
     .flatMap(s => (Array.isArray(s.role_scripts) ? s.role_scripts : s.role_scripts ? [s.role_scripts] : []))
 
+  const currentRound = (audition as { current_round?: number }).current_round ?? 1
   const retentionUntil = (audition as { retention_until: string | null }).retention_until
   const retentionLabel = retentionUntil
     ? new Date(retentionUntil).toLocaleDateString(locale === 'tr' ? 'tr-TR' : 'en-US', {
@@ -153,8 +154,18 @@ export default async function OyuncuTokenPage({ params }: { params: Promise<{ to
         </a>
       </div>
 
+      {/* Callback tur bilgisi */}
+      {currentRound > 1 && (
+        <div className="bg-indigo-50 rounded-xl border border-indigo-200 px-5 py-4 flex items-start gap-2.5">
+          <span className="text-lg leading-none">🎬</span>
+          <p className="text-sm text-indigo-800 font-medium">
+            {currentRound}. tur kaydı bekleniyor. Lütfen yeni bir video çekimi yükleyin.
+          </p>
+        </div>
+      )}
+
       {/* Video yükleme */}
-      <UploadSection token={token} initialVideos={existingVideos} />
+      <UploadSection token={token} initialVideos={existingVideos} round={currentRound} />
     </div>
   )
 }

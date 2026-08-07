@@ -54,6 +54,7 @@ type VideoEntry = {
   storage_path: string
   uploaded_at: string
   duration_seconds: number | null
+  round: number
 }
 
 type Audition = {
@@ -70,6 +71,7 @@ type Audition = {
   invite_phone: string | null
   token: string
   sort_order: number
+  current_round: number
   talent: TalentRef
   audition_videos: VideoEntry[]
   audition_tags: { tags: { id: string; name: string } | null }[]
@@ -389,6 +391,11 @@ function SortableRow({ audition, roleId, siteUrl, isDragMode, isSelected, onTogg
             {audition.talent
               ? <Link href={`/oyuncular/${audition.talent.id}`} className="hover:text-indigo-600">{name}</Link>
               : name}
+            {(audition.current_round ?? 1) > 1 && (
+              <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-indigo-50 text-indigo-500 flex-shrink-0">
+                {audition.current_round}. Tur
+              </span>
+            )}
             {audition.notes && (
               <span
                 title={`${audition.profiles?.full_name ?? 'Ekip'}: ${audition.notes}`}

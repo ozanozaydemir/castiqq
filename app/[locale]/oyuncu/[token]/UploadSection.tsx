@@ -15,6 +15,7 @@ type UploadedVideo = {
 interface Props {
   token: string
   initialVideos: UploadedVideo[]
+  round?: number
 }
 
 function getVideoDuration(file: File): Promise<number | null> {
@@ -96,7 +97,7 @@ function DeleteConfirm({ onConfirm, onCancel, pending }: {
   )
 }
 
-export function UploadSection({ token, initialVideos }: Props) {
+export function UploadSection({ token, initialVideos, round = 1 }: Props) {
   const t = useTranslations('upload')
   const [videos, setVideos]     = useState<UploadedVideo[]>(initialVideos)
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
@@ -131,7 +132,7 @@ export function UploadSection({ token, initialVideos }: Props) {
       return
     }
 
-    const { presignedUrl, storagePath, auditionId, organizationId } = await urlRes.json()
+    const { presignedUrl, storagePath, auditionId, organizationId, round: videoRound } = await urlRes.json()
     setProgress(10)
 
     try {
@@ -149,7 +150,7 @@ export function UploadSection({ token, initialVideos }: Props) {
     const completeRes = await fetch('/api/video-complete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ auditionId, organizationId, storagePath, duration, fileSizeBytes: file.size }),
+      body: JSON.stringify({ auditionId, organizationId, storagePath, duration, fileSizeBytes: file.size, round: videoRound ?? round }),
     })
 
     if (!completeRes.ok) {

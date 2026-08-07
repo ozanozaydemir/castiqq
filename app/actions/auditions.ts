@@ -276,6 +276,32 @@ export async function deleteVideo(videoId: string, roleId: string): Promise<Acti
   return { success: true }
 }
 
+export async function giveCallback(auditionId: string, roleId: string): Promise<ActionState> {
+  const { supabase } = await requireOrg()
+
+  const { data: audition, error: fetchError } = await supabase
+    .from('auditions')
+    .select('current_round')
+    .eq('id', auditionId)
+    .single()
+
+  if (fetchError || !audition) return { error: fetchError?.message ?? 'Audition bulunamadı.' }
+  if (audition.current_round >= 10) return { error: 'Maksimum tur sayısına ulaşıldı.' }
+
+  const { error } = await supabase
+    .from('auditions')
+    .update({ current_round: audition.current_round + 1 })
+    .eq('id', auditionId)
+
+  if (error) {
+    console.error('giveCallback error:', error.message, error.code)
+    return { error: error.message }
+  }
+
+  revalidatePath(`/roller/${roleId}`)
+  return { success: true }
+}
+
 export async function bulkUpdateAuditionStatus(
   ids: string[],
   roleId: string,

@@ -114,9 +114,9 @@ export default async function OyuncuDetailPage({
     supabase.from('talent_education').select('*').eq('talent_id', id).order('sort_order'),
     supabase.from('auditions')
       .select(`
-        id, status, notes, rating, submitted_at, token, talent_name, invite_phone,
+        id, status, notes, rating, submitted_at, token, talent_name, invite_phone, current_round,
         project_roles(id, name, projects(id, title)),
-        audition_videos(id, storage_path, public_url, uploaded_at, duration_seconds, file_size_bytes),
+        audition_videos(id, storage_path, public_url, uploaded_at, duration_seconds, file_size_bytes, round),
         audition_tags(tags(id, name))
       `)
       .eq('talent_id', id)

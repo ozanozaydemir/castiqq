@@ -8,7 +8,7 @@ import {
   Star, RotateCcw,
 } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
-import { updateAuditionStatus, updateAuditionNotes, updateAuditionRating, deleteVideo } from '@/app/actions/auditions'
+import { updateAuditionStatus, updateAuditionNotes, updateAuditionRating, deleteVideo, giveCallback } from '@/app/actions/auditions'
 import { addAuditionTag, removeAuditionTag } from '@/app/actions/audition-tags'
 import { addVideoNote, deleteVideoNote } from '@/app/actions/video-notes'
 import { useRouter } from '@/i18n/navigation'
@@ -22,6 +22,7 @@ export type VideoEntry = {
   storage_path: string
   uploaded_at: string
   duration_seconds: number | null
+  round: number
 }
 
 export type TagEntry = { id: string; name: string }
@@ -35,6 +36,7 @@ export type VideoAudition = {
   talent_name: string | null
   invite_phone: string | null
   token: string
+  current_round: number
   talent: { id: string; full_name: string } | null
   audition_videos: VideoEntry[]
   tags: TagEntry[]
@@ -118,34 +120,48 @@ function RatingSelector({ auditionId, roleId, initial }: {
   )
 }
 
-// ── Re-audition panel ──────────────────────────────────────────────
+// ── Callback panel ─────────────────────────────────────────────────
 
-function ReAuditionPanel({ token, invitePhone, siteUrl }: {
-  token: string; invitePhone: string | null; siteUrl: string
+function CallbackPanel({ auditionId, roleId, token, invitePhone, initialRound, siteUrl }: {
+  auditionId: string; roleId: string; token: string
+  invitePhone: string | null; initialRound: number; siteUrl: string
 }) {
-  const t = useTranslations('auditions')
-  const [open, setOpen]       = useState(false)
-  const [message, setMessage] = useState('')
+  const [currentRound, setCurrentRound] = useState(initialRound)
+  const [open, setOpen]                 = useState(false)
+  const [message, setMessage]           = useState('')
+  const [, start]                       = useTransition()
+  const router                          = useRouter()
 
-  const inviteUrl = `${siteUrl}/oyuncu/${token}`
-  const fullMsg   = message.trim()
-    ? `Merhaba! Ek bir video çekimi talep ediyoruz:\n\n${message.trim()}\n\nAynı linkten yeni videonuzu yükleyebilirsiniz:\n${inviteUrl}`
-    : `Merhaba! Ek bir video çekimi talep ediyoruz. Aynı linkten yükleyebilirsiniz:\n${inviteUrl}`
+  const inviteUrl  = `${siteUrl}/oyuncu/${token}`
+  const nextRound  = currentRound + 1
+  const fullMsg    = message.trim()
+    ? `Merhaba! ${nextRound}. tur kaydı bekliyoruz:\n\n${message.trim()}\n\nAynı linkten yükleyebilirsiniz:\n${inviteUrl}`
+    : `Merhaba! ${nextRound}. tur video kaydı bekliyoruz. Aynı linkten yükleyebilirsiniz:\n${inviteUrl}`
   const waLink = invitePhone
     ? `https://wa.me/${invitePhone.replace(/\D/g, '')}?text=${encodeURIComponent(fullMsg)}`
     : null
+
+  function doCallback() {
+    start(async () => {
+      const result = await giveCallback(auditionId, roleId)
+      if (!result?.error) {
+        setCurrentRound(r => r + 1)
+        router.refresh()
+      }
+    })
+  }
 
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-1">
-          <RotateCcw className="w-3 h-3" /> {t('reAudition')}
+          <RotateCcw className="w-3 h-3" /> Callback · {currentRound}. Tur
         </p>
         <button
           onClick={() => setOpen(v => !v)}
           className="text-[10px] text-indigo-500 hover:text-indigo-700 transition-colors"
         >
-          {open ? t('reAuditionClose') : t('reAuditionOpen')}
+          {open ? 'Kapat' : 'Yeni Tur'}
         </button>
       </div>
       {open && (
@@ -153,8 +169,8 @@ function ReAuditionPanel({ token, invitePhone, siteUrl }: {
           <textarea
             value={message}
             onChange={e => setMessage(e.target.value)}
-            placeholder={t('reAuditionPlaceholder')}
-            rows={3}
+            placeholder="Ek not (opsiyonel)…"
+            rows={2}
             className="w-full text-xs text-gray-700 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 resize-none focus:outline-none focus:border-indigo-300 placeholder-gray-300"
           />
           {waLink ? (
@@ -162,16 +178,17 @@ function ReAuditionPanel({ token, invitePhone, siteUrl }: {
               href={waLink}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={doCallback}
               className="flex items-center justify-center gap-1.5 w-full bg-green-50 hover:bg-green-100 text-green-700 text-xs font-medium rounded-lg py-2 transition-colors"
             >
-              <MessageCircle className="w-3.5 h-3.5" /> {t('reAuditionWhatsapp')}
+              <MessageCircle className="w-3.5 h-3.5" /> WhatsApp ile Gönder ({nextRound}. Tur)
             </a>
           ) : (
             <button
-              onClick={() => navigator.clipboard.writeText(inviteUrl)}
+              onClick={() => { doCallback(); navigator.clipboard.writeText(inviteUrl) }}
               className="flex items-center justify-center gap-1.5 w-full bg-gray-50 hover:bg-gray-100 text-gray-600 text-xs font-medium rounded-lg py-2 transition-colors"
             >
-              <Copy className="w-3.5 h-3.5" /> {t('reAuditionCopyLink')}
+              <Copy className="w-3.5 h-3.5" /> Linki Kopyala ({nextRound}. Tur Aç)
             </button>
           )}
         </div>
@@ -697,28 +714,53 @@ export function VideoModal({ auditions, startIndex, roleId, siteUrl, onClose }: 
         </div>
 
         {/* Video sekmeleri — sadece birden fazla video varsa */}
-        {audition.audition_videos.length > 1 && (
-          <div className="flex items-center gap-1.5 px-5 py-2.5 bg-gray-950 border-b border-white/5 flex-shrink-0 overflow-x-auto">
-            {audition.audition_videos.map((v, i) => (
-              <button
-                key={v.id}
-                onClick={() => setVidIdx(i)}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors flex-shrink-0 ${
-                  i === vidIdx
-                    ? 'bg-indigo-500 text-white'
-                    : 'bg-white/10 text-white/50 hover:bg-white/20 hover:text-white/80'
-                }`}
-              >
-                Video {i + 1}
-                {v.duration_seconds && (
-                  <span className={i === vidIdx ? 'opacity-70' : 'opacity-50'}>
-                    {fmt(v.duration_seconds)}
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-        )}
+        {audition.audition_videos.length > 1 && (() => {
+          const hasMultipleRounds = new Set(audition.audition_videos.map(v => v.round ?? 1)).size > 1
+          return (
+            <div className="flex items-center gap-1.5 px-5 py-2.5 bg-gray-950 border-b border-white/5 flex-shrink-0 overflow-x-auto">
+              {hasMultipleRounds
+                ? audition.audition_videos.map((v, i) => {
+                    const thisRound = v.round ?? 1
+                    const prevRound = i > 0 ? (audition.audition_videos[i - 1].round ?? 1) : null
+                    const isNewRound = prevRound === null || prevRound !== thisRound
+                    const roundVideoIdx = audition.audition_videos.filter((av, ai) => ai <= i && (av.round ?? 1) === thisRound).length
+                    return (
+                      <div key={v.id} className="flex items-center gap-1.5 flex-shrink-0">
+                        {isNewRound && (
+                          <span className={`text-[10px] text-white/30 ${i > 0 ? 'ml-2' : ''}`}>{thisRound}. Tur ·</span>
+                        )}
+                        <button
+                          onClick={() => setVidIdx(i)}
+                          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+                            i === vidIdx ? 'bg-indigo-500 text-white' : 'bg-white/10 text-white/50 hover:bg-white/20 hover:text-white/80'
+                          }`}
+                        >
+                          V{roundVideoIdx}
+                          {v.duration_seconds && (
+                            <span className={i === vidIdx ? 'opacity-70' : 'opacity-50'}>{fmt(v.duration_seconds)}</span>
+                          )}
+                        </button>
+                      </div>
+                    )
+                  })
+                : audition.audition_videos.map((v, i) => (
+                    <button
+                      key={v.id}
+                      onClick={() => setVidIdx(i)}
+                      className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors flex-shrink-0 ${
+                        i === vidIdx ? 'bg-indigo-500 text-white' : 'bg-white/10 text-white/50 hover:bg-white/20 hover:text-white/80'
+                      }`}
+                    >
+                      Video {i + 1}
+                      {v.duration_seconds && (
+                        <span className={i === vidIdx ? 'opacity-70' : 'opacity-50'}>{fmt(v.duration_seconds)}</span>
+                      )}
+                    </button>
+                  ))
+              }
+            </div>
+          )
+        })()}
 
         {/* Body */}
         <div className="flex flex-1 min-h-0 overflow-hidden">
@@ -726,9 +768,20 @@ export function VideoModal({ auditions, startIndex, roleId, siteUrl, onClose }: 
           <div className="flex-1 bg-black flex items-center justify-center min-w-0">
             {video?.storage_path ? (
               presignedUrls[video.storage_path] ? (
-                <video ref={videoRef} controls className="max-h-full max-w-full w-full" style={{ aspectRatio: '16/9' }}>
-                  <source src={presignedUrls[video.storage_path]} />
-                </video>
+                <div className="relative max-h-full max-w-full w-full" style={{ aspectRatio: '16/9' }}>
+                  <video ref={videoRef} controls className="w-full h-full">
+                    <source src={presignedUrls[video.storage_path]} />
+                  </video>
+                  {/* Görsel filigran — ekran kaydında görünür, oynatmayı engellemez */}
+                  <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
+                    <span
+                      className="text-white/20 font-bold text-2xl text-center whitespace-nowrap select-none"
+                      style={{ transform: 'rotate(-30deg)', textShadow: '0 0 8px rgba(0,0,0,0.5)' }}
+                    >
+                      {name} · GİZLİ
+                    </span>
+                  </div>
+                </div>
               ) : (
                 <div className="text-white/30 text-sm flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -761,7 +814,14 @@ export function VideoModal({ auditions, startIndex, roleId, siteUrl, onClose }: 
               )}
 
               <div className="pt-5">
-                <ReAuditionPanel token={audition.token} invitePhone={audition.invite_phone} siteUrl={siteUrl} />
+                <CallbackPanel
+                  auditionId={audition.id}
+                  roleId={roleId}
+                  token={audition.token}
+                  invitePhone={audition.invite_phone}
+                  initialRound={audition.current_round ?? 1}
+                  siteUrl={siteUrl}
+                />
               </div>
 
               <div className="pt-5 space-y-2">

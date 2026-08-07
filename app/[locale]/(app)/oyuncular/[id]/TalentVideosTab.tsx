@@ -18,6 +18,7 @@ export type AuditionWithVideos = {
   token: string
   talent_name: string | null
   invite_phone: string | null
+  current_round: number
   project_roles: { id: string; name: string; projects: { id: string; title: string } | null } | null
   audition_videos: {
     id: string
@@ -26,6 +27,7 @@ export type AuditionWithVideos = {
     uploaded_at: string
     duration_seconds: number | null
     file_size_bytes: number | null
+    round: number
   }[]
   audition_tags: { tags: { id: string; name: string } | null }[]
 }
@@ -143,6 +145,7 @@ export function TalentVideosTab({ auditions, talent, siteUrl }: Props) {
       talent_name: a.talent_name,
       invite_phone: a.invite_phone,
       token: a.token,
+      current_round: a.current_round ?? 1,
       talent: { id: talent.id, full_name: talent.full_name },
       audition_videos: a.audition_videos,
       tags: a.audition_tags.flatMap(at => (at.tags ? [at.tags] : [])),

@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
   const admin = createAdminClient()
   const { data: audition } = await admin
     .from('auditions')
-    .select('id, organization_id, submitted_at')
+    .select('id, organization_id, submitted_at, current_round')
     .eq('token', token)
     .single()
 
@@ -37,14 +37,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Geçersiz token' }, { status: 404 })
   }
 
+  const currentRound: number = (audition as { current_round?: number }).current_round ?? 1
+
   const { count: videoCount } = await admin
     .from('audition_videos')
     .select('*', { count: 'exact', head: true })
     .eq('audition_id', audition.id)
+    .eq('round', currentRound)
 
   if ((videoCount ?? 0) >= 3) {
     return NextResponse.json(
-      { error: 'Bu audition için maksimum 3 video yükleyebilirsiniz.' },
+      { error: 'Bu tur için maksimum 3 video yükleyebilirsiniz.' },
       { status: 409 }
     )
   }
@@ -90,5 +93,6 @@ export async function POST(req: NextRequest) {
     storagePath,
     auditionId: audition.id,
     organizationId: audition.organization_id,
+    round: currentRound,
   })
 }

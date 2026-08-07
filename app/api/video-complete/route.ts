@@ -14,13 +14,13 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  let body: { auditionId?: string; organizationId?: string; storagePath?: string; duration?: number; fileSizeBytes?: number }
+  let body: { auditionId?: string; organizationId?: string; storagePath?: string; duration?: number; fileSizeBytes?: number; round?: number }
   try {
     body = await req.json()
   } catch {
     return NextResponse.json({ error: 'Geçersiz istek.' }, { status: 400 })
   }
-  const { auditionId, organizationId, storagePath, duration, fileSizeBytes } = body
+  const { auditionId, organizationId, storagePath, duration, fileSizeBytes, round } = body
 
   if (!auditionId || !organizationId || !storagePath) {
     return NextResponse.json({ error: 'Eksik parametre' }, { status: 400 })
@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
       duration_seconds: duration ?? null,
       file_size_bytes: fileSizeBytes ?? null,
       uploaded_at: now,
+      round: round ?? 1,
     })
     .select('id, uploaded_at')
     .single()

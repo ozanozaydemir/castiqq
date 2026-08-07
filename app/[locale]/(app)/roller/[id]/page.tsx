@@ -63,7 +63,7 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
   // Auditions: tam sorgu (migration 015 gerektirir — notes_updated_by, profiles FK)
   let { data: auditions, error: auditionsError } = await supabase
     .from('auditions')
-    .select('id, status, notes, rating, notes_updated_by, notes_updated_at, submitted_at, talent_name, talent_email, invite_phone, token, sort_order, talent(id, full_name, city, gender, playable_age_min, playable_age_max, height_cm, agency_name, availability, skills, avatar_url, photos), audition_videos(id, public_url, storage_path, uploaded_at, duration_seconds), profiles!auditions_notes_author_fkey(full_name)')
+    .select('id, status, notes, rating, notes_updated_by, notes_updated_at, submitted_at, talent_name, talent_email, invite_phone, token, sort_order, current_round, talent(id, full_name, city, gender, playable_age_min, playable_age_max, height_cm, agency_name, availability, skills, avatar_url, photos), audition_videos(id, public_url, storage_path, uploaded_at, duration_seconds, round), profiles!auditions_notes_author_fkey(full_name)')
     .eq('role_id', id)
     .order('sort_order', { ascending: true })
 
@@ -73,7 +73,7 @@ export default async function RolDetailPage({ params }: { params: Promise<{ id: 
     // Fallback — migration 015 olmadan çalışan basit sorgu
     const fallback = await supabase
       .from('auditions')
-      .select('id, status, notes, rating, submitted_at, talent_name, talent_email, invite_phone, token, sort_order, talent(id, full_name, city, gender, playable_age_min, playable_age_max, height_cm, agency_name, availability, skills, avatar_url, photos), audition_videos(id, public_url, storage_path, uploaded_at, duration_seconds)')
+      .select('id, status, notes, rating, submitted_at, talent_name, talent_email, invite_phone, token, sort_order, current_round, talent(id, full_name, city, gender, playable_age_min, playable_age_max, height_cm, agency_name, availability, skills, avatar_url, photos), audition_videos(id, public_url, storage_path, uploaded_at, duration_seconds, round)')
       .eq('role_id', id)
       .order('sort_order', { ascending: true })
 
