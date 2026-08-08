@@ -165,7 +165,7 @@ export default async function DashboardPage() {
         })()}
 
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {stats.map(({ label, value, trend, icon: Icon, color, bg, href }) => (
             <Link key={label} href={href} className="sb-card p-5 hover:border-indigo-200 transition-colors group">
               <div className={`w-9 h-9 rounded-lg ${bg} flex items-center justify-center mb-3`}>

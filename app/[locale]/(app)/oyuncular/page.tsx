@@ -180,7 +180,7 @@ export default async function OyuncularPage({
         <PendingPaymentsBanner />
       </Suspense>
 
-      <div className="p-6 flex gap-6 items-start">
+      <div className="p-4 md:p-6 flex flex-col md:flex-row gap-4 md:gap-6 items-start">
         <Suspense>
           <OyuncuFilters teamMembers={isAgency ? (teamMembers ?? []) : []} />
         </Suspense>

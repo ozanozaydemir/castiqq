@@ -65,7 +65,8 @@ async function ProjelerTable({ searchParams }: { searchParams: SearchParams }) {
           </Link>
         </div>
       ) : (
-        <div className="sb-card overflow-hidden">
+        <div className="sb-card">
+          <div className="overflow-x-auto">
           <table className="sb-table">
             <thead>
               <tr>
@@ -93,6 +94,7 @@ async function ProjelerTable({ searchParams }: { searchParams: SearchParams }) {
               })}
             </tbody>
           </table>
+          </div>
           <Pagination page={page} totalPages={totalPages} />
         </div>
       )}

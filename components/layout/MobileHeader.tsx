@@ -20,7 +20,7 @@ export function MobileHeader({ orgName = 'Castiqq', onMenuOpen }: MobileHeaderPr
       </div>
       <button
         onClick={onMenuOpen}
-        className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+        className="p-2.5 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
         aria-label={t('openMenu')}
       >
         <Menu className="w-5 h-5" />

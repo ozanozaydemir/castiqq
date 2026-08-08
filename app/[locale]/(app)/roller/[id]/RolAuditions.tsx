@@ -493,7 +493,7 @@ function SortableRow({ audition, roleId, siteUrl, isDragMode, isSelected, onTogg
             })
             onDelete(audition.id)
           }}
-          className="text-gray-300 hover:text-red-400 transition-colors"
+          className="p-2 rounded-md text-gray-300 hover:text-red-400 hover:bg-red-50 transition-colors"
         >
           <Trash2 className="w-3.5 h-3.5" />
         </button>

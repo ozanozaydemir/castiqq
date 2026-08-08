@@ -763,9 +763,9 @@ export function VideoModal({ auditions, startIndex, roleId, siteUrl, onClose }: 
         })()}
 
         {/* Body */}
-        <div className="flex flex-1 min-h-0 overflow-hidden">
+        <div className="flex flex-1 min-h-0 overflow-hidden flex-col md:flex-row">
           {/* Video */}
-          <div className="flex-1 bg-black flex items-center justify-center min-w-0">
+          <div className="bg-black flex items-center justify-center min-w-0 h-[40vh] md:h-auto md:flex-1 flex-shrink-0">
             {video?.storage_path ? (
               presignedUrls[video.storage_path] ? (
                 <div className="relative max-h-full max-w-full w-full" style={{ aspectRatio: '16/9' }}>
@@ -793,7 +793,7 @@ export function VideoModal({ auditions, startIndex, roleId, siteUrl, onClose }: 
           </div>
 
           {/* Right panel */}
-          <div className="w-80 flex-shrink-0 border-l border-gray-100 flex flex-col overflow-y-auto">
+          <div className="w-full md:w-80 flex-shrink-0 border-t md:border-t-0 md:border-l border-gray-100 flex flex-col overflow-y-auto">
             <div className="p-5 space-y-5 divide-y divide-gray-50">
               <div className="space-y-5">
                 <RatingSelector auditionId={audition.id} roleId={roleId} initial={audition.rating} />
